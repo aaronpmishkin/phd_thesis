@@ -1,0 +1,20 @@
+%!TEX root=main.tex
+
+\prefacesection{Abstract}
+
+One of the key themes in modern optimization research is the boundary between
+convex and non-convex problems.
+While convex optimization problems can often be solved efficiently, many
+non-convex programs are NP-Hard and challenging to optimize.
+In this thesis, I break the barrier between convex and non-convex optimization
+by reformulating, or ``lifting'', neural networks into high-dimensional spaces
+where they become convex.
+I leverage these convex reformulations for two purposes: as algorithmic tools
+to enable fast, global optimization for two-layer ReLU networks; and as a
+convex proxy to study the optimal set of the original non-convex problem.
+In the process, I show that two-layer ReLU networks are equivalent to shallow
+neural networks with gated ReLU activations, derive the set of all critical
+points for two-layer ReLU networks, and give the first polynomial-time
+algorithm for optimal neuron pruning.
+I conclude with extensions ReLU networks of arbitrary depth using a novel
+layer-elimination lemma.

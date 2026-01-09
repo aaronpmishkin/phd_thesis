@@ -1,0 +1,103 @@
+% basically this is a template file, you should be able to take it and
+% start running.
+
+% the philosophy behind this template is that each chapter or
+% chapterlike section goes in a separate file and you use the \include
+% command to input it into the final document.  The \includeonly
+% command can be used so you only need to work on one or two chapters at a
+% time (instead of having to either latex the entire book each time or
+% losing cross-references and page numbering)
+
+% copy this file and call it something like mythesis.tex
+
+\documentclass[12pt]{report}
+% note that the documentclass can take other option such as
+% twoside - for double sided printing
+% openright - if double side  chapters always start on odd pages
+% openany - if double side chapters start on the next page even or odd
+% 12pt can be replaced by 11pt
+
+\usepackage{suthesis-2e}
+% options are
+% online - now the default
+% hardcopy - turns off online includes signature page and copyright page in file 
+% engineer - does an engineer thesis instead of a PhD dissertation
+
+%% load other packages you need
+
+%%  math symbols
+\usepackage{amsmath}    % ams math
+\usepackage{amssymb}    % ^^ 
+\usepackage{amsthm}     % ^^
+\usepackage{mathtools}  % additional tools
+\usepackage{centernot}  % nice /not commands
+\usepackage{xfrac}      % nice fractions
+\usepackage{dsfont}     % indicators
+\usepackage{leftindex}  % scripts on left side
+
+\usepackage{enumitem}   % better enums
+\usepackage{hyperref}   % internal referencing
+\usepackage[noabbrev, capitalize]{cleveref}   % internal referencing
+
+\usepackage{parskip}    % paragraph formatting
+%\usepackage{todonotes}  % inline todo notes 
+
+%% load macros and pre-defined symbols
+\input{macros/math}
+%% macros for paragraph mode
+\input{macros/paragraph}
+
+%% (optional) load tikz and PGFplots
+% \input{macros/plots}
+
+%% certain types of theses require special title page format.  See the
+%% style file for the full list.  An example would be that for some of
+%% the language departments. 
+% \dualthesis \dept{Asian Languages} \languagemajor{Korean} 
+%% or education
+% \educationthesis
+
+    \title{Convex Analysis of Non-Convex Neural Networks}
+    \author{Aaron Mishkin}
+    \dept{Computer Science}
+    \principaladviser{Mert Pilanci}
+    \coprincipaladvisor{Balaji Prabhakar}
+    \firstreader{Aaron Sidford}
+    \secondreader{Robert Tibshirani}
+    \thirdreader{Stephen Boyd}
+
+%the following command would (if uncommented) allow  only chapter1 and
+%chapter2 to be processed
+%\includeonly{chapter1,chapter2}
+
+
+\begin{document}
+
+\beforepreface
+
+\include{abstract}
+
+\include{acknowledgements}
+
+\newpage
+
+\afterpreface
+
+% === Main Body Starts === %
+
+% === Main Body Ends === %
+
+\appendix
+
+% === Appendices Begin === %
+
+% === Appendices End === %
+
+% bibliography.tex should include either 
+% \bibliographystyle{...}
+% \bibliography{mythesis}
+% or some other way of doing the bibliography
+%\include{bibliography}
+
+\end{document}
+
