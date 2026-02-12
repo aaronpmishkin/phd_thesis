@@ -2,8 +2,61 @@
 
 \chapter{Introduction}\label{chapter:introduction}
 
-Since AlexNet won the ImageNet Large Scale Visual Recognition Challenge in 
-2012 \citep{russakovksy2015imagenet, deng2009imagenet}
+In 2012, AlexNet won the ImageNet Large Scale Visual Recognition Challenge
+\citep{deng2009imagenet} and marked the ascendency of deep neural networks in
+machine learning, a process which (arguably) began with Geoffrey Hinton's
+famous MNIST digit generation demo in 2006 \citep{hinton2006deep}.
+AlexNet won the competition with a top-five accuracy of \( 84.7\%  \) and at
+the time was considered a ``large, deep convolutional neural network'' based on
+its model size of sixty million parameters \citep{russakovksy2015imagenet}.
+In comparison, the recent foundation model Florence
+\citep{yuan2021florence} achieves top-five accuracy greater than \( 99\% \)
+using 893 million parameters.
+In addition to being much larger than AlexNet, Florence uses modern techniques
+like contrastive learning, image transformers, and extensive pre-training on
+800 million additional images.
+The gaps between AlexNet and Florence in modeling, training data, and test
+performance reflect the rapid advances machine learning has made since 2012.
+
+While AlexNet took approximately seven days to train on two NVIDIA GTX 580 GPUs
+\citep{krizhevksy2012alexnet}, Florence required 10 days to pre-train on 512
+NVIDIA A100 GPUs.
+This means Florence used roughly 365 times more GPU hours on machines with
+between 12 (32 bit precision) and 48 (16 bit precision)
+times more FLOPS and with 20 times more memory than those used for AlexNet.
+Accounting for Florence's size and additional data implies a training
+efficiency compared to AlexNet between \( 0.68 \) and \( 2.74 \)
+\citep{a100, gpucomparison}.%
+\footnote{Florence uses mixed-precision training, so an exact performance
+    comparison is difficult.}
+The point of these back-of-the-envelope calculations is to expose a dominant
+trend in machine learning:
+increasingly large models and data sets have led to remarkable improvements in
+test performance, but training costs have increased proportionally and
+training efficiency has stagnated.
+In other words, advances in optimization for neural networks have not matched
+the advances in neural networks themselves.
+
+The key challenge in optimization for neural networks is non-convexity.
+Unlike matrix factorization and other benign non-convex functions
+\citep{burer2005low}, neural networks admit many saddle points and
+local extrema.
+As a result, global optimization for neural networks is NP-hard in general
+\citep{froese2023hard, blum1988complete}.
+Practitioners instead rely on stochastic gradient methods (SGMs) to find
+stationary points. 
+Despite the theoretical difficulty, highly accurate models are trained in practice using stochastic gradient methods (SGMs)~\citep{bengio2012practical}.
+Unfortunately, SGMs cannot guarantee convergence to a local optimum of the non-convex training loss~\citep{ge2015escaping} and existing methods rarely certify convergence to a stationary point of any type~\citep{goodfellow2016deeplearning}.
+SGMs are also sensitive to hyper-parameters;
+they converge slowly, to different stationary points~\citep{neyshabur2017implicit}, or even diverge depending on the choice of step-size.
+Parameters like the random seed complicate replications and can produce model churn, where networks learned using the same procedure give different predictions for the same inputs~\citep{henderson2018deep, bhojanapalli2021reproducibility}.
+See \autoref{fig:synthetic-classification} for an example.
+For most applications, practitioners use domain knowledge and costly hyper-parameter search to cope with these challenges.
+
+
+Moreover, non-convexity prevents practitioners from using fast optimization
+methods like Nesterov acceleration \citep{nesterov1983method}
+
 
 \section{Preliminaries and Assumptions}
 

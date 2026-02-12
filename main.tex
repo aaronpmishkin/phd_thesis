@@ -44,7 +44,7 @@
 
 
 % bibliography management
-\RequirePackage[backend=biber, style=authoryear, citestyle=authoryear, maxcitenames=2, natbib=true]{biblatex}
+\RequirePackage[sortcites=true, backend=biber, style=authoryear, citestyle=authoryear, maxcitenames=2, natbib=true]{biblatex}
 
 % src: http://codydunne.blogspot.com/2012/01/suppressing-bibtex-fields-for-specific.html 
 
@@ -55,12 +55,22 @@
 	}
 }
 
-\addbibresource{refs.bib}
+\addbibresource{bib/assumptions.bib}
+\addbibresource{bib/convex_neural_networks.bib}
+\addbibresource{bib/datasets.bib}
+\addbibresource{bib/general_refs.bib}
+\addbibresource{bib/gradient_methods.bib}
+\addbibresource{bib/interpolation.bib}
+\addbibresource{bib/lower_bounds.bib}
+\addbibresource{bib/monographs.bib}
+\addbibresource{bib/step_sizes.bib}
 
 %% load macros and pre-defined symbols
 \input{macros/math}
 %% macros for paragraph mode
 \input{macros/paragraph}
+
+\frenchspacing
 
 %% (optional) load tikz and PGFplots
 % \input{macros/plots}
