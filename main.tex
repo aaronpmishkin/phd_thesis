@@ -42,6 +42,21 @@
 \usepackage{parskip}    % paragraph formatting
 %\usepackage{todonotes}  % inline todo notes 
 
+
+% bibliography management
+\RequirePackage[backend=biber, style=authoryear, citestyle=authoryear, maxcitenames=2, natbib=true]{biblatex}
+
+% src: http://codydunne.blogspot.com/2012/01/suppressing-bibtex-fields-for-specific.html 
+
+\AtEveryBibitem{
+	\ifentrytype{book}{}{% Remove publisher and editor except for books
+		\clearlist{publisher}
+		\clearname{editor}
+	}
+}
+
+\addbibresource{refs.bib}
+
 %% load macros and pre-defined symbols
 \input{macros/math}
 %% macros for paragraph mode
@@ -97,11 +112,7 @@
 
 % === Appendices End === %
 
-% bibliography.tex should include either 
-% \bibliographystyle{...}
-% \bibliography{mythesis}
-% or some other way of doing the bibliography
-%\include{bibliography}
+\printbibliography[]
 
 \end{document}
 
