@@ -3,7 +3,7 @@
 \chapter{Introduction}\label{chapter:introduction}
 
 In 2012, AlexNet won the ImageNet Large Scale Visual Recognition Challenge
-\citep{deng2009imagenet} and marked the ascendency of deep neural networks in
+\citep{deng2009imagenet} and completed the ascendency of deep neural networks in
 machine learning, a process which (arguably) began with Geoffrey Hinton's
 famous MNIST digit generation demo in 2006 \citep{hinton2006deep}.
 AlexNet won the competition with a top-five accuracy of \( 84.7\%  \) and at
@@ -21,11 +21,11 @@ performance reflect the rapid advances machine learning has made since 2012.
 While AlexNet took approximately seven days to train on two NVIDIA GTX 580 GPUs
 \citep{krizhevksy2012alexnet}, Florence required 10 days to pre-train on 512
 NVIDIA A100 GPUs.
-This means Florence used roughly 365 times more GPU hours on machines with
-between 12 (32 bit precision) and 48 (16 bit precision)
+This means Florence used roughly 365 times more GPU hours on machines capable
+of either 12 (32 bit precision) or 48 (16 bit precision)
 times more FLOPS and with 20 times more memory than those used for AlexNet.
-Accounting for Florence's size and additional data implies a training
-efficiency compared to AlexNet between \( 0.68 \) and \( 2.74 \)
+Accounting for Florence's size and additional data yields a training
+efficiency between \( 0.68 \) and \( 2.74 \) relative to AlexNet
 \citep{a100, gpucomparison}.%
 \footnote{Florence uses mixed-precision training, so an exact performance
     comparison is difficult.}
@@ -37,26 +37,60 @@ training efficiency has stagnated.
 In other words, advances in optimization for neural networks have not matched
 the advances in neural networks themselves.
 
-The key challenge in optimization for neural networks is non-convexity.
-Unlike matrix factorization and other benign non-convex functions
+The key challenge to developing better optimizers for neural networks is
+non-convexity.
+Unlike matrix factorization and other benign non-convex problems
 \citep{burer2005low}, neural networks admit many saddle points and
 local extrema.
 As a result, global optimization for neural networks is NP-hard in general
 \citep{froese2023hard, blum1988complete}.
-Practitioners instead rely on stochastic gradient methods (SGMs) to find
-stationary points. 
-Despite the theoretical difficulty, highly accurate models are trained in practice using stochastic gradient methods (SGMs)~\citep{bengio2012practical}.
-Unfortunately, SGMs cannot guarantee convergence to a local optimum of the non-convex training loss~\citep{ge2015escaping} and existing methods rarely certify convergence to a stationary point of any type~\citep{goodfellow2016deeplearning}.
-SGMs are also sensitive to hyper-parameters;
-they converge slowly, to different stationary points~\citep{neyshabur2017implicit}, or even diverge depending on the choice of step-size.
-Parameters like the random seed complicate replications and can produce model churn, where networks learned using the same procedure give different predictions for the same inputs~\citep{henderson2018deep, bhojanapalli2021reproducibility}.
-See \autoref{fig:synthetic-classification} for an example.
-For most applications, practitioners use domain knowledge and costly hyper-parameter search to cope with these challenges.
+Faced with this formal hardness guarantee, practitioners rely on stochastic
+gradient methods (SGMs) to approximately minimize the training objective.
+However, SGMs do not guarantee convergence to a local optimum \citep{ge2015escaping}
+and existing methods rarely certify convergence to a stationary point of any
+type \citep{goodfellow2016deeplearning}.
+They are also slow from a theoretical perspective:
+lower bounds show that SGMs require at least \( \Omega(\epsilon^{-4}) \) iterations
+to compute an \( \epsilon \)-stationary point \citep{arjevani2023lower, drori2020complexity}.
+In stark contrast, for smooth, convex functions a stationary point can be
+computed in \( \tilde{O}(\epsilon^{-1/2}) \) iterations using acceleration
+\citep{nesterov2018lectures}.
 
+In addition to being theoretically slow, SGMs are also highly sensitive to
+their hyper-parameter settings.
+For example, they converge slowly or may even diverge depending on the choice
+of step-size and/or momentum parameters \citep{zhang2022adam}.
+Parameters like the random seed complicate replications and can produce model
+churn, where networks learned using the same procedure give different
+predictions for the same inputs \citep{henderson2018deep,
+    bhojanapalli2021reproducibility}.
+Although some authors have argued that these hyper-parameters make
+SGMs more adaptable \citep{choi2019empirical}, attaining this adaptivity
+requires the parameters to be carefully tuned for each problem
+\citep{sivaprasad2020tuning}.
+Non-convexity is again a critical challenge:
+standard solutions to tuning like line-search
+\citep{armijo1966ls} and restarts \citep{odonoghue2015restarts} cannot be
+applied to non-smooth, non-convex neural networks.
+Instead, practitioners are forced to rely on domain knowledge and costly,
+input-intensive algorithms like grid-search.
 
-Moreover, non-convexity prevents practitioners from using fast optimization
-methods like Nesterov acceleration \citep{nesterov1983method}
-
+Non-convexity is also the main barrier to understanding basic properties of the
+neural network training problem.
+For non-convex problems, stationarity of the training objective does not imply
+optimality of the network weights.
+Without strong optimality conditions, understanding of global optima has been
+limited to embedding principles \citep{fukumizu2000plateau,
+    zhang2021embedding}, mode connectivity \citep{garipov2018mode}, and existence
+arguments for optimal manifolds under restricted architectures
+\citep{cooper2021global}.
+This is in stark contrast to generalized linear models with \( \ell_2 \)
+or \( \ell_1 \) penalties;
+for example, it is well-known that the lasso \citep{tibshirani1996regression}
+has a piece-wise linear path~\citep{osborne2000new, efron2004least},
+a polyhedral solution set~\citep{tibshirani2013unique}, and
+admits efficient algorithms for computing
+minimal solutions~\citep{tibshirani2013unique}.
 
 \section{Preliminaries and Assumptions}
 
