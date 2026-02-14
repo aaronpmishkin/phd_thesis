@@ -37,7 +37,7 @@ training efficiency has stagnated.
 In other words, advances in optimization for neural networks have not matched
 the advances in neural networks themselves.
 
-The key challenge to developing better optimizers for neural networks is
+The challenge to developing better optimizers for neural networks is
 non-convexity.
 Unlike matrix factorization and other benign non-convex problems
 \citep{burer2005low}, neural networks admit many saddle points and
@@ -57,7 +57,7 @@ computed in \( \tilde{O}(\epsilon^{-1/2}) \) iterations using acceleration
 \citep{nesterov2018lectures}.
 
 In addition to being theoretically slow, SGMs are also highly sensitive to
-their hyper-parameter settings.
+their hyper-parameters.
 For example, they converge slowly or may even diverge depending on the choice
 of step-size and/or momentum parameters \citep{zhang2022adam}.
 Parameters like the random seed complicate replications and can produce model
@@ -79,18 +79,56 @@ Non-convexity is also the main barrier to understanding basic properties of the
 neural network training problem.
 For non-convex problems, stationarity of the training objective does not imply
 optimality of the network weights.
-Without strong optimality conditions, understanding of global optima has been
-limited to embedding principles \citep{fukumizu2000plateau,
+Without strong optimality conditions, characterizations of global optima have
+been limited to embedding principles \citep{fukumizu2000plateau,
     zhang2021embedding}, mode connectivity \citep{garipov2018mode}, and existence
 arguments for optimal manifolds under restricted architectures
 \citep{cooper2021global}.
 This is in stark contrast to generalized linear models with \( \ell_2 \)
 or \( \ell_1 \) penalties;
 for example, it is well-known that the lasso \citep{tibshirani1996regression}
-has a piece-wise linear path~\citep{osborne2000new, efron2004least},
-a polyhedral solution set~\citep{tibshirani2013unique}, and
+has a piece-wise linear regularization path \citep{osborne2000new, efron2004least},
+a polyhedral solution set \citep{tibshirani2013unique}, and
 admits efficient algorithms for computing
-minimal solutions~\citep{tibshirani2013unique}.
+minimal solutions \citep{tibshirani2013unique}.
+Optimization has not just fallen behind on training algorithms for neural
+networks, but also on the fundamental theory of training problems.
+
+This thesis tackles the optimization gap for neural networks using convex
+reformulations.
+Convex reformulations re-write the non-convex training problem for a neural
+network as a convex program by lifting it into a higher dimensional space
+\citep{pilanci2020convexnn}.
+Crucially, the resulting problem is finite-dimensional.
+As such, convex reformulations are distinct from convexifications of neural
+networks based on infinite-width relaxations
+\citep{bach2017breaking, bengio2006convex}.
+Indeed, convex reformulations can be viewed as providing a finite
+discretization for the measure optimization problem arising in the
+infinite-width setting.
+Since their introduction for two-layer ReLU networks by
+\citet{pilanci2020convexnn}, convex reformulations have been developed for many
+other shallow architectures, including for convolutions
+\citep{sahiner2020convex,ergen2021implicit,gupta2021exact}, vector-outputs
+\citep{sahiner2021vector}, batch normalization \citep{ergen2021demystifying},
+generative models \citep{sahiner2021hidden} and polynomial activations
+\citep{bartan2021polynomial}.
+
+We focus on convex reformulations of two-layer neural networks with ReLU
+activation functions.
+ReLU activations are among the most popular in machine learning
+\citep{szandala2020review} and two-layer ReLU networks are widely used in
+reinforcement learning \citep{gaur2023global}, prediction on edge devices
+\citep{teerapittayanon2017distributed}, and word-embeddings
+\citep{mikolov2013word}.
+They are also basic components of standard transformer blocks and can be used
+to model self attention \citep{sahiner2022attention}.
+Empirical evidence shows that greedy layer-wise training of deep ReLU networks
+with respect to two-layer blocks is competitive with standard
+end-to-end learning.
+From a theoretical perspective, two-layer ReLU networks are highly attractive
+because they are universal approximators while still being restricted to the
+class of piece-wise linear predictors \citep{huang2020universal}.
 
 \section{Preliminaries and Assumptions}
 
