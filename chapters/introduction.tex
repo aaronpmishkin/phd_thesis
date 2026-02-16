@@ -37,11 +37,11 @@ training efficiency has stagnated.
 In other words, advances in optimization for neural networks have not matched
 the advances in neural networks themselves.
 
-The challenge to developing better optimizers for neural networks is
+The key challenge to developing better optimizers for neural networks is
 non-convexity.
 Unlike matrix factorization and other benign non-convex problems
 \citep{burer2005low}, neural networks admit many saddle points and
-local extrema.
+local extrema \citep{safran2018local, dauphin2014saddles}.
 As a result, global optimization for neural networks is NP-hard in general
 \citep{froese2023hard, blum1988complete}.
 Faced with this formal hardness guarantee, practitioners rely on stochastic
@@ -78,10 +78,11 @@ input-intensive algorithms like grid-search.
 Non-convexity is also the main barrier to understanding basic properties of the
 neural network training problem.
 For non-convex problems, stationarity of the training objective does not imply
-optimality of the network weights.
+global optimality of the network weights.
 Without strong optimality conditions, characterizations of global optima have
-been limited to embedding principles \citep{fukumizu2000plateau,
-    zhang2021embedding}, mode connectivity \citep{garipov2018mode}, and existence
+been limited to embedding principles
+\citep{fukumizu2000plateau, zhang2021embedding}, mode connectivity
+\citep{garipov2018mode, draxler2018barriers}, and existence
 arguments for optimal manifolds under restricted architectures
 \citep{cooper2021global}.
 This is in stark contrast to generalized linear models with \( \ell_2 \)
@@ -92,7 +93,8 @@ a polyhedral solution set \citep{tibshirani2013unique}, and
 admits efficient algorithms for computing
 minimal solutions \citep{tibshirani2013unique}.
 Optimization has not just fallen behind on training algorithms for neural
-networks, but also on the fundamental theory of training problems.
+networks, but also on the fundamental theory of neural network training
+problems.
 
 This thesis tackles the optimization gap for neural networks using convex
 reformulations.
@@ -116,19 +118,24 @@ generative models \citep{sahiner2021hidden} and polynomial activations
 
 We focus on convex reformulations of two-layer neural networks with ReLU
 activation functions.
-ReLU activations are among the most popular in machine learning
-\citep{szandala2020review} and two-layer ReLU networks are widely used in
-reinforcement learning \citep{gaur2023global}, prediction on edge devices
-\citep{teerapittayanon2017distributed}, and word-embeddings
-\citep{mikolov2013word}.
-They are also basic components of standard transformer blocks and can be used
-to model self attention \citep{sahiner2022attention}.
-Empirical evidence shows that greedy layer-wise training of deep ReLU networks
-with respect to two-layer blocks is competitive with standard
-end-to-end learning.
 From a theoretical perspective, two-layer ReLU networks are highly attractive
 because they are universal approximators while still being restricted to the
 class of piece-wise linear predictors \citep{huang2020universal}.
+However, ReLU activations are also among the most popular in machine learning
+\citep{szandala2020review} and two-layer ReLU networks are fundamental building
+blocks of many important models.
+For instance, deep ReLU networks are simply stacks of two-layer modules and
+training by greedy sequential optimization of these blocks can be competitive
+with end-to-end training \citep{belilovsky2019greedy}.
+Two layer-ReLU networks are basic components of standard transformer blocks,
+can be used to model self attention \citep{sahiner2022attention}, and are
+widely used for reinforcement learning \citep{gaur2023global}, prediction on
+edge devices \citep{teerapittayanon2017distributed}, and word-embeddings
+\citep{mikolov2013word}.
+As such, advances in training and theory for two-layer networks stands to
+impact many areas of machine learning.
+
+
 
 \section{Preliminaries and Assumptions}
 
