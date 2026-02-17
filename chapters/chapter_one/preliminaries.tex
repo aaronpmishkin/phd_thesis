@@ -44,8 +44,8 @@ an explicit sum over neurons in the hidden layer,
 Note that since \( c = 1 \), there is no weight sharing and \( W^{(2)} \in \R^{d_2 \times 1} \)
 is a column vector.
 
-We consider choosing \( \theta \) by solving regularized empirical risk
-minimization problems given the fixed training set \( (X, y) \).
+We consider choosing \( \theta \) by solving a regularized empirical risk
+minimization problem using the fixed training set \( (X, y) \).
 That is, problems of the form,
 \begin{equation}\label{eq:regularized-erm}
     \theta^* \in \argmin_{\theta \in \Theta}
@@ -66,8 +66,8 @@ highly non-linear and itself non-convex.
 As a result, Problem~\ref{eq:regularized-erm} is challenging to solve in both
 theory and practice.
 
-The most common choice of \( \calL \) and \( \R \) in practice are
-squared error and weight-decay regularization, respectively.
+The most common choice of \( \calL \) and \( \R \) in practice are squared
+error and \( \ell_2 \)-squared (weight-decay) regularization, respectively.
 This leads to the following concrete optimization problem:
 \begin{equation}\label{eq:squared-error}
     \theta^* \in \argmin_{\theta \in \Theta}
@@ -76,45 +76,53 @@ This leads to the following concrete optimization problem:
 \end{equation}
 where \( \norm{\cdot}_F \) is the Frobenius norm given by the sum of squared entries,
 \[
-    \norm{\Wl}_F = \rbr{\sum_{i, j} \Wl_{i, j}}^2^{1/2}.
+    \norm{W}_F = \rbr{\sum_{i, j} W_{i, j}^2}^{1/2}.
 \]
-The squared-error loss function is standard for regression problems and
-recent work has shown that it performs comparable to cross-entropy for
+The squared-error loss function is equivalent to assuming a Gaussian likelihood
+function and is a standard choice for regression problems.
+Recent work has also shown that it performs comparably to cross-entropy for
 classification problems \citep{hui2021evaluation}.
+Similarly, \( \ell_2 \)-squared regularization is comparable to assuming
+a Gaussian prior on the model weights;
+from an optimization perspective, it is desirable because it gives curvature to
+objective function, ensuring that \( F_\lambda \) is coercive and that the
+level sets are compact.
 
-Our analysis will work by considering the space of activation patterns that
-can be attained by a single ReLU neuron.
-Given a matrix \( A \in \R^{a \times b} \), set of activation patterns for \( A \) is
-\begin{equation}
-    \calD(X) = \cbr{ \text{diag}\rbr{\mathds{1}\rbr{ X w \geq 0}}: w \in \R^d }.
-\end{equation}
-Note that each pattern \( D_i \in \calD(X) \) is a diagonal matrix with \(
-[D_i]_{jj} = 1 \) if \( x_i^\top w \geq 0 \) and \( 0 \) otherwise.
-Each activation pattern is associated with a convex cone of vectors which
-are consistent with that pattern,
-\begin{equation}
-    \calK_i(X) = \cbr{w : (2D_i - I) X w \geq 0 }.
-\end{equation}
-It is straightforward to show that \( w \in \calK_i(X) \) if and only if \(
-(Xw)_+ = D_i X w \), i.e. \( D_i \) linearizes the ReLU activation.
 
-To reduce the burden of notation, let \( X^{(1)} = X \) and \( \calD^{(1)} =
-\calD(X) \).
-Let \( D^{(1)}_i \in \calD^{(1)} \) denote the activation patterns associated
-with \( X^{(1)} \) and \( \calK^{(1)}_i \) the associated cone.
-The total number of activation patterns is \( p_1 = \abs{\calD^{(1)}} \).
-Let \( a_1 = d_1 \) so that \( X^{(1)} \in \R^{n \times a_1} \).
-Then, we can recursively define,
-\begin{equation}
-    X^{(l+1)} =
-    \begin{bmatrix}
-        \Dl_1 \Xl & \ldots & \Dl_{p_{l}} \Xl
-    \end{bmatrix}
-    ,
-\end{equation}
-\( \calDl = \calD(\Xl) \), \( \Dl_i \in \calDl \) where \(
-\calKl_i \) is the associated cone, and \( p_l = \abs{\calD^l} \).
-Note that \( X^{(l+1)} \in \R^{n \times p_{l} \cdot a_{l}} \), which implies \(
-a_{l+1} = p_{l} \cdot a_{l} \).
-These objects will allow us to reason about the activation patterns of neural
-networks with more than two layers.
+
+%Our analysis will work by considering the space of activation patterns that
+%can be attained by a single ReLU neuron.
+%Given a matrix \( A \in \R^{a \times b} \), set of activation patterns for \( A \) is
+%\begin{equation}
+%    \calD(X) = \cbr{ \text{diag}\rbr{\mathds{1}\rbr{ X w \geq 0}}: w \in \R^d }.
+%\end{equation}
+%Note that each pattern \( D_i \in \calD(X) \) is a diagonal matrix with \(
+%[D_i]_{jj} = 1 \) if \( x_i^\top w \geq 0 \) and \( 0 \) otherwise.
+%Each activation pattern is associated with a convex cone of vectors which
+%are consistent with that pattern,
+%\begin{equation}
+%    \calK_i(X) = \cbr{w : (2D_i - I) X w \geq 0 }.
+%\end{equation}
+%It is straightforward to show that \( w \in \calK_i(X) \) if and only if \(
+%(Xw)_+ = D_i X w \), i.e. \( D_i \) linearizes the ReLU activation.
+
+%To reduce the burden of notation, let \( X^{(1)} = X \) and \( \calD^{(1)} =
+%\calD(X) \).
+%Let \( D^{(1)}_i \in \calD^{(1)} \) denote the activation patterns associated
+%with \( X^{(1)} \) and \( \calK^{(1)}_i \) the associated cone.
+%The total number of activation patterns is \( p_1 = \abs{\calD^{(1)}} \).
+%Let \( a_1 = d_1 \) so that \( X^{(1)} \in \R^{n \times a_1} \).
+%Then, we can recursively define,
+%\begin{equation}
+%    X^{(l+1)} =
+%    \begin{bmatrix}
+%        \Dl_1 \Xl & \ldots & \Dl_{p_{l}} \Xl
+%    \end{bmatrix}
+%    ,
+%\end{equation}
+%\( \calDl = \calD(\Xl) \), \( \Dl_i \in \calDl \) where \(
+%\calKl_i \) is the associated cone, and \( p_l = \abs{\calD^l} \).
+%Note that \( X^{(l+1)} \in \R^{n \times p_{l} \cdot a_{l}} \), which implies \(
+%a_{l+1} = p_{l} \cdot a_{l} \).
+%These objects will allow us to reason about the activation patterns of neural
+%networks with more than two layers.

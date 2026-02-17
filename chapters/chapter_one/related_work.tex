@@ -1,4 +1,84 @@
 %!TEX root=../../main.tex
 
+Attempts to develop convex versions of neural networks have a long history that
+originates in large-width analyses of shallow networks.
+\citet{neal1996priors} were the first to show that infinite-width two-layer
+neural networks with appropriate priors on the network weights converge to
+convex Gaussian process models.
+\citet{williams1996computing} then gave an exact form for the covariance
+function of these processes.
+Recently, many works have extended the Gaussian process characterization to
+large-width limits of deep neural networks
+\citep{lee2019deep, matthews2018deep}, convolutional networks
+\citep{novak2019convolutional, alonso2019convolutional}, and recurrent
+architectures \citep{yang2019recurrent}.
+However, these models rely on a Bayesian approach that views the network
+weights as random variables and does not account for training dynamics.
 
+Another convexification of infinite-width neural networks is given by
+the neural tangent kernel (NTK) \citep{jacot2018ntk}.
+The innovation of the NTK is to extend the Gaussian process
+dynamics to describe the behavior of the network during training;
+this is achieved by showing that the effects of training vanish in the
+infinite-width limit and the network remains at the kernel specified by the
+choice of initialization.
+NTK dynamics have been the target of intense study by the machine learning
+community and extensions have been developed for convolutions
+\citep{arora2019ntk}, graph neural networks \citep{du2019graph} and general
+architectures \citep{yang2020tensor}, among other models.
 
+A major criticism of the NTK approach is that it does not capture feature
+learning.
+Since the effect of training vanishes as the network becomes arbitrarily wide,
+NTK models remain arbitrarily close to their initializations in the so-called
+``lazy training regime'' \citep{chizat2019lazy}.
+The mean-field, or ``rich training regime'', is an alternative large-width
+limit for two-layer neural networks where the model converges to a signed
+measure over an uncountably infinite number of basis functions
+\citep{bach2017breaking, mei2018mean}.
+In this formulation, the prediction function is an affine map with respect to
+the basis expansion, meaning training mean-field networks is a fully convex,
+although infinite-dimensional, problem.
+The mean-field approach originates with \citet{bengio2006convex} and
+\citet{rosset2007regularization}, who use convex boosting sub-problems to find
+optimal networks where number of units is chosen automatically by a sparsity
+inducing norm.
+More recent work has focused on the convergence of gradient flows for the
+measure optimization problem \citep{chizat2018convergence} and extensions
+of the mean-field regime to deeper networks
+\citep{yang2020tensor, sirignano2022mean, chizat2024speed}.
+
+Although the mean-field regime has been key to demonstrating provable
+feature-learning in neural networks, infinite-width problems are impractical to
+solve and do not yield direct insights into finite training problems.
+Convex reformulations solve both of these problems by providing finite-size
+convex versions of neural networks.
+Key steps towards convex reformulations were achieved by
+\citet{bartan2019relaxations}, who gave a convex relaxation of convolutional
+networks, and \citet{ergen2020convex}, who derived a convex, semi-infinite dual
+problem for two-layer ReLU models.
+\citet{pilanci2020convexnn} gave the first proper convex reformulation by
+computing the associated bi-dual and simplifying it using the piece-wise
+linear structure of ReLU activations.
+The resulting problem is equivalent to a finite discretization of the
+mean-field limit for two-layer ReLU networks.
+
+The space of convex reformulations has steadily expanded since
+\citet{pilanci2020convexnn}.
+In addition to the works mentioned at the start of this chapter, convex
+reformulations have been developed for deep parallel networks
+\citep{ergen2021beyond, wang2023parallel}, threshold activations
+\citep{ergen2023threshold}, and quantized networks \citep{bartan2021quantized}.
+Other papers have explored the connections between convex reformulations and
+the NTK \citep{dwaraknath2023ntk} and established approximation bounds
+for lower-dimensional relaxations \citep{kim2024convex}.
+\citet{lacotte2020hidden} use convex reformulations to show that spurious local
+minima vanish if the network is sufficiently wide, while \citet{wang2021hidden}
+show that local minima correspond to sub-sampled convex reformulations.
+
+Finally, we briefly mention input convex networks
+\citep{amos2017input, sivaprasad2021curious}.
+Input convex networks are neural networks for which the predictions are a
+convex function of the input features, rather than the model parameters.
+This approach is completely distinct from convex reformulations and does not
+address the challenge of the non-convex training problem.
