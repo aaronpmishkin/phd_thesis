@@ -1,0 +1,23 @@
+\begin{table*}[t]
+	\centering
+	\begin{tabular}{lllllll} \toprule
+		                 & \multicolumn{3}{c}{Training Objective} & \multicolumn{3}{c}{Test Accuracy}                                                                            \\ \cmidrule(r){2-4} \cmidrule(l){5-7}
+		\textbf{Dataset} & \textbf{C-GReLU}                       & \textbf{C-ReLU}                   & \textbf{NC-ReLU} & \textbf{C-GReLU} & \textbf{C-ReLU} & \textbf{NC-ReLU} \\ \midrule
+		statlog-heart    & 0.007 (0.01)                           & 0.019 (0.055)                     & 0.02             & 77.3 (77.3)      & 75.0 (74.4)     & 72.7             \\
+		vertebral-col.   & 0.026 (0.076)                          & 0.156 (0.194)                     & 0.179            & 79.6 (81.6)      & 81.6 (84.0)     & 82.0             \\
+		cardiotocogr.    & 0.033 (0.035)                          & 0.043 (0.046)                     & 0.074            & 91.5 (90.9)      & 88.5 (87.1)     & 91.2             \\
+		abalone          & 0.094 (0.096)                          & 0.098 (0.1)                       & 0.248            & 63.5 (63.3)      & 61.7 (61.0)     & 65.3             \\
+		car              & 0.04  (0.04)                           & 0.045 (0.046)                     & 0.116            & 81.2 (80.1)      & 76.5 (76.9)     & 88.1             \\
+		breast-cancer    & 0.024 (0.034)                          & 0.066 (0.145)                     & 0.075            & 71.7 (65.2)      & 65.2 (67.4)     & 65.2             \\
+		contrac          & 0.08  (0.092)                          & 0.095 (0.102)                     & 0.251            & 54.5 (55.1)      & 57.2 (53.6)     & 56.8             \\
+		congressional    & 0.383 (0.384)                          & 0.385 (0.389)                     & 0.385            & 60.0 (58.6)      & 58.6 (60.0)     & 58.6             \\
+		synthetic        & 0.01  (0.013)                          & 0.015 (0.019)                     & 0.037            & 99.0 (97.9)      & 99.0 (97.9)     & 97.9             \\
+		musk-1           & 0.003 (0.005)                          & 0.007 (0.013)                     & 0.008            & 90.8 (85.5)      & 92.1 (88.3)     & 92.1             \\
+		ecoli            & 0.015 (0.019)                          & 0.019 (0.021)                     & 0.086            & 90.6 (90.6)      & 88.9 (85.2)     & 90.7             \\
+		hill-valley      & 0.197 (0.405)                          & 0.411 (0.412)                     & 0.458            & 57.7 (61.9)      & 63.9 (66.0)     & 57.7             \\ \bottomrule
+	\end{tabular}
+	\caption{Comparison of the full path active set strategy for C-ReLU and NC-ReLU against the same problems with a fixed set of 100 activation patterns (shown in parenthesis) and NC-ReLU solved with SGD.
+		We report the median training objective and test accuracy from five-fold cross validation.
+	}%
+	\label{table:active-set-short}
+\end{table*}

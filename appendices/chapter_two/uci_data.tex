@@ -1,0 +1,103 @@
+%!TEX root = ../main.tex
+
+\section{UCI Datasets}\label{app:uci-datasets}
+
+We use the binary and multi-class classification datasets from the UCI machine learning repository~\citep{dua2019uci} as pre-processed by \citet{delgado2014hundreds}.
+Note that we do not use the same training/validation/test procedure as \citet{delgado2014hundreds}, since this is known to have test-set leakage.
+We applied the following selection rules to decide which datasets to retain for our experiments:
+\begin{itemize}
+	\item at least 150 examples and 5 features;
+	\item no more than 50000 examples and 10 classes;
+	\item no duplicated datasets with different targets or features.
+\end{itemize}
+This left the following 73 datasets from the original collection of 121:
+\texttt{abalone},
+\texttt{adult},
+\texttt{annealing},
+\texttt{bank},
+\texttt{breast-cancer},
+\texttt{breast-cancer-wisc-diag},
+\texttt{car},
+\texttt{cardiotocography-3clases},
+\texttt{chess-krvkp},
+\texttt{congressional-voting},
+\texttt{conn-bench-sonar-mines-rocks},
+\texttt{contrac},
+\texttt{credit-approval},
+\texttt{cylinder-bands},
+\texttt{dermatology},
+\texttt{ecoli},
+\texttt{energy-y1},
+\texttt{flags},
+\texttt{glass},
+\texttt{heart-cleveland},
+\texttt{heart-hungarian},
+\texttt{heart-va},
+\texttt{hepatitis},
+\texttt{hill-valley},
+\texttt{horse-colic},
+\texttt{ilpd-indian-liver},
+\texttt{image-segmentation},
+\texttt{ionosphere},
+\texttt{led-display},
+\texttt{low-res-spect},
+\texttt{magic},
+\texttt{mammographic},
+\texttt{molec-biol-splice},
+\texttt{monks-2},
+\texttt{monks-3},
+\texttt{mushroom},
+\texttt{musk-1},
+\texttt{musk-2},
+\texttt{nursery},
+\texttt{oocytes\_merluccius\_nucleus\_4d},
+\texttt{oocytes\_trisopterus\_nucleus\_2f},
+\texttt{optical},
+\texttt{ozone},
+\texttt{page-blocks},
+\texttt{parkinsons},
+\texttt{pendigits},
+\texttt{pima},
+\texttt{planning},
+\texttt{primary-tumor},
+\texttt{ringnorm},
+\texttt{seeds},
+\texttt{semeion},
+\texttt{spambase},
+\texttt{statlog-australian-credit},
+\texttt{statlog-german-credit},
+\texttt{statlog-heart},
+\texttt{statlog-image},
+\texttt{statlog-landsat},
+\texttt{statlog-vehicle},
+\texttt{steel-plates},
+\texttt{synthetic-control},
+\texttt{teaching},
+\texttt{thyroid},
+\texttt{tic-tac-toe},
+\texttt{twonorm},
+\texttt{vertebral-column-2clases},
+\texttt{wall-following},
+\texttt{waveform},
+\texttt{waveform-noise},
+\texttt{wine},
+\texttt{wine-quality-red},
+\texttt{wine-quality-white},
+\texttt{yeast}
+
+\textbf{Optimization Performance}:
+For our experiments evaluating optimization performance, we considered all 73 datasets and generated \( 6 * 73 = 438 \) optimization problems by considering the following grid of regularization parameters:
+\[
+	\lambda \in \cbr{1 \times 10^{-5},
+		6.31 \times 10^{-5},
+		3.98 \times 10^{-4},
+		2.51 \times 10^{-3},
+		1.58 \times 10^{-2},
+		1.0 \times 10^{-1}}
+\]
+We did a single train/test split for each dataset and report optimization metrics on the training set only.
+The test was used for heuristic ``sanity checks'' of the final models.
+
+\textbf{Model Performance}:
+For our experiments evaluating generalization or test performance of different models, we randomly selected a subset of the filtered UCI datasets.
+We report the regularization parameters considered for each experiment in the appropriate section.

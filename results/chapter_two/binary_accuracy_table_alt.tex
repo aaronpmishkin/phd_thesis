@@ -1,0 +1,37 @@
+\begin{table}[t]
+	\centering
+	\caption{Additional results comparing our convex solvers against random forests (RF), SVMs with a linear kernel (Linear)
+		and SVMs with an RBF kernel (RBF).
+		We report test accuracies on a further 19 UCI datasets.
+		Combined, C-GReLU and C-ReLU obtain the best test accuracy on 10 datasets.
+		Out of the baselines considered, RBF SVMs are the most competitive with our approach,
+		attaining or tying for best accuracy on 9 datasets.
+	}%
+	\label{table:binary-uci-accuracies-alt}
+	\vspace{0.1in}
+	\begin{small}
+		\begin{tabular}{lccccc} \toprule
+			\textbf{Dataset}  & \textbf{C-GReLU} & \textbf{C-ReLU} & \textbf{RF}   & \textbf{SVM}  & \textbf{RBF}  \\ \midrule
+			breast-cancer     & 73.7             & 70.2            & \textbf{75.4} & 68.4          & 68.4          \\
+			congressional     & 66.7             & 65.5            & 65.5          & \textbf{67.8} & \textbf{67.8} \\
+			credit-approval   & 84.1             & 84.1            & \textbf{85.5} & \textbf{85.5} & 84.8          \\
+			echocardiogram    & 80.8             & 76.9            & \textbf{88.5} & 84.6          & 84.6          \\
+			haberman-survival & 67.2             & \textbf{75.4}   & 70.5          & 70.5          & 70.5          \\
+			hepatitis         & 80.6             & 80.6            & \textbf{83.9} & 77.4          & 77.4          \\
+			horse-colic       & 88.3             & 86.7            & \textbf{93.3} & 90.0          & \textbf{93.3} \\
+			ionosphere        & 90.0             & 91.4            & 91.4          & 85.7          & \textbf{97.1} \\
+			molec-biol        & 76.2             & \textbf{81.0}   & 76.2          & \textbf{81.0} & 66.7          \\
+			monks-2           & \textbf{69.7}    & \textbf{69.7}   & 54.5          & 57.6          & \textbf{69.7} \\
+			monks-3           & \textbf{95.8}    & \textbf{95.8}   & \textbf{95.8} & 87.5          & 91.7          \\
+			musk-2            & 99.7             & \textbf{99.8}   & 97.3          & 95.1          & 99.6          \\
+			parkinsons        & 97.4             & 97.4            & 84.6          & 89.7          & \textbf{100}  \\
+			pittsburg         & \textbf{80.0}    & 75.0            & 75.0          & \textbf{80.0} & \textbf{80.0} \\
+			ringnorm          & 97.4             & 83.0            & 95.1          & 76.9          & \textbf{98.2} \\
+			spect             & 46.7             & 40.0            & 53.3          & \textbf{66.7} & \textbf{66.7} \\
+			statlog-austr.    & 65.9             & \textbf{66.7}   & 62.3          & 65.2          & 65.2          \\
+			statlog-heart     & 81.5             & \textbf{85.2}   & 83.3          & 81.5          & 81.5          \\
+			twonorm           & 97.6             & \textbf{97.7}   & 97.2          & 97.4          & 97.4          \\
+			vertebral-col.    & \textbf{91.9}    & \textbf{91.9}   & 87.1          & \textbf{91.9} & 90.3          \\ \bottomrule
+		\end{tabular}
+	\end{small}
+\end{table}

@@ -1,0 +1,36 @@
+\begin{table}[t]
+	\centering
+	\caption{Median test accuracies from five restarts on a subset of the UCI datasets.
+		Results are presented as \texttt{Gated ReLU} / \texttt{ReLU}.
+		Overall, we find the convex reformulations have comparable generalization to the non-convex networks.
+		Note the catastrophic failure of SGD on \texttt{ecoli}.
+		See Appendix~\ref{app:non-convex-solvers} for quartiles.}%
+	\label{table:non-convex-solvers}
+	\vspace{0.1in}
+	\begin{small}
+		\begin{tabular}{lccc} \toprule
+			\textbf{Dataset} & \textbf{Convex} & \textbf{Adam} & \textbf{SGD} \\ \midrule
+			magic            & 86.9  / 85.9    & 82.9 / 86.9   & 82.1 / 86.4  \\
+			statlog-heart    & 79.6  / 83.3    & 85.2 / 83.3   & 83.3 / 79.6  \\
+			mushroom         & 100 / 100       & 97.6 / 100    & 96.9 / 99.9  \\
+			vertebral-col.   & 87.1  / 90.3    & 90.3 / 90.3   & 90.3 / 88.7  \\
+			cardiotocogr.    & 90.1  / 89.9    & 85.6 / 36.5   & 85.2 / 88.9  \\
+			abalone          & 63.8  / 66.2    & 58.7 / 65.3   & 58.1 / 66.1  \\
+			annealing        & 90.6  / 90.6    & 86.2 / 93.7   & 86.2 / 88.7  \\
+			car              & 89.9  / 87.8    & 83.8 / 94.8   & 83.2 / 90.1  \\
+			bank             & 89.8  / 89.8    & 89.9 / 90.8   & 89.8 / 90.5  \\
+			breast-cancer    & 68.4  / 68.4    & 68.4 / 64.9   & 70.2 / 68.4  \\
+			page-blocks      & 96.8  / 94.0    & 92.1 / 97.1   & 92.4 / 96.9  \\
+			contrac          & 45.9  / 55.1    & 53.1 / 54.4   & 53.4 / 53.7  \\
+			congressional    & 63.2  / 63.2    & 64.4 / 62.1   & 66.7 / 67.8  \\
+			spambase         & 93.4  / 93.3    & 91.6 / 93.5   & 91.2 / 93.2  \\
+			synthetic        & 97.5  / 98.3    & 98.3 / 96.7   & 97.5 / 96.7  \\
+			musk-1           & 93.7  / 93.7    & 93.7 / 96.8   & 94.7 / 95.8  \\
+			ringnorm         & 69.8  / 77.0    & 77.0 / 77.3   & 77.2 / 77.4  \\
+			ecoli            & 82.1  / 80.6    & 79.1 / 82.1   & 4.5  / 80.6  \\
+			monks-2          & 69.7  / 69.7    & 66.7 / 69.7   & 60.6 / 72.7  \\
+			hill-valley      & 62.0  / 65.3    & 57.0 / 62.8   & 58.7 / 55.4  \\ \bottomrule
+		\end{tabular}
+		\vspace{-0.7cm}
+	\end{small}
+\end{table}

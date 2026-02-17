@@ -1,0 +1,33 @@
+%!TEX root = ../main.tex
+
+\section{Default Optimization Parameters}\label{app:default-parameters}
+
+In this section, we report the standard parameter settings for our optimizers.
+We use these parameters in all experiments unless explicitly stated otherwise.
+Note that data normalization (Appendix~\ref{app:data-normalization}) is applied in all experiments for both the convex and non-convex training problems.
+
+\subsection{R-FISTA}
+
+We set the backtracking parameter to \( \beta = 0.8 \) and the forward-tracking parameter to \( \alpha = 1.25 \).
+For the step-size initialization strategy, we set the threshold to be \( c = 5.0 \).
+We set the first step-size to be \( \eta_0 = 1.0 \).
+The restart strategy detailed in Section~\ref{sec:efficient-fista} is always used unless it is explicitly stated otherwise.
+Finally, we consider the optimizer to have (approximately) converged when the minimum-norm subgradient has \( \ell_2 \)-norm less than or equal to \( 10^{-3} \).
+In practice we check the equivalent condition on the squared gradient norm with the threshold \( 10^{-6} \).
+We always initialize the model weights as \( v_i = 0 \) for each \( D_i \in \tilde \calD \).
+
+\subsection{AL Method}
+
+We set the initial penalty parameter to be \( \delta = 100 \) and use the windowing heuristic with \( r_u = 10^{-2} \) and \( r_l = 10^{-3} \).
+The dual parameters are initialization at \( 0 \), as are the primal parameters.
+Note that we always warm-start the optimization of the augmented Lagrangian at the solution to the previous iteration's optimization problem.
+The convergence tolerance when checking for satisfaction of the windowing heuristic is set to be \( \text{tol} = 10^{-3/2} \).
+If the constraint gap is larger than \( r_u \), we increase \( \delta \) as \( \delta \gets 2 * \delta \) and repeat the procedure.
+If \( c_{\text{gap}} < r_l \), we set \( \delta \gets \delta / 2 \) and also change the convergence to be \( \text{tol} \gets \text{tol} / 2 \).
+
+The convergence tolerance for minimization of the augmented Lagrangian once the window heuristic is satisfied is \( \text{tol} = 10^{-3} \).
+We consider the AL method to have approximately converged when \( c_{\text{gap}} \leq 10^{-3} \) and the minimum norm subgradient of the augmented Lagrangian (with respect to the primal parameters) is also less than \( 10^{-3} \).
+
+To solve Equation~\eqref{eq:al-subroutine}, we use R-FISTA with the standard configuration as outlined in the previous section.
+We enforce a maximum of \( 1000 \) iterations for the sub-solver, meaning that we execute a step of the AL method after at most \( 1000 \) iterations of R-FISTA regardless of the termination tolerances.
+In general, we permit as many ``outer'' iterations of the AL method as needed since these do not require gradient computations, but limit the overall optimization procedure to \( 10000 \) iterations of R-FISTA.

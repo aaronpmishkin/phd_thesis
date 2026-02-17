@@ -1,0 +1,70 @@
+\subsection{UCI Classification}\label{app:uci-accuracies}
+
+This section gives experimental details and additional results for the experiments evaluating generalization performance of the convex reformulations.
+
+\textbf{Experimental Details}:
+We selected 37 binary classification datasets from our filtered collection of 73 datasets;
+see Appendix~\ref{app:uci-datasets} for details how the 73 datasets were obtained.
+
+We used the default parameters for each of the convex solvers as described in Appendix~\ref{app:default-parameters},
+except that a tighter convergence tolerance of \( 10^{-7} \) was used for terminating our methods.
+R-FISTA was limited to \( 2000 \) iterations.
+For the gated ReLU problems (both C-GReLU and NC-GReLU) we sampled the same set of \( 5000 \) activation patterns for both the convex reformulation and the original non-convex model.
+We used \( 2500 \) activation patterns for the C-ReLU problem.
+
+For each dataset-method pair, we performed five-fold cross validation on the training set
+to select hyper-parameters.
+We considered two hyper-parameters for our methods: regularization strength,
+and the proportion of examples active in each local model (ie. the number of
+non-zeros in each \( D_i \) matrix).
+For regularization strength, we optimized over a logarithmic grid with values
+	{ \small \(
+		\cbr{1\times 10^{-8},
+			3.59\times 10^{-8},
+			1.29\times 10^{-7},
+			4.64\times 10^{-7},
+			1.67\times 10^{-6},
+			5.99\times 10^{-6},
+			2.15\times 10^{-5},
+			7.74\times 10^{-5},
+			2.78\times 10^{-4},
+			1.0\times 10^{-3}}
+		\)
+	}.
+For the proportion of active examples, we considered (1) setting the bias term
+for each neuron to enforce \( 50 \% \) of examples to be active or (2)
+setting the bias to \( 0 \) and allowing the proportion to be random.
+
+For the baselines, we used the implementations available from
+the \texttt{scikit-learn} package.
+We optimized each random forest classifier with respect to the depth of
+the random trees in the ensemble (\( \cbr{2, 4, 10, 25, 50}\))
+and over the number of trees in the ensemble (\( \cbr{5, 10, 100, 1000} \)).
+We used the standard soft-margin SVM with and chose regularization parameter from
+the range
+\( \cbr{1.\times 10^{-5}, 1.\times 10^{-4}, 1.\times 10^{-3}, 1.\times 10^{-2}, 1.\times 10^{-1}, 1} \)
+for linear SVMs and
+\( \cbr{1\times 10^{-5},
+	1.78\times 10^{-4},
+	3.16\times 10^{-3},
+	5.62\times 10^{-2},
+	1} \)
+for SVMs with an RBF kernel.
+For RBF SVMs, the RBF bandwidth was optimized over the grid \( \cbr{1\times 10^{-4},
+	1.58\times 10^{-3},
+	2.51\times 10^{-2},
+	3.98\times 10^{-1},
+	6.31,
+	100.0} \).
+To obtain final test accuracies, we re-trained each method on the full training
+set.
+For our methods, we report the best test accuracy out of five random restarts.
+
+\input{results/chapter_two/binary_accuracy_table_alt}
+
+\textbf{Additional Results}:
+Table~\ref{table:binary-uci-accuracies-alt} reports test results for
+19 of the 37 datasets, while Table~\ref{table:binary-uci-accuracies} in the
+main paper presents results for the remaining 18 datasets.
+Overall, we find that two-layer neural networks trained using our convex
+solvers generally perform better than the baseline methods.

@@ -41,6 +41,9 @@
 
 \usepackage{parskip}    % paragraph formatting
 %\usepackage{todonotes}  % inline todo notes 
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{booktabs}
 
 
 % bibliography management
@@ -74,7 +77,7 @@
 \frenchspacing
 
 %% (optional) load tikz and PGFplots
-% \input{macros/plots}
+\input{macros/plots}
 
 %% certain types of theses require special title page format.  See the
 %% style file for the full list.  An example would be that for some of
@@ -116,7 +119,7 @@
 \include{chapters/chapter_one/chapter_one.tex}
 
 
-\include{chapters/chapter_two/fast_optimization}
+\include{chapters/chapter_two/chapter_two.tex}
 
 
 \include{chapters/chapter_three/solution_functions}
@@ -127,6 +130,8 @@
 % === Main Body Ends === %
 
 \appendix
+
+\include{appendices/chapter_two/chapter_two_appendix.tex}
 
 % === Appendices Begin === %
 

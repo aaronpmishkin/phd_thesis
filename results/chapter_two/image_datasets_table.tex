@@ -1,0 +1,27 @@
+\begin{table}
+	\centering
+	\caption{Test accuracy of R-FISTA for the C-GReLU problem compared to SGMs for NC-GReLU on two image classification tasks.
+		Models trained using the convex program have comparable test accuracy to the non-convex formulation on MNIST and are slightly better on CIFAR-10.
+	}%
+	\label{table:image-datasets}%
+	\vspace{0.1in}
+	\begin{small}
+		\begin{tabular}{lcccc} \toprule
+			\textbf{Dataset} & \textbf{Convex} & \textbf{Adam} & \textbf{SGD} & \textbf{Adagrad} \\ \midrule
+			MNIST            & 97.6            & 98.0          & 97.2         & 97.5             \\
+			CIFAR-10         & 56.4            & 50.1          & 54.3         & 54.2             \\\bottomrule
+		\end{tabular}
+	\end{small}
+\end{table}
+
+
+% \begin{table*}
+%     \centering
+% 	\begin{tabular}{lcccc} \toprule
+% 		\textbf{Dataset}     & \textbf{Convex}  & \textbf{Adam}    & \textbf{SGD} & \textbf{Adagrad} \\ \midrule
+% 		MNIST                & 97.6 & 96.5/11.0 & 96.4/97.2 & 97.0/97.5\\
+% 		CIFAR-10            &  56.4 & 51.9/44.4 & 56.4/53.6  & 55.7/53.9 \\\bottomrule
+% 	\end{tabular}
+% 	\caption{Something something caption}%
+% 	\label{table:image-datasets}
+% \end{table*}

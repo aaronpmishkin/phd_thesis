@@ -1,0 +1,32 @@
+\begin{table*}
+	\centering
+	\caption{Test accuracies for convex and non-convex formulations of the ReLU training problem on a subset of 20 datasets selected from the UCI dataset repository
+		Results are shown as \texttt{median (first-quartile/third-quartile)} for each method.}%
+	\label{table:uci-relu-accuracies}
+	\vspace{0.1in}
+	\begin{small}
+		\begin{tabular}{lccc} \toprule
+			\textbf{Dataset}     & \textbf{C-ReLU}  & \textbf{NC-ReLU (Adam)} & \textbf{NC-ReLU (SGD)} \\ \midrule
+			magic                & 85.9 (85.8/85.9) & 86.9 (86.9/86.9)        & 86.4 (86.3/86.4)       \\
+			statlog-heart        & 83.3 (81.5/83.3) & 83.3 (83.3/83.3)        & 79.6 (79.6/79.6)       \\
+			mushroom             & 100.0 (100/100)  & 100.0 (100/100)         & 99.9 (99.9/99.9)       \\
+			vertebral-column     & 90.3 (88.7/90.3) & 90.3 (90.3/90.3)        & 88.7 (88.7/88.7)       \\
+			cardiotocography     & 89.9 (89.9/89.9) & 36.5 (22.8/36.5)        & 88.9 (88.9/88.9)       \\
+			abalone              & 66.2 (66.1/66.3) & 65.3 (64.9/65.4)        & 66.1 (66.1/66.1)       \\
+			annealing            & 90.6 (89.9/90.6) & 93.7 (93.7/93.7)        & 88.7 (88.1/88.7)       \\
+			car                  & 87.8 (87.8/87.8) & 94.8 (94.8/94.8)        & 90.1 (90.1/90.1)       \\
+			bank                 & 89.8 (89.7/89.9) & 90.8 (90.8/90.9)        & 90.5 (90.5/90.5)       \\
+			breast-cancer        & 68.4 (66.7/68.4) & 64.9 (64.9/64.9)        & 68.4 (68.4/68.4)       \\
+			page-blocks          & 94.0 (94.0/94.0) & 97.1 (97.1/97.1)        & 96.9 (96.9/96.9)       \\
+			contrac              & 55.1 (54.1/55.4) & 54.4 (54.1/54.4)        & 53.7 (53.7/53.7)       \\
+			congressional-voting & 63.2 (63.2/65.5) & 62.1 (62.1/62.1)        & 67.8 (67.8/67.8)       \\
+			spambase             & 93.3 (93.2/93.4) & 93.5 (93.5/93.5)        & 93.2 (93.2/93.2)       \\
+			synthetic-control    & 98.3 (97.5/98.3) & 96.7 (96.7/96.7)        & 96.7 (96.7/96.7)       \\
+			musk-1               & 93.7 (93.7/93.7) & 96.8 (96.8/96.8)        & 95.8 (95.8/95.8)       \\
+			ringnorm             & 77.0 (76.8/77.0) & 77.3 (77.3/77.4)        & 77.4 (77.3/77.5)       \\
+			ecoli                & 80.6 (80.6/80.6) & 82.1 (82.1/82.1)        & 80.6 (80.6/80.6)       \\
+			monks-2              & 69.7 (69.7/72.7) & 69.7 (66.7/69.7)        & 72.7 (72.7/75.8)       \\
+			hill-valley          & 65.3 (64.5/65.3) & 62.8 (62.8/62.8)        & 55.4 (55.4/55.4)       \\ \bottomrule
+		\end{tabular}
+	\end{small}
+\end{table*}

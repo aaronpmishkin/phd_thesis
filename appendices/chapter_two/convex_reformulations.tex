@@ -1,0 +1,308 @@
+%!TEX root = ../main.tex
+
+\section{Convex Reformulations:\ Proofs}\label{app:convex-forms}
+
+\begin{restatable}{lemma}{miFormulation}\label{lemma:mi-reformulation}
+	The non-convex problem NC-ReLU (Problem \ref{convex-forms:eq:non-convex-relu-mlp}) is equivalent to the mixed-integer program,
+	\begin{equation}\label{convex-forms:eq:mi-reformulation}
+		\begin{aligned}
+			\min_{W_1, w_2} \; & \calL\Big(\sum_{i = 1}^m \rbr{X W_{1i}}_+ w_{2i}, y\Big) + \lambda \sum_{i = 1}^m \norm{W_{1i}}_2 \\
+			                   & \text{\emph{s.t.}} \; w_2 \in \cbr{-1, 1}^m.
+		\end{aligned}
+	\end{equation}
+\end{restatable}
+
+\begin{proof}
+	The proof proceeds in two steps: first we transform the objective into an equivalent problem which is invariant to certain scale re-parameterizations of the network parameters.
+	Then, we use these scale re-parameterizations reduce the two optimization problems to each-other.
+
+	Let \( p^* \) be the optimal value of the non-convex optimization problem and \( d^* \) the optimal value of the mixed-integer program.
+	The ReLU activation function,
+	\begin{align*}
+		\rbr{a}_+ = \max\cbr{a, 0},
+	\end{align*}
+	is positively homogeneous, meaning \( \rbr{a * \beta}_+ = \beta \rbr{a}_+ \) for any scalar \( \beta \geq 0 \).
+	Defining \( W_{1i}' = \beta_i W_{1i}, \, w_{2i}' = w_{2i} / \beta_i \), \( i \in [m] \), we have
+	\begin{align*}
+		h_{W_1, w_2}(X)
+		 & = \sum_{i=1}^m \rbr{X W_{1i} }_+ w_{2i}
+		= \sum_{i=1}^m \rbr{X W_{1i} \frac{\beta_i}{\beta_i}}_+ w_{2i} \\
+		 & = \sum_{i=1}^m \rbr{X W_{1i}'}_+ w_{2i}'
+		= h(W'_{1}, w_2'),
+	\end{align*}
+	implying that the loss \( \calL(\sum_{i=1}^m \rbr{X W_{1i} }_+ w_{2i}, y) \) is invariant to ``scale-shift'' re-parameterizations of this form.
+	To extend the invariance to the full objective function, recall Young's inequality,
+	\[
+		2 \abr{a, b} \leq a^2 + b^2,
+	\]
+	which yields,
+	\begin{align*}
+		\calL\rbr{\sum_{i = 1}^m \rbr{X W_{1i} }_+ w_{2i}, y } + \frac{\lambda}{2} \sum_{i = 1}^m \norm{W_{1i}}_2 + \abs{w_{2i}}^2
+		 & \geq \calL\rbr{ \sum_{i = 1}^m \rbr{X W_{1i} }_+ w_{2i}, y } + \lambda \sum_{i = 1}^m \norm{W_{1i}}\abs{w_{2i}}.
+	\end{align*}
+	For any choice of parameters \( W_{1i}, w_{2i} \), equality in this expression is achieved with the rescaling
+	\[
+		W_{1i}' = W_{1i} * \beta_i, \quad \quad w_{2i}' = w_{2i} / \beta_i,
+	\]
+	where \( \beta_i = \sqrt{\frac{w_{2i}}{\norm{W_{1i}}_2}} \).
+	As this rescaling does not affect \( h_{W_1, w_2} \), it must be that any global minimizer \( \theta^* = \rbr{W_{1}^*, w_{2}^*} \) of Problem~\ref{convex-forms:eq:non-convex-relu-mlp} achieves the lower-bound in Young's inequality and,
+	\begin{align}\label{convex-forms:eq:inner-product-reformulation}
+		\calL\rbr{\sum_{i = 1}^m \rbr{X W_{1i}^*}_+ w_{2i}^*, y} + \frac{\lambda}{2} \sum_{i = 1}^m \norm{W_{1i}^*}_2^2 + \abs{w_{2i}^*}^2
+		=
+		\calL\rbr{\sum_{i = 1}^m \rbr{X W_{1i}^*}_+ w_{2i}^*, y} + \lambda \sum_{i = 1}^m \norm{W_{1i}^*}_2\abs{w_{2i}^*}.
+	\end{align}
+	The right-hand side of this equation is invariant to scale re-parameterizations of the form \( W_{1i}' = \beta W_{1i}^*, w_{2i}' = w_{2i}^* / \beta \) for \( \beta > 0 \).
+	Taking \( \beta = \abs{w_{2i}} \), we deduce
+	\begin{align*}
+		p^* = \calL\rbr{\sum_{i = 1}^m \rbr{X W_{1i}'}_+ w_{2i}', y} + \lambda \sum_{i = 1}^m \norm{W'_{1i}}_2 \geq d^*.
+	\end{align*}
+
+	To show the reverse inequality, observe that every global minimum \( \rbr{W^*_1, w^*_2} \) of Problem~\ref{convex-forms:eq:mi-reformulation} is trivially in the domain of the non-convex ReLU training problem.
+	Using the mapping
+	\[ \rbr{W'_{1i}, w_{2i}'} = \rbr{\frac{W_{1i}^*}{\sqrt{\norm{W_{1i}^*}_2}}, w^*_{2i} \sqrt{\norm{W_{1i}^*}_2}}, \]
+	and plugging \( \rbr{W'_1, w'_{2}} \) into Problem~\ref{convex-forms:eq:non-convex-relu-mlp} shows \( d^* \geq p^* \).
+	We have shown \( p^* = d^* \) and so the problems are formally equivalent with mappings between the solutions as given above.
+
+\end{proof}
+
+\convexDualityFree*
+\begin{proof}
+	The proof proceeds by showing the equivalence of C-ReLU and the mixed integer problem given in \cref{convex-forms:eq:mi-reformulation} and the invoking \cref{lemma:mi-reformulation}.
+	Let \( p^* \) be the optimal value of the mixed-integer problem in~\eqref{convex-forms:eq:mi-reformulation} and \( d^* \) the optimal value of the convex program in~\eqref{convex-forms:eq:convex-relu-mlp}.
+	We first show that \( d^* \geq p^* \).
+
+	Suppose \( \rbr{v^*, w^*} \) is a global minimizer of Problem~\ref{convex-forms:eq:convex-relu-mlp} and let
+	\begin{align*}
+		\cbr{\rbr{W_{1k}^*, w_{2k}^*}} = \bigcup_{D_i \in \tilde \calD_i} \cbr{\rbr{v^*_i, 1} : v^*_i \neq 0} \cup \cbr{\rbr{w^*_i, -1} : w^*_i \neq 0},
+	\end{align*}
+	where we set \( W_{1k}^* = 0, \) and \( w_{2k}^* = 0 \) for all \( k \in [m], k > b \).
+	It holds by assumption that \( b \leq m \) and thus \( \rbr{W_1^*, w_{2}^*} \) is a valid input for the mixed-integer problem.
+
+	Recalling the constraints \( (2 D_i - I) X v^*_i \geq 0 \), and \( (2 D_i - I) X w^*_i \geq 0 \),
+	we see that \( D_i X v_i^* = \rbr{X v_i^*}_+ \), \( D_i X w_i^* = \rbr{X w_i^*}_+ \), and thus
+	\begin{align*}
+		\rbr{X W_{1k}^*} w_{2j}
+		 & = \begin{cases}
+			     D_i X v_i^*   & \mbox{if \( W_{1k}^* = v_i^* \) for some \( i \in [b] \)} \\
+			     - D_i X w_i^* & \mbox{if \( W_{1k}^* = w_i^* \) for some \( i \in [b] \)} \\
+			     0             & \mbox{otherwise}.
+		     \end{cases}
+	\end{align*}
+	Using this fact in the optimization objective for the convex program, we find
+	\begin{align*}
+		d^*
+		 & = \calL\rbr{\sum_{D_i \in \tilde \calD} D_i X (v_i - w_i), y} + \lambda \sum_{D_i \in \calD} \norm{v_i}_2 + \norm{w_i}_2 \\
+		 & = \calL\rbr{\sum_{k = 1}^m \rbr{X W_{1k}^*}_+ w_{2k}^* - y} + \lambda \sum_{k = 1}^m \norm{W_{1k}^*}_2                   \\
+		 & \geq p^*,
+	\end{align*}
+	as required.
+
+	To show the reverse inequality, let \( \rbr{W_1^*, w_{2}^*} \) be a solution to~\eqref{convex-forms:eq:mi-reformulation} and consider the set-function
+	\[
+		T(j) = \cbr{ i \in [m] : \text{diag}\rbr{X W_{1i}^* > 0} = D_j }.
+	\]
+	Recalling
+	\( \cbr{\text{diag}\rbr{X W_{1i}^* > 0 : i \in [m]} } \subseteq \tilde \calD, \)
+	by assumption, we define a valid candidate solution as
+	\begin{equation*}
+		\cbr{\rbr{v_j^*, w_j^*}}_{D_j \in \tilde \calD} = \cbr{ \sum_{i \in T(j)} W_{1i}^* \mathds{1}(w_{2i}^* = 1), \sum_{i \in T(j)} W_{1i}^* \mathds{1}(w_{2i}^* = -1) }_{D_j \in \tilde \calD}
+	\end{equation*}
+
+	We start by showing that the neurons indexed by \( T(j) \) can be merged without changing the objective of the mixed-integer problem.
+	In particular, let \( j \in [m] \) be arbitrary and suppose that there exists \( l,k \in T(j) \) such that \( w_{2l}^* = w_{2k}^* = 1 \).
+	By definition of \( T \), it holds that \( \rbr{X W_{1l}^*}_+ \) and \( \rbr{X W_{1k}^*}_+ \) have the same activation pattern.
+	Accordingly, we have \(  \rbr{X W_{1l}^*}_+ + \rbr{X W_{1k}^*}_+ = \rbr{X (W_{1l}^* + W_{1k}^*)}_+ \) by definition of the ReLU activation.
+	Thus, merging these two parameter vectors as \( Z_{lk}^* = W_{1l}^* + W_{1k}^*\) does not change the prediction of the model in the mixed-integer program.
+
+	Now we consider the group \( \ell_1 \) penalty term.
+	Triangle inequality implies
+	\begin{align*}
+		\norm{\tilde Z_{lk}^*}_2 \leq \norm{W_{1l}^*}_2 + \norm{W_{1k}^*}_2,
+	\end{align*}
+	with equality if and only if \( W_{1l}^* = 0 \), \( W_{1k}^* = 0 \), or the vectors are collinear.
+	Suppose that equality does not hold.
+	Then the penalty term could be reduced setting \( W_{1l}^* = Z_{lk} \) and \( W_{1k}^* = 0\) while leaving the squared-loss term unchanged.
+	But, this contradicts global optimality of \(W_{1}^*, w_{2}^* \).
+	Thus, it must be that \( W_{1l}^* = 0 \), \( W_{1k}^* = 0 \), or the vectors are collinear.
+	In each case, we have that the merged vector \( \tilde Z_{lk}^* \) also attains the optimal value \( p^* \).
+	Clearly a symmetric argument holds in the case \( w_{2k} = w_{2l} = -1 \).
+
+	Arguing by induction if necessary, we deduce that the vectors \( v^*, w^* \) given by the solution mapping also attain \( p^* \).
+	Recalling that \( D_j X v_j^* = \rbr{X v_j}_+ \) and \( D_j X w_j^* = \rbr{X w_j}_+ \) by choice of \( T(j) \) and definition of \( D_j \) gives
+	\begin{align*}
+		p^*
+		 & = \calL\rbr{\sum_{i=j}^P D_j X (v^*_j - w^*_j) - y} + \lambda \sum_{j=1}^P \norm{v^*_j}_2 + \norm{w^*_j}_2 \\
+		 & \geq d^*,
+	\end{align*}
+	where \( v_j^*, w_j^* \) are feasible.
+	This completes the proof.
+\end{proof}
+
+
+\unconstrainedEquivalence*
+\begin{proof}
+	The proof proceeds similarly to the proof \cref{lemma:mi-reformulation}.
+
+	Let \( p^* \) be the optimal value of the Problem~\ref{convex-forms:eq:gated-relu-mlp} and let \( d^* \) be the optimal value of the C-GReLU problem~\eqref{convex-forms:eq:unconstrained-relu-mlp}.
+	For each \( z_i \in \tilde \calZ \) and any \( v \in \R^d \), we have the following equality by construction:
+	\[ \phi_{z_i}(X, v) = \rbr{X z_i > 0} \circ X v = D_i X v. \]
+	Accordingly, the non-convex optimization problem~\eqref{convex-forms:eq:gated-relu-mlp} can be written as
+	\begin{equation}
+		\min_{W_1,w_2} \mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X W_{1i} w_{2i}, y\Big) + \frac{\lambda}{2} \sum_{z_i \in \tilde \calZ} \norm{W_{1i}}_2^2 + w_{2i}^2,
+	\end{equation}
+	which makes the connection to C-GReLU clear.
+	Applying Young's inequality gives,
+	\begin{align*}
+		\mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X W_{1i} w_{2i}, y\Big) + \frac{\lambda}{2} \sum_{z_i \in \tilde \calZ} \norm{W_{1i}}_2^2 + w_{2i}^2
+		 & \geq \mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X W_{1i} w_{2i}, y\Big) + \lambda \sum_{z_i \in \tilde \calZ} \norm{W_{1i}}_2 \abs{w_{2i}}
+	\end{align*}
+	For any choice of parameters \( W_{1i}, w_{2i} \), equality in this expression is achieved with the rescaling
+	\[
+		W_{1i}' = W_{1i} * \beta_i, \quad \quad w_{2i}' = w_{2i} / \beta_i,
+	\]
+	where \( \beta_i = \sqrt{\frac{w_{2i}}{\norm{W_{1i}}_2}} \).
+	As this rescaling does not affect \( D_i X W_{1i} \, w_{2i} \) for each \( i \), it must be that any global minimizer \( \theta^* = \cbr{W_{1i}^*, w_{2i}^*} \) of Problem~\ref{convex-forms:eq:gated-relu-mlp} achieves the lower-bound in Young's inequality.
+	Defining \( v_i' = W_{1i} * w_{2i} \), we have shown
+	\begin{align*}
+		p^*
+		 & = \mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X W_{1i} w_{2i}, y\Big) + \lambda \sum_{z_i \in \tilde \calZ} \norm{W_{1i}}_2 \abs{w_{2i}} \\
+		 & = \mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X v_i', y \big) + \lambda \sum_{z_i \in \tilde \calZ} \norm{v_{i}'}_2
+		\geq d^*,
+	\end{align*}
+	where we have used absolute homogeneity of the norm.
+
+	To obtain the reverse inequality, let \( v^* \) be a global minimizer of C-GReLU and define \( W_{1i}' = \frac{v_i^*}{\sqrt{\norm{v_i^*}_2}} \), \( w_{2i}' = \sqrt{\norm{v_i^*}_2} \) for all \( i \) to obtain
+
+	\begin{align*}
+		d^*
+		 & = \mathcal{L}\Big(\sum_{D_i \in \tilde \calD} D_i X v_i, y\Big)+ \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2                                                 \\
+		 & = \mathcal{L}\Big(\sum_{D_i \in \tilde \calD } D_i X W_{1i}' w_{2i}', y\Big) + \frac{\lambda}{2} \sum_{z_i \in \tilde \calZ} \norm{W_{1i}'}^2_2 + \abs{w_{2i}'}^2
+		\geq p^*,
+	\end{align*}
+	which completes the proof.
+
+\end{proof}
+
+
+%% Dimensionality reduction for unconstrained Problem
+
+\begin{proposition}\label{prop:unconstrained-relu-mlp}
+	Problem~\ref{convex-forms:eq:unconstrained-relu-mlp} is equivalent to following unconstrained relaxation of the ReLU training problem's convex reformulation (Problem~\ref{convex-forms:eq:convex-relu-mlp}):
+	\begin{equation} \label{convex-forms:eq:unreduced-unconstrained-relu-mlp}
+		\begin{aligned}
+			\min_{v, w} \;
+			 & \half \calL\rbr{\sum_{D_i \in \tilde \calD} D_i X (v_i - w_i), y} + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2 + \norm{w_i}_2 \\
+			 & \text{s.t.} \;  \rbr{2 D_i - I_n} X v_i \succeq 0, \rbr{2 D_i - I_n} X w_i \succeq 0,
+		\end{aligned}
+	\end{equation}
+\end{proposition}
+\begin{proof}
+	Suppose that \( (v^*, w^*) \) is an optimal solution \eqref{convex-forms:eq:unreduced-unconstrained-relu-mlp}.
+	Defining \( r^* = v^* - w^* \), it holds by the triangle inequality that
+	\begin{equation*}
+		\norm{r_i^*}_2 \leq \norm{v_i^*}_2 + \norm{w_i^*}_2,
+	\end{equation*}
+	for each \( i \in [P] \).
+	Since replacing \( v_i^* - w_i^* \) with \( r_i^* \) does not change the model prediction
+	\[ \hat y = \sum_{D_i \in \tilde \calD} D_i X(v_i - w_i), \]
+	we have shown that \( (r^*, 0) \) defines an equivalent model with the same or smaller objective value.
+	Accordingly, any solution to~\eqref{convex-forms:eq:unreduced-unconstrained-relu-mlp} must have
+	\( v_i^* = 0 \) or \( w_i^* = 0 \).
+	Equivalence of the two problems follows immediately.
+\end{proof}
+
+\subsection{Extension to Multi-class Classification}\label{app:multi-class-extension}
+
+Now we extend our sub-sampled C-ReLU and C-GReLU formulations to vector-valued problems, such as occur in multi-class classification.
+Our starting place is the following vector-output variant of the NC-ReLU problem
+\begin{equation}\label{convex-forms:eq:vector-non-convex-relu-mlp}
+	\min_{W_1, W_2} \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i})_+ W_{2i}^\top, Y\Big) + \frac{\lambda}{2}\sum_{i=1}^m \norm{W_{1i}}_2^2 + \norm{W_{2i}}_1^2,
+\end{equation}
+where now labels \(Y \in \R^{n \times C}\).
+We note that the main difference between this formulation and \cref{convex-forms:eq:non-convex-relu-mlp} is that each row of \(X\) now maps to a vector rather than a single scalar, and the use of \(\ell_1\)-squared regularization on the second-layer weights. We now present a similar result to \cref{lemma:mi-reformulation} for this particular problem.
+\begin{lemma}
+	The non-convex problem \eqref{convex-forms:eq:vector-non-convex-relu-mlp} is equivalent to the following program,
+	\begin{equation}\label{convex-forms:eq:vector-mi-reformulation}
+		\begin{aligned}
+			\min_{\{W_{1}^k, w_{2}^k\}_{k=1}^C}  \; & \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i})_+ W_{2i}^\top, Y\Big) + \lambda \sum_{i = 1}^{m}  \norm{W_{1i}}_2 \\
+			                                        & \text{\emph{s.t.}} \;\|W_{2i}\|_1 = 1~\forall i \in [m]
+		\end{aligned}
+	\end{equation}
+\end{lemma}
+\begin{proof}
+	Follow from the proof of \cref{lemma:mi-reformulation} (Appendix \ref{app:convex-forms}), i.e. apply Young's inequality to achieve
+	\begin{equation*}
+		p^* = \min_{W_1, W_2} \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i})_+ W_{2i}^\top, Y\Big) + \frac{\lambda}{2}\sum_{i=1}^m \norm{W_{1i}}_2^2 + \norm{W_{2i}}_1^2 = \min_{W_1, W_2} \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i})_+ W_{2i}^\top, Y\Big) + \lambda\sum_{i=1}^m \norm{W_{1i}}_2\norm{W_{2i}}_1
+	\end{equation*}
+	Then, this is clearly equivalent to
+	\begin{equation*}
+		\begin{aligned}
+			\min_{W_{1}, W_2}  \; & \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i})_+ W_{2i}^\top, Y\Big) + \lambda \sum_{i = 1}^{m}  \norm{W_{1i}}_2 \\
+			                      & \text{\emph{s.t.}} \;\|W_{2i}\|_1 = 1~\forall i \in [m]
+		\end{aligned}
+	\end{equation*}
+\end{proof}
+We can form the one-vs-all convex reformulation as follows:
+\begin{equation}\label{convex-forms:eq:vector-convex-relu-mlp}
+	\begin{aligned}
+		\!\!\! \min_{\{v^k, w^k\}_{k=1}^C} \, & \mathcal{L}\Big(\sum_{k=1}^C \sum_{D_i \in \tilde \calD}\!\! D_i X (v_{i}^k \!-\! w_{i}^k)e_k^\top, Y\Big)\!+\!\lambda\!\sum_{k=1}^C\sum_{D_i \in \tilde \calD}\!\norm{v_{i}^k}_2\!+\!\norm{w_{i}^k}_2 \\
+		                                      & \text{s.t.} \, \rbr{2 D_i - I_n} X v_{i}^k \succeq 0, \, \rbr{2 D_i - I_n} X w_{i}^k \succeq 0,
+	\end{aligned}
+\end{equation}
+where \(e_k\) is the \(k\)th standard basis vector.
+
+Then, we have the following analog of \cref{thm:duality-free} for the vector-output case:
+\begin{restatable}{theorem}{convexVectorDualityFree}\label{thm:vector-duality-free}
+	Suppose \(\rbr{W_1^* W_2^*}\) and \( \{\rbr{v^{k*}, w^{k*}}\}_{k=1}^C \) are global minimizers of Problems~\ref{convex-forms:eq:vector-mi-reformulation} and Problem~\ref{convex-forms:eq:vector-convex-relu-mlp}, respectively.
+	If the number of hidden units satisfies
+	\[ m^* \geq b := \sum_{k=1}^C \sum_{D_i \in \tilde \calD} \abs{\cbr{v^{k*}_i : v^{k*}_i \neq 0} \cup \cbr{w^{k*}_i : w^{k*}_i \neq 0} }, \]
+	and the optimal activations are in the convex model,
+	\[ \cbr{\text{\emph{diag}}\rbr{X W_{1i}^{*} > 0 : i \in [m]} } \subseteq \tilde \calD, \]
+	then the two problems have same the optimal value.
+\end{restatable}
+\begin{proof}
+	We follow from the proof of \cref{thm:duality-free}.   Let \(p^*\) be the optimal value of \eqref{convex-forms:eq:vector-mi-reformulation} and \(d^*\) be the optimal value of \eqref{convex-forms:eq:vector-convex-relu-mlp}.
+
+	First, suppose \( \{\rbr{v^{k*}, w^{k*}}\}_{k=1}^C\) is a global minimizer of Problem \ref{convex-forms:eq:vector-convex-relu-mlp}. Then, let
+	\[ \rbr{W_{1(i, k)}^*, W_{2(i, k)}^*} = \bigcup_{D_i \in \tilde \calD} \bigcup_{k=1}^C \cbr{(v_i^{k*}, e_k): v_i^{k*} \neq 0} \cup \cbr{(w_i^{k*}, -e_k): w_i^{k*} \neq 0)}  \]
+	where we set \(W_{1(i, k)}^* = 0\) and \(W_{2(i, k)}^*\) = 0 for non-assigned neurons. It holds by assumption that \(b \leq m\) and thus this is a valid input for \eqref{convex-forms:eq:vector-mi-reformulation}.
+	Further, we have, due to the constraints,
+	\begin{equation*}
+		(XW_{1(i, k)}^*)_+W_{2(i, k)}^{*\top } = \begin{cases}
+			D_iXv_{i}^{k*}e_k^\top & \text{if } W_{1(i, k)}^* = v_i^{k*} \\
+			D_iXw_{i}^{k*}e_k^\top & \text{if } W_{1(i, k)}^* = w_i^{k*} \\
+			0                      & o.w.
+		\end{cases}
+	\end{equation*}
+	Inserting to the objective for the convex program,
+	\begin{align}
+		d^* & =\mathcal{L}\Big(\sum_{k=1}^C \sum_{D_i \in \tilde \calD}\!\! D_i X (v_{i}^{k*} \!-\! w_{i}^{k*})e_k^\top, Y\Big)\!+\!\lambda\!\sum_{k=1}^C\sum_{D_i \in \tilde \calD}\!\norm{v_{i}^{k*}}_2\!+\!\norm{w_{i}^{k*}}_2 \\
+		    & = \mathcal{L}\Big(\sum_{(i, k)}\!\!(XW_{1(i, k)}^*)_+W_{2(i, k)}^{*\top }, Y\Big)\!+\!\lambda\!\sum_{(i,k) }\!\norm{W_{1(i, k)}^*}_2                                                                                \\  &\geq p^*
+	\end{align}
+	Now, we seek to find the other direction, i.e. show \(p^* \geq d^*\) and show a mapping. Let \(\rbr{W_{1i}^*, W_{2i}^*}\) be a solution to \eqref{convex-forms:eq:vector-mi-reformulation}. Defining, as in \cref{thm:duality-free},
+	\[
+		T(j) = \cbr{ i \in [m] : \text{diag}\rbr{X W_{1i}^* > 0} = D_j }.
+	\]
+	Recalling
+	\( \cbr{\text{diag}\rbr{X W_{1i}^* > 0 : i \in [m]} } \subseteq \tilde \calD, \)
+	by assumption, we define a valid candidate solution as
+	\begin{equation*}
+		\cbr{\cbr{\rbr{v_j^{k*}, w_j^{k*}}}_{k \in [C]}}_{D_j \in \tilde \calD} = \cbr{ \cbr{\sum_{i \in T(j)} W_{1i}^*w_{2i}^{k*} \mathds{1}(W_{2i}^{k*} \geq 0)}_{k \in [C]}, \cbr{-\sum_{i \in T(j)} W_{1i}^*w_{2i}^{k*} \mathds{1}(W_{2i}^{k*} < 0)}_{k \in [C]} }_{D_j \in \tilde \calD}
+	\end{equation*}
+	Then, by the same co-linearity arguments as in \cref{thm:duality-free}, we have
+	\begin{align*}
+		p^* & =  \mathcal{L}\Big(\sum_{i=1}^m (XW_{1i}^*)_+ W_{2i}^{*\top}, Y\Big) + \lambda \sum_{i = 1}^{m}  \norm{W_{1i}^*}_2                                                                                   \\
+		    & = \mathcal{L}\Big(\sum_{i=1}^m \sum_{k=1}^C (XW_{1i}^*)_+ W_{2i}^{k*}e_k^\top, Y\Big) + \lambda \sum_{i = 1}^{m}  \norm{W_{1i}^*}_2 \sum_{k=1}^C |W_{2i}^{k*}|                                       \\
+		    & = \mathcal{L}\Big(\sum_{i=1}^m \sum_{k=1}^C (XW_{1i}^*)_+ W_{2i}^{k*}e_k^\top, Y\Big) + \lambda \sum_{i = 1}^{m} \sum_{k=1}^C \norm{W_{1i}^*}_2  |W_{2i}^{k*}|                                       \\
+		    & = \mathcal{L}\Big(\sum_{D_j \in \tilde \calD} \sum_{k=1}^C D_jX(v_{j}^{k*}- w_{j}^{k*})e_k^\top, Y\Big) + \lambda \sum_{D_j \in \tilde \calD} \sum_{k=1}^C \norm{v_{j}^{k*}}_2 + \norm{w_{j}^{k*}}_2 \\
+		    & \geq d^*
+	\end{align*}
+\end{proof}
+Thus, the vector-output NC-ReLU training problem~\eqref{convex-forms:eq:vector-non-convex-relu-mlp} is equivalent to the one-vs-all C-ReLU problem~\eqref{convex-forms:eq:vector-convex-relu-mlp} if the conditions of \cref{thm:vector-duality-free} are satisfied.
+Further, taking \(\tilde \calD = \calD_X\) and applying \cref{thm:vector-duality-free} yields
+\begin{equation*}
+	{m}^{*} = \sum_{k=1}^C \sum_{D_i \in \calD_X} \abs{\cbr{v^{k*}_i : v^{k*}_i \neq 0} \cup \cbr{w^{k*}_i : w^{k*}_i \neq 0} }.
+\end{equation*}
+It follows that global optimization of the vector-output NC-ReLU problem requires \(m \geq m^*\) neurons, where \(m^* \leq C(n+1)\).
+
+The gated ReLU analogs to vector-output ReLU architectures can be formulated in the same fashion.

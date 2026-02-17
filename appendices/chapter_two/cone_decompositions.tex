@@ -1,0 +1,43 @@
+%!TEX root = ../main.tex
+
+\subsection{Cone Decompositions}\label{app:cone-decomps}
+
+\input{results/chapter_two/cone_decomp_table_full.tex}
+
+Now we provide details and additional results for the cone-decomposition experiments given in \cref{table:cone-decomp}.
+
+\textbf{Experimental Details}:
+We selected 23 datasets from the UCI repository and fixed the regularization parameter at \( \lambda = 0.01 \).
+Note that this parameter is not necessary optimal for each dataset;
+the purpose of these experiments is to study the effects of using cone-decompositions to approximate the C-ReLU solution with a G-ReLU solution, rather than to obtain optimal test accuracies.
+We randomly sampled 1000 activation patterns for the C-ReLU and C-GReLU models, removing duplicates and the zero pattern as necessary.
+Note that we report the median results from five individual runs with re-sampled activation patterns to control for variance in the procedure.
+
+For multi-class datasets, the convex formulations were extended as described in Appendix~\ref{app:multi-class-extension}.
+We used the standard parameters for R-FISTA and the AL method as given in Appendix~\ref{app:default-parameters},
+while the min-norm decomposition programs (CD-SOCP) was solved with MOSEK using the default parameters.
+For CD-A, we set \( \lambda = 10^{-10} \) and \cref{eq:cd-approx} with R-FISTA
+using the default parameters.
+We terminate the optimization procedure when the min-norm subgradient has squared-norm
+less than or equal to \( 10^{-10} \).
+R-FISTA and the AL method were run on GPU compute nodes with one GeForce RTX 2080Ti graphics card, and four AMD 7502P CPUs, and 32 GB of RAM.
+The cone decompositions were solved on identical nodes with four AMD 7502P CPUs with 32 GB of RAM.
+
+\textbf{Additional Results}:
+\cref{table:cone-decomp-full} provides the full set of results on all 23 datasets.
+It also includes the final group norms of the models, calculated as
+\[
+	\sum_{D_i \in \tilde \calD} \norm{u_i^*}_2,
+\]
+for the C-GReLU model and
+\[
+	\sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{w_i^*}_2,
+\]
+for the C-ReLU models.
+This allows us to quantify the ``blow-up'' in the model norm from decomposing \( u_i^* \) onto \( \calK_i - \calK_i \).
+In practice, we find that CD-SOCP leads to very large increases in the model norm compared to the FISTA/AL solutions, while CD-A has a less severe effect.
+However, the increased norms do not appear to affect the test accuracy of the final models.
+Indeed, CD-SOCP and CD-A perform as well as the solution to the C-GReLU problem given by R-FISTA and are comparable to the AL method's solution.
+The major downside of exact the cone-decomposition method is the huge increase in time necessary to solve for the decomposition.
+This is largely because MOSEK is restricted to running on CPU.
+

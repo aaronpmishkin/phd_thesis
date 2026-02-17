@@ -1,0 +1,43 @@
+\subsection{Non-Convex Solvers}\label{app:non-convex-solvers}
+
+\input{results/chapter_two/uci_gated_table}
+
+This section gives experimental details and additional results for experiments comparing the generalization performance of our convex reformulations to neural networks trained by optimizing the non-convex loss with stochastic gradient methods.
+
+\textbf{Experimental Details}:
+We selected 20 datasets randomly from our filtered collection of 73 datasets; see Appendix~\ref{app:uci-datasets} for details how the 73 datasets were obtained.
+
+We used the default parameters for each of the convex solvers as described in Appendix~\ref{app:default-parameters}.
+R-FISTA was limited to \( 2000 \) iterations, while SGD and Adam were limited to \( 2000 \) epochs.
+For SGD and Adam, considered step-sizes from the following grid: \( \cbr{10, 5, 1, 0.5, 0.1, 0.01, 0.001} \).
+We used a ``step'' decrease schedule for the step-sizes, dividing them by \( 2 \) every 100 epochs, which we found to work much better than the classical Robbins-Monro schedule~\citep{robbins1951sgd}.
+We considered the following grid of ten regularization parameters:
+\( \{
+1 \times 10^{-6},
+2.78 \times 10^{-6},
+7.74 \times 10^{-6},
+2.15 \times 10^{-5},
+5.99 \times 10^{-5},
+1.67 \times 10^{-4},
+4.64 \times 10^{-4},
+1.29 \times 10^{-3}
+3.59 \times 10^{-2},
+1.0 \times 10^{-2} \}
+\).
+For each method-dataset pair, we performed five-fold cross validation on the training set and selected the best step-size and regularization parameter according to the cross-validated test accuracy.
+
+For the gated ReLU problems (both C-GReLU and NC-GReLU) we sampled the same set of \( 5000 \) activation patterns for both the convex reformulation and the original non-convex model.
+We used \( 2500 \) activation patterns for the C-ReLU problem.
+To ensure a similar model space, we computed at the number of active neurons (e.g. \( v_i \neq 0 \) or \( w_i \neq 0 \)) at convergence for C-ReLU and then used this as the number of hidden units for \( NC-ReLU \) problems.
+Note that we extend our convex reformulations to multi-class problems using the results in Appendix~\ref{app:multi-class-extension}.
+Similarly, we use the vector-output variant of the NC-ReLU problem (Eq.~\ref{convex-forms:eq:vector-non-convex-relu-mlp}) for multi-class problems.
+
+After selecting hyper-parameters, we obtain the final test accuracies by re-training on the full training set and testing on a held-out test set.
+To control for noise in the sampling of gate vectors in the Gated ReLU problems and C-ReLU, we repeat this final testing procedure five times with different random seeds.
+
+\input{results/chapter_two/uci_relu_table}
+
+\textbf{Additional Results}:
+Tables~\ref{table:uci-gated-accuracies} and~\ref{table:uci-relu-accuracies} report median test accuracies as well as first and third quartiles for the convex and non-convex formulations with gated ReLU and ReLU activations, respectively.
+Note that these results are identical to those the provided in the main paper (\cref{table:non-convex-solvers}) but for the inclusion of variance/distribution information in the form of quartiles.
+

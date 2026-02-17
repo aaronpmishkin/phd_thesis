@@ -1,0 +1,12 @@
+%!TEX root=../main.tex
+
+\section{Conclusion}\label{sec:conclusion}
+We propose optimization algorithms for convex reformulations of two-layer neural networks with ReLU activations.
+By studying the problem constraints, we split the space of ReLU activations into singular patterns, which may be safely ignored, and non-singular patterns.
+As a result, we show that ReLU networks can be trained by decomposing the solution to an unconstrained Gated ReLU training problem onto a difference of polyhedral cones.
+Experimentally, we test our algorithms on more than \( 70 \) different datasets, demonstrating that convex optimization is faster and more reliable than popular training methods like Adam and SGD.
+
+Many directions are left to future work.
+Efficiently solving the cone decomposition problem is key to improving on our augmented Lagrangian method, but existing conic solvers rely on CPU computation.
+We believe developing methods which can natively leverage GPU acceleration is necessary.
+Finally, we hope to extend convex optimization to deeper networks by layer-wise training, which has been shown to perform well on ImageNet~\cite{belilovsky2019greedy}.

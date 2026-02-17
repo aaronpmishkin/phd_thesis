@@ -1,0 +1,567 @@
+%!TEX root=../main.tex
+
+\section{Equivalence of ReLU and Gated ReLU: Proofs}\label{app:relu-grelu-equivalence}
+
+First we give a simple lemma that will be useful when characterizing the span of \( \calK_i - \calK_i \).
+
+\begin{lemma}\label{lemma:affine-characterization}
+    The cone \( \calK_i \) has a non-empty interior if and only if \( \calK_i - \calK_i = \R^d \).
+\end{lemma}
+\begin{proof}
+    Let \( x \in \text{aff} (\calK_i) \).
+    Then \( x = \sum_{j=1}^m \alpha_j y_j \), \( y_j \in \calK_i \).
+    Let \( j \in [m] \).
+    If \( \alpha_j \geq 0 \), then \( \alpha_j y_j \in \calK_i \) since \( \calK_i \) is a cone.
+    Otherwise, \( \alpha_j y_j \in - \calK_i \).
+    Either way, we have \( \alpha_j y_j \in \calK_i - \calK_i \).
+
+    Observe that \( \calK_i - \calK_i \) is a convex cone since \( \calK_i \) is a convex cone.
+    Thus, \( \alpha_1 y_1 + \alpha_2 y_2 \in \calK_i - \calK_i \).
+    Induction on \( j \in [m] \) now implies \( x \in \calK_i - \calK_i \) and thus \( \text{aff} (\calK_i) \subseteq \calK_i - \calK_i \).
+    Now suppose \( x \in \calK_i - \calK_i \) so that \( x = y_1 - y_2 \), where \( y_1, y_2 \in \calK_i \).
+    It is trivial to deduce \( x \in \text{aff} (\calK_i) \);
+    we conclude that \( \text{aff} (\calK_i) = \calK_i - \calK_i \).
+
+    Since \( 0 \in \text{aff} (\calK_i) \), this set is a linear subspace of \( \R^d \).
+    If \( \calK_i \) has an interior point, then \( \text{aff} (\calK_i) = \R^d \) and we must have \( \text{aff} (\calK_i) = \calK_i - \calK_i = \R^d \).
+    On the other hand, if \( \calK_i \) does not have an interior point, then \( \text{aff} (\calK_i) \subset \R^d \) and \( \text{aff} (\calK_i) = \calK_i - \calK_i \subset \R^d \) must hold;
+    we have shown the reverse implication by the contrapositive.
+\end{proof}
+
+Now we show that \( \calK_i \) has an interior point when \( X \) is full row-rank.
+The proof proceeds by studying a relative interior point of \( \calK_i \).
+
+\nonSingularCones*
+\begin{proof}
+    Let \( \bar w \in \text{relint} (\calK_i) \), which exists since the relative interior of a non-empty convex set is non-empty \citep{bertsekas2009convex}.
+    Assume that the inequality,
+    \[
+        (2 D_i - I) X \bar w \succeq 0,
+    \]
+    is tight for at least one index \( j \in [n] \);
+    let \( X_{\calI} \) be the submatrix of \( X \) formed by the rows of \( X \) for which the inequality
+    is tight.
+    Define \( \tilde D =  (2 D_i - I) \).
+    Since \( X \) is full row-rank, the rows of \( X_{\calI} \) are linearly independent.
+    Let \( x_k \) be an arbitrary row of \( X_{\calI} \) (noting \( x_k \neq 0 \) by linear independence) and define \( z_k \) to be the component of \( x_k \) which is orthogonal to the remaining rows of \( X_{\calI} \).
+    Clearly such a vector exists since the rows of \( X_{\calI} \) are linearly independent.
+    Define \( w' = \bar w + [\tilde D_i]_{kk} z_k \) to obtain
+    \[
+        [\tilde D_i]_{kk} x_k^\top w' = [\tilde D_i]_{kk} x_k^\top \bar w + \norm{z_k}_2^2 = \norm{z_k}_2^2 > 0,
+    \]
+    and, for \( j \neq k \),
+    \[
+        [\tilde D_i]_{jj} x_j^\top w' = [\tilde D_i]_{jj} x_{j}^\top \bar w + [\tilde D_i]_{jj} [D_i]_{kk} x_{j}^\top z_k \geq 0,
+    \]
+    since \( x_j \) and \( z_k \) are orthogonal.
+    This contradicts \( \bar w \in \text{relint} (\calK_i) \) and we deduce that \( (2 D_i - I) X \bar w \succ 0 \).
+    \cref{lemma:affine-characterization} now implies that \( \calK_i - \calK_i = \R^d \).
+
+    Let \( u^* \) be an optimal solution to the C-GReLU problem with \( \tilde \calD = \calD_X \).
+    Since the Minkowski difference \( \calK_i - \calK_i \) spans \( \R^d \) for every \( D_i \in \calD_X \), we can find \( v_i, w_i \)  such that \( u_i^* = v_i - u_i \).
+    Moreover, we can always reparameterize the optimal solution to the C-ReLU problem as \( u_i = v_i^* - w_i^* \).
+    A simple reduction argument now shows the two problems are equivalent.
+    Applying theorems~\ref{thm:duality-free} and~\ref{thm:unconstrained-equivalence} extends the equivalence to NC-ReLU and NC-GReLU.
+\end{proof}
+
+The main difficulty extending \cref{prop:non-singular-cones} to general, full-rank \( X \) is showing that none of the cone-constraints are tight at \( \bar w \).
+Unfortunately, the following shows that these difficulties cannot be resolved.
+
+\begin{proposition}\label{prop:col-rank-counter-example}
+    There exists a full-rank data matrix \( X \) and activation pattern \( D_i \in \calD_X \) such that \( \calK_i \) is contained in a linear subspace of \( \R^d \).
+\end{proposition}
+\begin{proof}
+    Let \( d = 3 \), \( n = 4 \) and take
+    \begin{equation*}
+        X =
+        \begin{bmatrix}
+            1  & 0  & 0  \\
+            0  & 1  & 0  \\
+            -1 & -1 & 0  \\
+            0  & 0  & 1.
+        \end{bmatrix}
+    \end{equation*}
+    It is easy to see that \( X \) is full-rank, although it does not have full row-rank since \( x_1, x_2, x_3 \) are collinear.
+    The cone \( \calK_i = \cbr{ w : X w \succeq 0 } \), which corresponds to positive activations for each example, has the following alternative representation:
+    \[
+        \calK_i = \cbr{\alpha * e_3 : \alpha \geq 0 }.
+    \]
+    Clearly \( \calK_i \) is contained in a subspace of dimension one.
+    Thus, we cannot hope for \( \calK_i \) to have full affine dimension in this more general setting.
+\end{proof}
+
+\subsection{Singular Cones are Contained in Non-Singular Cones}\label{app:singular-cones}
+
+Considering the counter-example in \cref{prop:col-rank-counter-example}, we find the ``bad'' \( \calK_i \) is contained within the subspace \( \calS \) spanned by \( e_3 \).
+By construction, every \( w \in \calK_i \) is orthogonal to \( x_1, x_2, \) and \( x_3 \), meaning these examples don't contribute to the constraints on \( \calK_i \) once it is restricted to \( \calS \).
+Intuitively, changing the activation associated with \( x_1, x_2 \), or \( x_3 \) can only lead to cones which contain \( \calK_i \).
+For example, consider \( \calK_i' = \cbr{w : \abr{x_3, w} \leq 0}, X_{-3} w \succeq 0 \), which is equal to the non-negative orthant, \( \R^3_+ \).
+We immediately observe \( \calK_i \subset \calK_i' \) and we may replace the degenerate cone with the alternative, full-dimensional \( \calK_2 \).
+The rest of this section formalizes these observations.
+
+\begin{definition}\label{def:minimal-constraints}
+    Let \( \tilde X \in \R^{m \times d} \) and consider a cone
+    \( \calK = \cbr{ w: \tilde X w \succeq 0} \)
+    such that \( \text{aff} (\calK) = \calS \subset \R^d \).
+    We call an index set \( \calI \subseteq [m] \) minimal for \( S \) if
+    \[ \calK_{\calI} = \cbr{w : \tilde X_{\calI} w \succeq 0} \subseteq \calS \]
+    and, for any \( j \in \calI \),
+    \[
+        \calK_{\calI \setminus j} \not \subseteq \calS.
+    \]
+    That is, removing any half-space constraint indexed by \( \calI \) ensures \( \calK_{\calI} \) is not contained in \( \calS \).
+\end{definition}
+
+Note that there may be many minimal index sets for a singular cone and these sets may have varying cardinalities.
+However, each minimal index set shares a key property: every row \( \tilde x_i \) indexed by such \( \calI \) must be orthogonal to \( \calS \).
+
+\begin{lemma}\label{lemma:orthogonality}
+    Let \( \tilde X \in \R^{m \times d} \) such that the cone
+    \( \calK = \cbr{ w: \tilde X w \succeq 0} \)
+    is singular.
+    Let \( \calS = \text{aff} (\calK) \) be the smallest containing subspace and \( \calI \) a minimal index set for \( \calS \).
+    Then, \( \abr{\tilde x_i, s} = 0 \) for all \( i \in \calI \) and \( s \in \calS \).
+\end{lemma}
+\begin{proof}
+    Suppose \( \abr{\tilde x_i, w} \neq 0 \) for some \( i \in \calI \) and \( w \in \calK \).
+    Since \( w \in \calK \), \( \tilde X w \succeq 0 \) and it must be that \( \abr{\tilde x_i, w} > 0 \).
+    Let \( z \in \calS^{\perp} \) be arbitrary and define \( w' = z + \alpha w \), \( \alpha > 0 \).
+    By taking \( \alpha \) to be sufficiently large, we obtain
+    \[
+        \abr{\tilde x_i, w'} = \abr{\tilde x_i, z}  + \alpha \abr{\tilde x_i, w} > 0,
+    \]
+    Since \( w' \not \in \calS \supseteq \calK \), we must have
+    \[ \tilde X_{\calI \setminus i} w' \not \succeq 0 \implies \tilde X_{\calI \setminus i} z \not \succeq 0, \]
+    where we have used \( X w \succeq 0 \).
+    Moreover, this holds for all \( z \in \calS^{\perp} \), which implies that \( \calK_{\calI \setminus i} \subseteq \calS \) and \( \calI \) cannot be minimal for \( \calS \).
+    We conclude \( \abr{\tilde x_i, w} = 0 \) for all \( i \in \calI \) and \( w \in \calK \) by contradiction.
+
+    Since \( \calS \) is the affine hull of \( \calK \), we have for every \( s \in \calS \) and \( i \in \calI \) the following:
+    \[
+        \abr{\tilde x_i, s} = \abr{\tilde x_i, \sum_{j=1}^k \alpha_j y_j} = \sum_{j=1}^k \alpha_j \abr{ \tilde x_i, y_j} = 0,
+    \]
+    since \( y_j \in \calK \).
+\end{proof}
+
+Similarly, if any constraint is tight at a relative interior point, then that constraint must be orthogonal to the cone.
+
+\begin{lemma}\label{lemma:tight-constraints}
+    Let \( \tilde X \in \R^{m \times d} \), \( \calK = \cbr{ w : \tilde X w \succeq 0} \), and \( \bar w \) be a relative interior point of \( \calK \).
+    If \( \abr{\tilde x_j, \bar w} = 0 \) for any \( j \in [m] \), then \( \tilde x_j \) is orthogonal to \( \calK \).
+\end{lemma}
+\begin{proof}
+    Suppose \( \abr{\tilde x_j, \bar w} = 0 \) for some \( j \in [m] \).
+    If there exists \( w \in \calK \) such that \( \abr{\tilde x_j, \bar w} > 0 \), then \( \abr{\tilde x_j, \bar w + w} > 0 \) and \( \bar w + w \in \calK \), which contradicts the assumption \( \bar w \) is a relative interior point.
+    Since every \( w \in \calK \) satisfies \( \abr{\tilde x_j, w} \geq 0 \), we conclude \( \abr{\tilde x_j, w} = 0 \) for all such \( w \).
+\end{proof}
+
+\cref{lemma:orthogonality} is key to our analysis because it implies that the half-space constraints which force \( \calK \) to lie in a subspace don't ``cut into'' that subspace.
+In particular, it means that we can choose to enforce membership in \( \calH_{x_i} \) or \( \calH_{- x_i} \) without changing the inclusion.
+We show now that there exists a choice of signed half-spaces for which the intersection is non-singular.
+
+\begin{lemma}\label{lemma:sign-assignment}
+    Let \( x_1, \ldots x_m \) be a collection of vectors in \( \R^d \) and \( X \in \R^{m \times d} \) the matrix formed by stacking these vectors.
+    Then there exists a diagonal matrix \( \tilde D \), where \( \tilde D_{jj} \in \cbr{-1, 1} \), such that
+    \[
+        \text{aff} (\cbr{ w : \tilde D X w \succeq 0}) = \R^d.
+    \]
+\end{lemma}
+\begin{proof}
+    We proceed by induction.
+    Let \( \tilde \calD_{11} = 1 \) and \( \calK_1 = \calH_{x_1} := \cbr{w : \abr{x_1, w} \geq 0} \).
+    Clearly \( \text{aff} (\calK_1) = \R^d \) since it is a half-space.
+
+    Now, let \( t < m \) and assume that \( \text{aff} (\calK_t) = \R^d \).
+    Consider
+    \[
+        A_{t+1} := \calK_t \cap \calH_{x_{t+1}}.
+    \]
+    If \( \calS := \text{aff} (A_{t+1}) = \R^d \), then the inductive hypothesis holds at \( \calK_{t+1} = A_{t+1} \) and we can choose \( \tilde D_{t+1, t+1} = 1 \).
+    Otherwise, \( x_{t+1} \) must be part of a minimal index set \( \calI \subseteq [t+1] \) such that \( \cbr{w : \tilde D_{\calI} X_{\calI} w \succeq 0 } \subseteq \calS \).
+    \cref{lemma:orthogonality} now implies that \( x_{t+1} \) is orthogonal to \( \calS \).
+    Let \( w \in \calK_{t} \cap \calS^{\perp} \) (which is non-empty by the inductive hypothesis) and observe that
+    \[
+        \abr{w, x_{t+1}} < 0,
+    \]
+    must hold, otherwise \( w \in A_{t+1} \).
+    We deduce \( \abr{w, x_{t+1}} \leq 0 \) for every \( w \in \calK_{t} \) and thus
+    \[
+        \calK_t \cap \calH_{- x_{t+1}} = \calK_t,
+    \]
+    which is full-dimensional by the inductive hypothesis.
+    Taking \( \calK_{t+1} = \calK_t \) and \( \calD_{t+1, t+1} = -1 \) completes the case.
+
+    The desired result follows by induction.
+
+\end{proof}
+
+We now use \cref{lemma:sign-assignment} to show that every singular cone is contained in a non-singular cone.
+
+\coneContainment*
+\begin{proof}
+    For simplicity, we drop the index \( i \) and work with \( \calK = \cbr{w : (2 D - I) X w \succeq 0 } \).
+    To ease the notation, we also write \( \tilde D = (2 D - I) \) and \( \tilde X = \tilde D X \).
+    Let \( \calS = \text{aff} (\calK) \) be the smallest subspace containing \( \calK \),
+    \( \calO \) be the set of all indices \( j \) such that \( x_j \) is orthogonal to \( \calS \),
+    and \( \calU = [n] \setminus \calO \).
+    \cref{lemma:sign-assignment} implies that there exists an alternative activation pattern \( \tilde D' \) such that,
+    \( \tilde D_{\calU}' = \tilde D_{\calU} \), and
+    if \( \calK' = \cbr{w : \tilde D' X w \succeq 0 } \), then
+    \[
+        \calK'_{\calO} := \cbr{w : \tilde D_{\calO}' X_\calO w \succeq 0} \quad \text{satisfies} \quad \text{aff} \rbr{\calK_\calO'} = \R^d.
+    \]
+    Since the vectors indexed by \( \calO \) are orthogonal to \( \calS \), they are also orthogonal to every \( w \in \calK \), implying \( \calK \subset \calK' \).
+    In other words, the change of activation signs preserves inclusion of \( \calK \).
+
+    Let us show that \( \calK' \) contains an interior point.
+    Let \( \bar w \) be a relative interior point of \( \calK \) and suppose that \( \abr{\tilde x_j, \bar w} = 0 \) for some \( j \in \calU \).
+    \cref{lemma:tight-constraints} implies \( \tilde x_j \) is orthogonal to \( \calK \).
+    But, then \( j \in \calO \), which is a contradiction.
+    We conclude \( \tilde X_{\calU }\bar w \succ 0\).
+
+    Let \( \bar y \) be an interior point of \( \calK'_{\calO} \), which exists because \( \text{aff} (\calK'_{\calO}) = \R^d \).
+    The point \( \bar z = \bar y + \alpha \bar w \), \( \alpha > 0 \) satisfies
+    \[
+        \tilde D_{\calO}' X_{\calO} \bar z = \tilde D_{\calO}' X_{\calO} \bar y \succ 0,
+    \]
+    since \( \bar w \) is orthogonal to the rows of \( X_{\calO} \).
+    Similarly, by taking \( \alpha \) to be sufficiently large, we have
+    \[
+        \tilde D_{\calU}' X_{\calU} \bar z \succ 0.
+    \]
+    We have shown that \( \bar z \) is an interior point of \( \calK' \)
+    and \cref{lemma:affine-characterization} now implies \( \calK' - \calK' = \R^d \).
+\end{proof}
+
+\coneElimination*
+\begin{proof}
+    Assume \( \lambda = 0 \).
+    The equivalence of the C-ReLU and C-GReLU problems with sub-sampled
+    patterns \( \tilde \calD \setminus \calS(\tilde\calD) \) follows
+    immediately from cone decompositions.
+    Let \( u^* \) be a solution to the C-GReLU problem with
+    \( \tilde \calD \setminus \calS(\tilde\calD) \)
+    and \( p^* \) the optimal value.
+    Let \( d^* \) be the optimal value of the C-ReLU problem with the same
+    patterns.
+    For every \( D_i \in \tilde \calD \setminus \calS(\tilde\calD) \),
+    \( \calK_i - \calK_i = \R^d \) by construction.
+    Thus, there exists \( v_i, w_i \in \calK_i \) such that
+    \( v_i - w_i = u_i^* \).
+    It is now straightforward to conclude that,
+    \[
+        p^* =
+        \calL\rbr{\sum_{D_i \in \tilde \calD \setminus \calS(\tilde\calD)}
+            D_i X u_i^*, y}
+        =
+        \calL\rbr{\sum_{D_i \in \tilde \calD \setminus \calS(\tilde\calD)}
+            D_i X (v_i - w_i), y}
+        \geq d^*,
+    \]
+    since \( v_i, w_i \) are feasible for the C-ReLU problem.
+    Letting \( v^*, w^* \) be a solution to the C-ReLU problem,
+    we obtain the opposite inequality immediately be noting that
+    \( u_i = v^*_i - w^*_i \) is feasible for the C-GReLU problem.
+    Thus, the two problems are equivalent when singular cones are omitted.
+    Now let us show that singular cones do not affect the optimal value
+    of the C-ReLU problem.
+
+    Assume \( \lambda \geq 0 \) and let \( (v^*, w^*) \) be a solution to the
+    C-ReLU problem with patterns \( \tilde\calD \) and \( p^* \) the optimal
+    value.
+    For every \( D_i \in \calD_{X} \), we either have \( \calK_i - \calK_i = \R^d \), or not.
+    If the former condition holds, take \( r_i^* = v_i^* \) and \( q_i^* = w_i^* \).
+    Otherwise, invoke \cref{prop:cone-containment} to obtain \( D_j \in \calD_{X} \)
+    such that \( \calK_i \subset \calK_j \) and \( \calK_j - \calK_j = \R^d \).
+    By the construction in the proof of \cref{prop:cone-containment},
+    if \( \sbr{D_j}_{kk} \neq \sbr{D_i}_{kk} \),
+    then \( x_k \) is orthogonal to \( v_i^*, w_i^* \in \calK_i \) and we deduce
+    \[
+        D_j X (v_i^* - w_i^*)  = D_i X (v_i^* - w_i^*).
+    \]
+    We may therefore merge the two neurons as \( r^*_j = v^*_j + v^*_i \),
+    \( q_j^* = w_j^* + w_i^* \) and update
+    \( \tilde \calD' = \tilde \calD \setminus D_i \) without changing the
+    (optimal) prediction of the C-ReLU model.
+    In this way, we obtain a sub-sampled C-ReLU problem with activation patterns
+    \( \tilde \calD \setminus \calS(\tilde \calD) \),
+    for which
+    \begin{align*}
+        p^* & = \calL\rbr{\sum_{D_i \in \tilde \calD} D_i X (v_i^* - w_i^*), y}
+        + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{v_i^*}_2
+        \\
+            & \geq \calL\rbr{\sum_{D_j \in \tilde \calD \setminus \calS(\tilde \calD)} D_j X (r_j^* - q_j^*), y}
+        + \lambda \sum_{D_j \in \tilde \calD \setminus \calS(\tilde \calD)} \norm{r_j^*}_2 + \norm{q_j^*}_2                              \\
+            & \geq \min_{r_j, q_j \in \calK_j} \calL\rbr{\sum_{D_j \in \tilde \calD \setminus \calS(\tilde \calD)} D_j X (r_j - q_j), y}
+        + \lambda \sum_{D_j \in \tilde \calD \setminus \calS(\tilde \calD)} \norm{r_j}_2 + \norm{q_j}_2
+        := d^*,
+    \end{align*}
+    where we used triangle inequality to imply \( \norm{r_j^*}_2 \leq
+    \norm{v_j^*}_2 + \norm{v_i^*}_2 \) also the fact that \( r_i^*, q_i^* \)
+    are feasible because \( \calK_j \) is a convex cone and closed under
+    addition.
+    It is now straightforward to conclude \( p^* = d^* \) since sub-sampling
+    the C-ReLU problem can only increase the optimal objective value.
+\end{proof}
+
+\subsection{Approximating ReLU by Cone Decomposition: Proofs}\label{app:cone-decompositions}
+\closedFormDecomp*
+\begin{proof}
+    Let's show that the decomposition is valid.
+    Setting \( v = u + w \),
+    we obtain \( v - w = u \) by construction.
+    For notational ease, let \( \calJ = [n] \setminus \calI \).
+    It holds that
+    \[
+        \tilde X_{\calI} w = - \tilde X_{\calI} \tilde X_{\calI}^\dagger \tilde X_{\calI} u = - \tilde X_{\calI} u > 0.
+    \]
+    Moreover, since \( X \) is full row-rank and \( \calJ \cap \calI = \emptyset \), we have
+    \[
+        \tilde X \tilde X^\dagger = \tilde X \tilde X^\top \rbr{\tilde X \tilde X^\top}^{-1} = I,
+    \]
+    which implies that \( \tilde X_{\calJ} \tilde X_{\calI}^\dagger = 0 \).
+    We deduce
+    \[
+        \tilde X_{\calJ} w = - \tilde X_{\calJ} \tilde X_{\calI}^\dagger \tilde X_{\calI} u = 0.
+    \]
+    Moreover, we also have
+    \[
+        \tilde X_{\calI} v = \tilde X_{\calI} u - \tilde X_{\calI} u = 0,
+    \]
+    and
+    \[
+        \tilde X_{\calJ} v = \tilde X_{\calJ} u + 0 \geq 0,
+    \]
+    by definition of \( \calJ \).
+    We conclude \( w, v \in \calK \).
+
+    To show the approximation result, start from
+    \begin{align*}
+        \norm{w}_2
+         & = \norm{\tilde X_{\calI}^\dagger \tilde X_{\calI} u}_2             \\
+         & \leq \norm{\tilde X_{\calI}^\dagger \tilde X_{\calI}}_2 \norm{u}_2 \\
+         & = \norm{u}_2.
+    \end{align*}
+    Triangle inequality now gives,
+    \begin{align*}
+        \norm{v}_2
+         & = \norm{u - \tilde X_{\calI}^\dagger \tilde X_{\calI} u}_2               \\
+         & \leq \norm{(I - \tilde X_{\calI}^\dagger \tilde X_{\calI})}_2 \norm{u}_2 \\
+         & = \norm{u}_2,
+    \end{align*}
+    and summing these two inequalities gives the result.
+\end{proof}
+
+\worstCaseNorm*
+\begin{proof}
+    Consider the data matrix
+    \begin{equation}
+        X =
+        \begin{bmatrix}
+            1   & \alpha \\
+            - 1 & \alpha \\
+        \end{bmatrix}
+    \end{equation}
+    The cone corresponding to positive activations for both examples is \( \calK = \cbr{x \in \R^d : x_2 \geq - x_1 / \alpha, x_2 \geq x_1 / \alpha  } \).
+    Consider decomposing the vector \( u = [2, 0] \) onto \( \calK - \calK \).
+    Clearly \( u \not \in \calK \); by inspection, we see that the minimum norm decomposition is given by \( v = [1, 1/\alpha] \), and \( w = [-1, 1/\alpha] \).
+    Taking \( \alpha \rightarrow 0 \), we find \( \norm{v}_2 = \norm{w}_2 \rightarrow \infty \).
+\end{proof}
+
+\socpDecomp*
+\begin{proof}
+    First, we re-parameterize the problem: \( u = v - w \) implies \( u + w = v \), giving the equivalent program
+    \begin{equation}
+        \begin{aligned}
+            \min_{w \in \calK} \norm{w}_2 + \norm{u + w}_2^2.
+        \end{aligned}
+    \end{equation}
+    In order to character the solution, we re-write the constraints into a single system of linear inequalities as follows:
+    \begin{align*}
+        \calF
+              & = \cbr{w : \tilde X w \succeq 0, \tilde X w \succeq - \tilde X u} \\
+              & = \cbr{w : \tilde X w \succeq 0, \tilde X w \succeq b},
+        \intertext{where we have introduced \( b = - \tilde X u \). It is possible to combine these inequalities by taking the element-wise maximum as follows:}
+        \calF & = \cbr{w : \tilde X w \succeq \max\rbr{0, b}}                     \\
+              & = \cbr{w : \tilde X w \succeq \rbr{b}_+}.
+    \end{align*}
+    Let \( \bar w \in \calF \) be a optimal point for the reparameterized program.
+    Relaxing the objective using triangle inequality gives,
+    \begin{align*}
+        \norm{\bar w}_2 + \norm{u + \bar w}_2
+         & = \min_{w \in \calF} \norm{w}_2 + \norm{u + w}_2  \\
+         & \leq \min_{w \in \calF} 2\norm{w}_2 + \norm{u}_2.
+    \end{align*}
+    Let \( w' \) be a solution to the relaxation.
+    The KKT conditions imply there exists a submatrix \( \tilde X_{\calJ} \) for which the inequality constraints are tight:
+    \[
+        \tilde X_{\calJ} w' = \rbr{b_{\calJ}}_+.
+    \]
+    The set of vectors satisfying this equality is \( \cbr{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+ + z : z \in \text{null} (X_{\calJ})} \).
+    Choosing \( z \neq 0 \) can only increase the value of the objective, from which we deduce \( w' = \sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+ \).
+    We obtain
+    \begin{align*}
+        \norm{\bar w}_2 + \norm{\bar v}_2
+         & \leq 2\norm{w'}_2 + \norm{u}_2                                                                                  \\
+         & = 2 \norm{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+} + \norm{u}_2                                        \\
+         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\rbr{b_{\calJ}}_+}_2 + \norm{u}_2                    \\
+         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{b_{\calJ}}_2 + \norm{u}_2                            \\
+         & =  \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\tilde X_{\calJ} u}_2 + \norm{u}_2                     \\
+         & \leq \rbr{1 + 2\frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})}} \norm{u}_2.
+    \end{align*}
+\end{proof}
+
+\approxResult*
+\begin{proof}
+    The proof is straightforward given our existing results.
+    Let \( u^* \) be the solution to the full (potentially regularized) C-GReLU problem.
+    For every \( D_i \in \calD_{X} \), we either have \( \calK_i - \calK_i = \R^d \), or not.
+    If the former condition holds, take \( r_i^* = u_i^* \).
+    Otherwise, invoke \cref{prop:cone-containment} to obtain \( D_j \in \calD_{X} \) such that \( \calK_i \subset \calK_j \) and \( \calK_j - \calK_j = \R^d \).
+    By the construction in the proof of \cref{prop:cone-containment}, if \( \sbr{D_j}_{kk} \neq \sbr{D_i}_{kk} \), then \( x_k \) is orthogonal to \( \calK_i \) and we deduce
+    \[
+        D_j X u^*_i = D_i X u^*_i.
+    \]
+    We may therefore merge the two neurons as \( r^*_j = u^*_j + u^*_i \) and update \( \tilde \calD' = \tilde \calD \setminus D_i \) without changing the loss component of the C-GReLU program.
+    Furthermore, since \( \norm{r^*_j} \leq \norm{u^*_j}_2 + \norm{u^*_i}_2 \), merging these neurons can only decrease the regularization term.
+    \footnote{In fact, we know that one of \( u^*_j, u^*_i \) is zero or they are collinear}
+    In this way, we obtain a sub-sampled C-GReLU problem with activation patterns \( \tilde \calD \) and optimal value \( d^* \).
+
+    Let \( \rbr{v^*, u^*} \) be the optimal solution to full C-ReLU problem.
+    Applying \cref{prop:socp-decomp} for each \( D_i \in \tilde \calD \) gives decompositions \( u_i^* = v_i' - u_i' \) such that
+    \begin{align*}
+        d^*
+         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2                                                                                                                                               \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - w_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^* - w_i^*}_2                                                                                                                            \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - w_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{w_i^*}_2                                                                                                                   \\
+         & = p^*                                                                                                                                                                                                                                                                  \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v'_i - w_i', y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{w_i'}_2                                                                                                                       \\
+         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{w_i'}_2                                                                                                                                \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2 + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2 \\
+         & = p^* + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2.
+    \end{align*}
+    We have abused notation here and omitted the dependence on \( i \) in \( \tilde X_{\calJ} = \rbr{2 D_i -I} X_{\calJ_i} \).
+    However, observe that \( 2D_i - I \) is orthonormal so that \( \sigma_{\text{max}}(\tilde X_{\calI}) = \sigma_{\text{max}}(X_{\calI}) \) and \( \sigma_{\text{min}}(\tilde X_{\calI}) = \sigma_{\text{min}}(X_{\calI}) \) for all \( \calI \).
+    Maximizing over \( \calI \subseteq [n] \) now gives a fixed subset \( \calJ \) for which the claimed bound holds.
+\end{proof}
+
+\iffalse
+
+    %% Now superseded by other results!
+    \subsection{Additional Results on Cone Decompositions}\label{app:additional-cone-results}
+
+    In this section, we provide additional theoretical results which were omitted from the main paper due to space constraints.
+    We examine the special case where \( X \) is full-row rank and also \emph{semi-orthogonal}, meaning the rows of \( X \) are orthogonal (although not necessarily orthonormal) vectors.
+    In this setting, there exists a simple decomposition based on the pseudo-inverse of a submatrix of \( X \) that gives a \( 2 \)-approximation of the norm.
+
+    \begin{proposition}\label{prop:orthogonal-decomp}
+        Let \( X \) be full row-rank and semi-orthogonal.
+        For every \( u \in \R^d \),
+        if \( \calI = \cbr{i \in [n] : \abr{\tilde x_i, u} < 0} \), then the decomposition
+        \[
+            w = - \tilde X_{\calI}^\dagger \tilde X_{\calI} u,
+        \]
+        and \( v = u + w \) satisfies \( v, w \in \calK \) and
+        \[
+            \norm{v}_2 + \norm{w}_2 \leq 2 \norm{u}_2.
+        \]
+    \end{proposition}
+    \begin{proof}
+        Let's show that the decomposition is valid.
+        Clearly, \( v - w = u \) by construction.
+        For notational ease, let \( \calJ = [n] \setminus \calI \).
+        It holds that
+        \[
+            \tilde X_{\calI} w = - \tilde X_{\calI} X_{\calI}^\dagger \tilde X_{\calI} u = - \tilde X_{\calI} u > 0,
+        \]
+        and, using that fact that \( \tilde X_{\calI}^\dagger X_{\calI} u_i^* \) lies in the row space of \( \tilde X_{\calI} \), which is orthogonal to the row space of \( \tilde X_{\calJ} \),
+        \[
+            \tilde X_{\calJ} w = - \tilde X_{\calJ} \tilde X_{\calI}^\dagger \tilde X_{\calI} u = 0.
+        \]
+        It remains only to note that
+        \[
+            \tilde X_{\calI} v = \tilde X_{\calI} u - \tilde X_{\calI} u = 0,
+        \]
+        and
+        \[
+            \tilde X_{\calJ} v = \tilde X_{\calJ} u + 0 \geq 0,
+        \]
+        by definition of \( \calJ \).
+        We conclude that \( w, v \in \calK \).
+
+        To show the approximation result, start from
+        \begin{align*}
+            \norm{w}_2
+             & = \norm{\tilde X_{\calI}^\dagger \tilde X_{\calI} u}_2             \\
+             & \leq \norm{\tilde X_{\calI}^\dagger \tilde X_{\calI}}_2 \norm{u}_2 \\
+             & = \norm{u}_2.
+        \end{align*}
+        Triangle inequality now gives the final result as follows:
+        \begin{align*}
+            \norm{v}_2
+             & = \norm{u - \tilde X_{\calI}^\dagger \tilde X_{\calI} u}_2               \\
+             & \leq \norm{(I - \tilde X_{\calI}^\dagger \tilde X_{\calI})}_2 \norm{u}_2 \\
+             & = \norm{u}_2.
+        \end{align*}
+        Combining these two inequalities gives the result.
+    \end{proof}
+\fi
+
+%% Old Proof
+
+%\begin{proof}
+%    We first show that the decomposition is valid.
+%    First, we observe that \( Z = \tilde X (\tilde X \tilde X^\top)^{-1} \) so that
+%    \[
+%        \tilde X Z^\top = I,
+%    \]
+%    and \( \tilde X_{\calI} \tilde Z_{\calI}^{\top} \) is diagonal with diagonal values
+%    exactly equal to \( 1 \).
+%    Using the index set \( \calI \), we have
+%    \begin{align*}
+%        \tilde X_{\calI} w
+%         & = - \tilde X_{\calI} \tilde Z_{\calI}^{\top} \rbr{\tilde X_{\calI} \tilde Z_{\calI}^{\top}}^{-1} \tilde X_{\calI} u \\
+%         & = - \tilde X_{\calI} u                                                                                              \\
+%         & > 0,
+%    \end{align*}
+%    by choice of \( \calI \).
+%    Moreover, since \( \tilde X_{[n] \setminus \calI} \tilde Z_{\calI}^{\top} = 0 \),
+%    we have \( \tilde X_{[n] \setminus \calI} w = 0 \) and \( w \in \calK \).
+%    The other component similarly satisfies
+%    \begin{align*}
+%        \tilde X_{[n] \setminus \calI} v
+%         & = \tilde X_{\calI} u - \tilde X_{\calI} u \\
+%         & = 0
+%        \intertext{and}
+%        \tilde X_{[n]\setminus\calI} v
+%         & = \tilde X_{[n]\setminus\calI} u - 0      \\
+%         & \geq 0,
+%    \end{align*}
+%    again by choice of \( \calI \).
+%    Thus, \( v \in \calK \) and the decomposition is valid.
+%    Next we control the blow-up in norm caused by the decomposition.
+
+%    Let \( \sigma_{\text{min}} \) be the smallest non-zero singular value of \( \tilde X_{\calI} \) and \( \sigma_{\text{max}} \) the largest singular value.
+%    Observe that \( \abs{\abr{\tilde x_j, \tilde z_j}} = \norm{\tilde X_{\calI} \tilde z_j}_2 \geq \sigma_{\text{min}} \) for \( j \in \calI \) since \( \abr{\tilde x_l, \tilde z_j} = 0 \) for \( l \neq j \) and \( \norm{\tilde z_j}_2 = 1 \).
+%    Using orthogonality of the \( \tilde z_j \), we obtain
+%    \begin{align*}
+%        \norm{w}_2^2
+%                   & = \left\|\tilde Z_{\calI}^{\top} \rbr{\tilde X_{\calI} \tilde Z_{\calI}^{\top}}^{-1} \tilde X_{\calI} u\right\|_2^2                                          \\
+%                   & = \left\|\sum_{j \in \calI} \frac{\abr{\tilde x_j, u}^2}{\abr{\tilde x_j, \tilde z_j}^2} \tilde z_j \right\|_2^2                                             \\
+%                   & = \sum_{j \in \calI} \frac{\abr{\tilde x_j, u}^2}{\abr{\tilde x_j, \tilde z_j}^2}                                \tag{since \( \norm{\tilde z_j}_2^2 = 1 \)} \\
+%                   & \leq \frac{1}{\sigma_{\text{min}}^2}  \sum_{j \in \calI} \abr{\tilde x_j, u}^2                                                                               \\
+%                   & = \frac{1}{\sigma_{\text{min}}^2}  \norm{\tilde X_{\calI} u}_2^2                                                                                             \\
+%                   & \leq \frac{\sigma_{\text{max}}^2}{\sigma_{\text{min}}^2}  \norm{u}_2^2.                                                                                      \\
+%        \implies
+%        \norm{w}_2 & \leq \frac{\sigma_{\text{max}}}{\sigma_{\text{min}}}  \norm{u}_2.
+%    \end{align*}
+%    Similarly,
+%    \begin{align*}
+%        \norm{v}_2
+%         & = \norm{u + w}_2                                                             \\
+%         & \leq \norm{u}_2 + \norm{w}_2                                                 \\
+%         & \leq \rbr{1 + 2 \frac{\sigma_{\text{max}}}{\sigma_{\text{min}}}} \norm{u}_2.
+%    \end{align*}
+%    Combining these two equations gives the desired result.
+%\end{proof}
+
