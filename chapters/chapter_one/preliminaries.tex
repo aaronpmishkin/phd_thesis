@@ -1,0 +1,120 @@
+%!TEX root=../../main.tex
+
+Let \( X \in \R^{n \times d_1} \) be a matrix of observations and \( y \in
+\R^{n \times c} \) a matrix of \( c \)-dimensional responses for each
+observation.
+This setup covers both multi-class classification and regression with
+vector-valued targets.
+We are interested in fully-connected ReLU neural networks with arbitrarily many
+layers.
+Let \( \Wl \in \R^{d_{l} \times d_{l+1}} \) be the matrix of weights for the \(
+^{\text{th}} \) layer.
+We will use \( \Wl_{i} \) to refer to the \( i^{\text{th}} \) row of \( \Wl \)
+and \( \Wl_{\cdot, j} \) to refer to the \( j^{\text{th}} \) column.
+The activations at layer $l$ are defined to be,
+\begin{equation}
+    Z^{(l+1)} = \rbr{\Z W^{(l)}}_+,
+\end{equation}
+where we take \( Z^{(1)} = X \) and \( \rbr{\cdot}_+ \) is ReLU activation
+function defined element-wise as \( \rbr{z}_+ = \max\cbr{z, 0} \).
+Using this notation, a fully-connected neural network with \( k \)-layers has
+the prediction function given by,
+\begin{equation}
+    f_\theta(X) = Z^{(k)}
+    W^{(k)},
+\end{equation}
+where \( W^{(k)} \in \R^{d_{k} \times c} \) ensures
+that the prediction is of the right dimension.
+Here, \( \theta = \cbr{W^{(1)}, \ldots, \Wk} \) denotes the collection of
+weights for the network and \( \Theta \) the complete parameter space.
+The choice of \( k = 2 \) corresponds to a two-layer ReLU network,
+which is sometimes referred to as a network with one hidden layer.
+In this case, the recursive definition can be unrolled to give a simple
+and explicit prediction function,
+\begin{equation}\label{eq:two-layer-vector-output}
+    f_\theta(X) = \rbr{X W^{(1)}}_+ W^{(2)}.
+\end{equation}
+Many of our results are focused on two-layer ReLU networks with scalar
+outputs, meaning \( c = 1 \).
+In this setting, it will often be useful to break-down \( f_\theta \) into
+an explicit sum over neurons in the hidden layer,
+\begin{equation}\label{eq:two-layer-scalar-output}
+    f_\theta(X) = \sum_{j = 1}^{d_2} \rbr{X W^{(1)}_{\cdot, j}}_+ W^{(2)}_{j}.
+\end{equation}
+Note that since \( c = 1 \), there is no weight sharing and \( W^{(2)} \in \R^{d_2 \times 1} \)
+is a column vector.
+
+We consider choosing \( \theta \) by solving regularized empirical risk
+minimization problems given the fixed training set \( (X, y) \).
+That is, problems of the form,
+\begin{equation}\label{eq:regularized-erm}
+    \theta^* \in \argmin_{\theta \in \Theta}
+    \calL\rbr{f_\theta(X), y} +
+    \lambda R(\theta),
+\end{equation}
+where \( \calL \) is a strictly convex loss function, \( R \) is a (typically
+convex) regularizer, and \( \lambda \geq 0 \) controls the strength of the
+regularization.
+The function
+\begin{equation}
+    F_\lambda(\theta) = \calL(f_\theta(X), y) + \lambda R(\theta)
+\end{equation}
+is referred to as the objective function.
+Although \( \calL \) and \( R \) are usually convex, \( \theta \mapsto
+F_\lambda(\theta) \) is not because the neural network \( f_\theta \) is
+highly non-linear and itself non-convex.
+As a result, Problem~\ref{eq:regularized-erm} is challenging to solve in both
+theory and practice.
+
+The most common choice of \( \calL \) and \( \R \) in practice are
+squared error and weight-decay regularization, respectively.
+This leads to the following concrete optimization problem:
+\begin{equation}\label{eq:squared-error}
+    \theta^* \in \argmin_{\theta \in \Theta}
+    \half \norm{f_\theta(X) - y}_2^2 +
+    \frac{\lambda}{2} \sum_{l=1}^k \norm{\Wl}_F^2,
+\end{equation}
+where \( \norm{\cdot}_F \) is the Frobenius norm given by the sum of squared entries,
+\[
+    \norm{\Wl}_F = \rbr{\sum_{i, j} \Wl_{i, j}}^2^{1/2}.
+\]
+The squared-error loss function is standard for regression problems and
+recent work has shown that it performs comparable to cross-entropy for
+classification problems \citep{hui2021evaluation}.
+
+Our analysis will work by considering the space of activation patterns that
+can be attained by a single ReLU neuron.
+Given a matrix \( A \in \R^{a \times b} \), set of activation patterns for \( A \) is
+\begin{equation}
+    \calD(X) = \cbr{ \text{diag}\rbr{\mathds{1}\rbr{ X w \geq 0}}: w \in \R^d }.
+\end{equation}
+Note that each pattern \( D_i \in \calD(X) \) is a diagonal matrix with \(
+[D_i]_{jj} = 1 \) if \( x_i^\top w \geq 0 \) and \( 0 \) otherwise.
+Each activation pattern is associated with a convex cone of vectors which
+are consistent with that pattern,
+\begin{equation}
+    \calK_i(X) = \cbr{w : (2D_i - I) X w \geq 0 }.
+\end{equation}
+It is straightforward to show that \( w \in \calK_i(X) \) if and only if \(
+(Xw)_+ = D_i X w \), i.e. \( D_i \) linearizes the ReLU activation.
+
+To reduce the burden of notation, let \( X^{(1)} = X \) and \( \calD^{(1)} =
+\calD(X) \).
+Let \( D^{(1)}_i \in \calD^{(1)} \) denote the activation patterns associated
+with \( X^{(1)} \) and \( \calK^{(1)}_i \) the associated cone.
+The total number of activation patterns is \( p_1 = \abs{\calD^{(1)}} \).
+Let \( a_1 = d_1 \) so that \( X^{(1)} \in \R^{n \times a_1} \).
+Then, we can recursively define,
+\begin{equation}
+    X^{(l+1)} =
+    \begin{bmatrix}
+        \Dl_1 \Xl & \ldots & \Dl_{p_{l}} \Xl
+    \end{bmatrix}
+    ,
+\end{equation}
+\( \calDl = \calD(\Xl) \), \( \Dl_i \in \calDl \) where \(
+\calKl_i \) is the associated cone, and \( p_l = \abs{\calD^l} \).
+Note that \( X^{(l+1)} \in \R^{n \times p_{l} \cdot a_{l}} \), which implies \(
+a_{l+1} = p_{l} \cdot a_{l} \).
+These objects will allow us to reason about the activation patterns of neural
+networks with more than two layers.

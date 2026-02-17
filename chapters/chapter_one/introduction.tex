@@ -1,6 +1,4 @@
-%!TEX root=../main.tex
-
-\chapter{Introduction}\label{chapter:introduction}
+%!TEX root=../../main.tex
 
 In 2012, AlexNet won the ImageNet Large Scale Visual Recognition Challenge
 \citep{deng2009imagenet} and completed the ascendency of deep neural networks in
@@ -119,26 +117,71 @@ generative models \citep{sahiner2021hidden} and polynomial activations
 We focus on convex reformulations of two-layer neural networks with ReLU
 activation functions.
 From a theoretical perspective, two-layer ReLU networks are highly attractive
-because they are universal approximators while still being restricted to the
-class of piece-wise linear predictors \citep{huang2020universal}.
+because they are piece-wise linear predictors as well as universal
+approximators \citep{huang2020universal}.
 However, ReLU activations are also among the most popular in machine learning
 \citep{szandala2020review} and two-layer ReLU networks are fundamental building
 blocks of many important models.
-For instance, deep ReLU networks are simply stacks of two-layer modules and
-training by greedy sequential optimization of these blocks can be competitive
+For instance, deep ReLU networks can be modeled as stacks of two-layer modules
+and training by greedy sequential optimization of these blocks is competitive
 with end-to-end training \citep{belilovsky2019greedy}.
-Two layer-ReLU networks are basic components of standard transformer blocks,
-can be used to model self attention \citep{sahiner2022attention}, and are
-widely used for reinforcement learning \citep{gaur2023global}, prediction on
-edge devices \citep{teerapittayanon2017distributed}, and word-embeddings
+Two-layer ReLU networks are basic components of the standard transformer block
+and can be used to model self attention \citep{sahiner2022attention}.
+On their own, two-layer ReLU networks are widely used for reinforcement
+learning \citep{gaur2023global}, prediction on edge devices
+\citep{teerapittayanon2017distributed}, and word-embeddings
 \citep{mikolov2013word}.
-As such, advances in training and theory for two-layer networks stands to
+As such, advances in training and theory for two-layer networks stand to
 impact many areas of machine learning.
 
+We start by leveraging convex reformulations to develop fast, global
+optimization methods for two-layer ReLU networks.
+Access to an equivalent convex program allows us to side-step optimization
+lower-bounds for non-convex, non-smooth functions and develop accelerated
+solvers based on the FISTA algorithm \citep{beck2009fista} and on
+augmented Lagrangian methods \citep{rockafellar1976augmented}.
+Key to this approach is the development of an unconstrained relaxation of the
+convex ReLU problem called a gated ReLU network \citep{fiat2019decoupling}.
+We show that gated ReLU networks with non-singular activation patterns form the
+same hypothesis space as ReLU networks and provide approximation bounds for
+regularized training problems.
+Experimentally, our convex solvers are orders of magnitude faster than SGMs
+while requiring with little-to-no hyper-parameter tuning.
 
+Next, we use convex reformulations to characterize the set of global
+solutions to the non-convex training problem for two-layer ReLU networks.
+Our work reveals the existence of a non-trivial manifold of global optima;
+in the convex parameterization, this manifold corresponds to a convex polytope
+living in an affine subspace.
+We show that vertices of the polytope correspond to highly neuron-sparse
+networks and derive a neuron pruning algorithm to compute these minimal models
+To the best of our knowledge, this is the first optimal neuron pruning
+algorithm for neural networks.
+We also prove many other continuity and sensitivity results as well as extend
+our characterization of the optimal set to include all critical points of the
+training objective.
 
-\section{Preliminaries and Assumptions}
+Since these optimality results address only two-layer networks, we conclude by
+developing convex reformulations for arbitrarily deep ReLU networks.
+Our approach is based on a novel layer elimination lemma, which we use to
+to show that ReLU networks are equivalent to tensor optimization problems with
+non-convex, low-rank decomposition constraints.
+For sufficiently wide networks (although still finite), these low-rank
+constraints vanish and we obtain a fully convex tensor program with a
+recursive cone constraint.
+Similar to the two-layer setting, we develop a unconstrained Gated ReLU
+relaxation and prove equivalence of the model spaces for non-singular
+activation patterns.
+Finally, we study both deep ReLU and deep gated ReLU models under a variety
+of regularization schemes.
 
-\section{Related Work}
+The rest of the thesis is organized as follows:
+In \cref{chapter:fast-optimization}, we develop the theory of gated ReLU
+networks and present our convex solvers for two-layer models.
+Next, \cref{chapter:solution-functions} derives the structure of the optimal
+set for two-layer ReLU networks and establishes many results around pruning,
+sampling, continuity, and sensitivity.
+Finally, \cref{chapter:deep-reformulations} extends convex reformulations
+to deep, fully-connected ReLU networks.
+All proofs are postponed to the appropriate section of the appendix.
 
-\section{Published Papers and Multiple Authorship}
