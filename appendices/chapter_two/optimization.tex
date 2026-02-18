@@ -6,13 +6,13 @@
 \begin{proof}
 	Applying the solution mapping from the proof of \cref{thm:unconstrained-equivalence} (see \cref{app:convex-forms}) we find that taking
 	\[
-		v_i' = W_{1i} * w_{2i},
+		v_i' = W^{*(1)}_{\cdot, i} * W^{*(2)}_{i},
 	\]
 	for each \( D_i \in \calD \) yields a global minimizer of C-ReLU.
 	Now we apply the iteration complexity of FISTA~\citep[Theorem 4.4]{beck2009fista} to obtain an \( \epsilon \)-optimal solution in
 	\begin{align*}
 		T & \leq \frac{\rbr{2 \lambda_{\text{max}}\rbr{M^\top M}\sum_{D_i \in \tilde \calD} \norm{v_i'}_2^2}^{1/2}}{\epsilon^{1/2}}            \\
-		  & = \frac{\rbr{2 \lambda_{\text{max}}\rbr{M^\top M}\sum_{D_i \in \tilde \calD} \norm{W_{1i}^* w_{2i}^*}_2^2}^{1/2}}{\epsilon^{1/2}},
+		  & = \frac{\rbr{2 \lambda_{\text{max}}\rbr{M^\top M}\sum_{D_i \in \tilde \calD} \norm{W^{*(1)}_{\cdot, i}* W^{*(2)}_{i}*}_2^2}^{1/2}}{\epsilon^{1/2}},
 	\end{align*}
 	iterations.
 	Note that we have used the fact that \( \lambda_{\text{max}}(M^\top M) \) is the Lipschitz smoothness constant of the squared-error loss.

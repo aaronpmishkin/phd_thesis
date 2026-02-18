@@ -1,15 +1,19 @@
 %!TEX root = ../main.tex
 \section{Convex Reformulations}\label{sec:convex-formulations}
 
+Throughout this section, we will focus on training two-layer ReLU networks
+using convex optimization.
+We consider the standard training problem with weight decay regularization,
+\begin{equation*}
+    h_{W_1, w_2}(X) = \sum_{i=1}^m \rbr{X W^{(1)}_{\cdot, i}}_+ W^{(2)}_{i},
+\end{equation*}
+
 Let \( X \in \R^{n \times d} \) be a data matrix and \( y \in \R^n \) the associated targets.
 We are interested in two-layer ReLU networks,
-\begin{equation*}
-	h_{W_1, w_2}(X) = \sum_{i=1}^m \rbr{X W_{1i}}_+ w_{2i},
-\end{equation*}
 where \( W_1 \in \R^{m \times d} \), \( w_2 \in \R^m \) are the weights of the first and second layers, \( m \) is the number of hidden units, and \( \rbr{\cdot}_+ = \max\cbr{\cdot, 0} \) is the ReLU activation.
 Fitting \( h_{W_1, w_2} \) by minimizing convex loss \( \calL \) with weight decay (\( \ell_2 \)) regularization leads to the optimization problem (NC-ReLU),\vspace{-1em}
 \begin{equation}\label{convex-forms:eq:non-convex-relu-mlp}
-	\min_{W_1, w_2} \! \calL\Big(h_{W_1, w_2}(X), y \Big) + \frac{\lambda}{2}\sum_{i=1}^m \norm{W_{1i}}_2^2 + |w_{2i}|^2,\!
+    \min_{W_1, w_2}   \calL\Big(h_{W_1, w_2}(X), y \Big) + \frac{\lambda}{2}\sum_{i=1}^m \norm{W^{(1)}_{\cdot, i}}_2^2 + |W^{(2)}_{i}|^2, 
 \end{equation}
 where \( \lambda \geq 0 \) is the regularization strength.
 While Problem~\ref{convex-forms:eq:non-convex-relu-mlp} is non-convex,
@@ -23,14 +27,14 @@ The activation patterns a ReLU neuron \( \rbr{X w}_{+} \) can take for fixed \( 
 which grows as \(|\calD_X| \in O(r(n/r)^r)\) for \(r := \text{rank}(X)\) \citep{pilanci2020convexnn}.
 For \( D_i \in \calD_{X} \), the set of vectors \( u \) which achieve the corresponding activation pattern, meaning \( D_i X u = \rbr{X u}_+ \), is the convex cone,
 \[
-	\calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
+    \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
 \]
 For any subset \( \tilde \calD \subseteq \calD_X \), we define the sub-sampled convex optimization problem (C-ReLU):
 \begin{equation}\label{convex-forms:eq:convex-relu-mlp}
-	\begin{aligned}
-		\!\!\! \min_{v, w} \, & \calL\Big(\!\!\sum_{D_i \in \tilde \calD}\!\! D_i X (v_i \!-\! w_i), y\Big)\!+\!\lambda\!\sum_{D_i \in \tilde \calD}\!\norm{v_i}_2\!+\!\norm{w_i}_2. \\
-		                      & \text{s.t.} \quad v_i, w_i \in \calK_i
-	\end{aligned}
+    \begin{aligned}
+            \min_{v, w} \, & \calL\Big(  \sum_{D_i \in \tilde \calD}   D_i X (v_i  -  w_i), y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2 + \norm{w_i}_2. \\
+                              & \text{s.t.} \quad v_i, w_i \in \calK_i
+    \end{aligned}
 \end{equation}
 
 \citet{pilanci2020convexnn} prove NC-ReLU and C-ReLU are equivalent using linear semi-infinite duality theory~\citep{ goberna2002semi}.
@@ -46,37 +50,39 @@ By introducing sub-sampled models, we relax the dependencies on \( m^* \) and \(
 %    The non-convex problem NC-ReLU (Problem \ref{convex-forms:eq:non-convex-relu-mlp}) is equivalent to the mixed-integer program,
 %    \begin{equation}\label{convex-forms:eq:mi-reformulation}
 %        \begin{aligned}
-%            \min_{W_1, w_2} \; & \calL\Big(\sum_{i = 1}^m \rbr{X W_{1i}}_+ w_{2i}, y\Big) + \lambda \sum_{i = 1}^m \norm{W_{1i}}_2 \\
+%            \min_{W_1, w_2} \; & \calL\Big(\sum_{i = 1}^m \rbr{X W^{(1)}_{\cdot, i}}_+ W^{(2)}_{i}, y\Big) + \lambda \sum_{i = 1}^m \norm{W^{(1)}_{\cdot, i}}_2 \\
 %                               & \text{\emph{s.t.}} \; w_2 \in \cbr{-1, 1}^m.
 %        \end{aligned}
 %    \end{equation}
 %\end{restatable}
 
 %See \cref{app:convex-forms} for a proof.
-%\cref{lemma:mi-reformulation} suggests splitting on the values of \( w_{2i} \) and then enumerating the ReLU activations functions, which gives the following theorem.
+%\cref{lemma:mi-reformulation} suggests splitting on the values of \( W^{(2)}_{i} \) and then enumerating the ReLU activations functions, which gives the following theorem.
 
 \begin{restatable}{theorem}{convexDualityFree}\label{thm:duality-free}
-	Suppose \( \rbr{W_1^*, w_2^*} \) and \( \rbr{v^*, w^*} \) are global minima of the NC-ReLU~\eqref{convex-forms:eq:mi-reformulation} and C-ReLU~\eqref{convex-forms:eq:convex-relu-mlp} problems, respectively.
-	If the number of hidden units satisfies
-	\[ m \geq b := \sum_{D_i \in \tilde \calD} \abs{\cbr{v^*_i : v^*_i \neq 0} \cup \cbr{w^*_i : w^*_i \neq 0} }, \]
-	and the optimal activations are in the convex model,
-	\[ \cbr{\text{\emph{diag}}\rbr{X W_{1i}^* \geq 0 : i \in [m]} } \subseteq \tilde \calD, \]
-	then the two problems have same the optimal value.
+    Suppose \( \theta^* = \rbr{W^{*(1)}, W^{*(2)}} \) and \( \rbr{v^*, w^*} \)
+    are global minima of the NC-ReLU~\eqref{convex-forms:eq:mi-reformulation}
+    and C-ReLU~\eqref{convex-forms:eq:convex-relu-mlp} problems, respectively.
+    If the number of hidden units satisfies
+    \[ m \geq b := \sum_{D_i \in \tilde \calD} \abs{\cbr{v^*_i : v^*_i \neq 0} \cup \cbr{w^*_i : w^*_i \neq 0} }, \]
+    and the optimal activations are in the convex model,
+    \[ \cbr{\text{\emph{diag}}\rbr{X W^{*(1)}_{\cdot, i} \geq 0 : i \in [m]} } \subseteq \tilde \calD, \]
+    then the two problems have same the optimal value.
 \end{restatable}
 See \cref{app:convex-forms} for proof.
 The advantages of this theorem over existing results are (i) the simple and duality-free proof, and (ii) the dependence on \( \tilde \calD \), which we show in \cref{sec:experiments} can be much smaller than \( \calD_X \) while still performing comparably to NC-ReLU.
 \cref{thm:duality-free} also reveals that \( m^* \) is determined by the number of active ``neurons'' at the optimal solution of the full C-ReLU problem with \( \tilde \calD = \calD_X \).
 
 %\begin{align*}
-%    \rbr{\hat W_1^*, \hat w_2^*} \!=\!\!\!\bigcup_{D_i \in \tilde \calD_i}\!\!\!\cbr{\rbr{v^*_i, 1} : v^*_i \neq 0} \cup \cbr{\rbr{w^*_i, -1} : w^*_i \neq 0}
+%    \rbr{\hat W_1^*, \hat w_2^*}  =   \bigcup_{D_i \in \tilde \calD_i}   \cbr{\rbr{v^*_i, 1} : v^*_i \neq 0} \cup \cbr{\rbr{w^*_i, -1} : w^*_i \neq 0}
 %\end{align*}
 %is a global minimizer of Problem~\ref{convex-forms:eq:mi-reformulation} and, defining,
 %\[
-%    T(j) = \cbr{ i \in [m] : \text{diag}\rbr{X W_{1i}^* > 0} = D_j },
+%    T(j) = \cbr{ i \in [m] : \text{diag}\rbr{X W^{(1)}_{\cdot, i}^* > 0} = D_j },
 %\]
 %we construct a solution to Problem~\ref{convex-forms:eq:convex-relu-mlp} as,
 %\begin{equation*}
-%    \rbr{\hat v^*, \hat w^*} \!=\! \bigg\{\!\sum_{i \in T(j)}\!\!W_{1i}^* \mathds{1}(w_{2i}^*\!=\!1), \!\!\!\sum_{i \in T(j)}\!\!\! W_{1i}^* \mathds{1}(w_{2i}^*\!=\!-1) \bigg\}_{j = 1}^m
+%    \rbr{\hat v^*, \hat w^*}  =  \bigg\{ \sum_{i \in T(j)}  W^{(1)}_{\cdot, i}^* \mathds{1}(W^{(2)}_{i}^* = 1),    \sum_{i \in T(j)}    W^{(1)}_{\cdot, i}^* \mathds{1}(W^{(2)}_{i}^* = -1) \bigg\}_{j = 1}^m
 %\end{equation*}
 
 %\begin{corollary}
@@ -93,23 +99,26 @@ The advantages of this theorem over existing results are (i) the simple and dual
 Solving C-ReLU using scalable first-order methods typically requires projecting on \( \calK_i \), which is an expensive quadratic program in the general case.
 To circumvent this, we consider the following unconstrained relaxation (C-GReLU):
 \begin{equation}\label{convex-forms:eq:unconstrained-relu-mlp}
-	\min_{u} \; \calL\Big(\sum_{D_i \in \tilde \calD} D_i X u_i, y\Big)+ \lambda \sum_{D_i \in \tilde \calD} \norm{u_i}_2.
+    \min_{u} \; \calL\Big(\sum_{D_i \in \tilde \calD} D_i X u_i, y\Big)+ \lambda \sum_{D_i \in \tilde \calD} \norm{u_i}_2.
 \end{equation}
 At first look, this problem is a high-dimensional GLM with group-\( \ell_1 \) regularization.
 In fact, C-GReLU is the convex re-formulation of another neural network optimization problem.
 Let \( \calG \subset \R^d \) and consider the model,
 \[
-	h_{W_1, w_2}(X) = \sum_{g_i \in \calG} \phi_{g}(X, W_{1i}) w_{2i},
+    h_{W_1, w_2}(X) = \sum_{g_i \in \calG} \phi_{g}(X, W^{(1)}_{\cdot, i}) W^{(2)}_{i},
 \]
 where \( \phi_{g}(X, u) = \text{diag}(\mathds{1}(Xg \geq 0)) X u \) is a ``gated ReLU'' activation function with fixed gate vector \( g \) \citep{fiat2019decoupling}.
 C-GReLU is equivalent to training this gated ReLU network.
 
 \begin{restatable}{theorem}{unconstrainedEquivalence}\label{thm:unconstrained-equivalence}
-	Let \( g_i \in R^d \) such that \(\text{diag}(X g_i \geq 0) = D_i \) and \( \tilde \calG = \cbr{g_i : D_i \in \tilde \calD} \).
-	Then, C-GReLU is equivalent to the following gated ReLU problem (NC-GReLU):
-	\begin{equation}\label{convex-forms:eq:gated-relu-mlp}
-		\!\min_{W_1, w_2}\! \calL\Big(\!\!\sum_{g_i \in \tilde \calG }\!\!\phi_{g_i}(X, W_{1i})w_{2i}, y\Big)\!+\!\frac{\lambda}{2} \!\! \sum_{g_i \in \tilde \calG}\!\!\norm{W_{1i}}_2^2 + w_{2i}^2. \!\!
-	\end{equation}
+    Let \( g_i \in R^d \) such that \(\text{diag}(X g_i \geq 0) = D_i \) and \(
+    \tilde \calG = \cbr{g_i : D_i \in \tilde \calD} \).
+    Then, C-GReLU is equivalent to the following gated ReLU problem (NC-GReLU):
+    \begin{equation}\label{convex-forms:eq:gated-relu-mlp}
+         \min_{W_1, w_2} \calL\Big(\sum_{g_i \in \tilde \calG} 
+         \phi_{g_i}(X, W^{(1)}_{\cdot, i})W^{(2)}_{i}, y\Big) + \frac{\lambda}{2}
+         \sum_{g_i \in \tilde \calG} \norm{W^{(1)}_{\cdot, i}}_2^2 + \abs{W^{(2)}_{i}}^2. 
+    \end{equation}
 \end{restatable}
 See \cref{app:convex-forms} for proof.
 We can use \cref{thm:unconstrained-equivalence} to fit Gated ReLU networks by (much easier) unconstrained minimization.

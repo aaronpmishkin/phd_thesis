@@ -32,9 +32,9 @@ The forward operator for the network at iteration \( t \) may be re-written as
 where \( \calA^t = \cbr{D^t_i = \text{diag}\rbr{X W^t_{1i} > 0} : i \in [m]} \) is the collection of ``active'' patterns.
 We can also define \( \calI^t = \calD_X \setminus \calA^t \) to be the set of inactive patterns and an extended weight space
 \begin{align*}
-	\rbr{\bar W_{1i}^t, \bar w_{2i}^t} =
+	\rbr{\bar W^{*(1)}_{\cdot, i}t, \bar W^{*(2)}_{i}t} =
 	\begin{cases}
-		\rbr{W_{1i}^t, w_{2i}^t} & \mbox{if \( D_i \in \calA^t \)} \\
+		\rbr{W^{*(1)}_{\cdot, i}t, W^{*(2)}_{i}t} & \mbox{if \( D_i \in \calA^t \)} \\
 		\rbr{0, 0}               & \mbox{otherwise},
 	\end{cases}
 \end{align*}
