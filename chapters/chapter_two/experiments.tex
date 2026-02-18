@@ -10,7 +10,7 @@ Moreover, the models learned by convex optimization are consistent and generaliz
 
 \textbf{Synthetic Classification}:
 Convex-reformulations offer a stable approach to model training, especially outside of the over-parameterized setting.
-To illustrate this, we create a realizable problem with \( X \sim \calN\rbr{0, \Sigma} \) and \( y = \text{sign}(h_{W_1,w_2}(X)) \), where \( h_{W_1, w_2} \) is a two-layer ReLU network with \( m = 100 \) and random Gaussian weights.
+To illustrate this, we create a realizable problem with \( X \sim \calN\rbr{0, \Sigma} \) and \( y = \text{sign}(f_{W^{(1)}, W^{(2)}}(X)) \), where \( f_{W^{(1)}, W^{(2)}} \) is a two-layer ReLU network with \( m = 100 \) and random Gaussian weights.
 We try to recover this model with ten independent runs of SGD and compare against our AL method on the C-ReLU problem.
 For C-ReLU, \( \tilde \calD \) is 100 random arrangements augmented with all activations generated while solving the non-convex problem with SGD.\footnote{This guarantees the non-convex model is in the model space of the convex program.}
 \cref{fig:synthetic-classification} shows that SGD converges to sub-optimal stationary points four times, while every run of the convex solver yields a model with perfect training accuracy.

@@ -28,7 +28,7 @@ For each method-dataset pair, we performed five-fold cross validation on the tra
 
 For the gated ReLU problems (both C-GReLU and NC-GReLU) we sampled the same set of \( 5000 \) activation patterns for both the convex reformulation and the original non-convex model.
 We used \( 2500 \) activation patterns for the C-ReLU problem.
-To ensure a similar model space, we computed at the number of active neurons (e.g. \( v_i \neq 0 \) or \( w_i \neq 0 \)) at convergence for C-ReLU and then used this as the number of hidden units for \( NC-ReLU \) problems.
+To ensure a similar model space, we computed at the number of active neurons (e.g. \( v_i \neq 0 \) or \( u_i \neq 0 \)) at convergence for C-ReLU and then used this as the number of hidden units for \( NC-ReLU \) problems.
 Note that we extend our convex reformulations to multi-class problems using the results in Appendix~\ref{app:multi-class-extension}.
 Similarly, we use the vector-output variant of the NC-ReLU problem (Eq.~\ref{convex-forms:eq:vector-non-convex-relu-mlp}) for multi-class problems.
 

@@ -133,55 +133,67 @@ Empirically, the complexity of solving these problems with commercial software i
 Instead, we propose an \emph{approximate} decomposition procedure which
 can be solved efficiently using R-FISTA.
 
-Manipulating the cone decomposition \( v - w = u \), \( v, w \in \calK \),
-we obtain the equivalent conditions \( \tilde X w \geq (-\tilde X u)_+ \) and \( v = u + w \).
-Given
-\( \rho \geq 0 \), and \( b = (-\tilde X u)_+ \),
-the regularized one-sided quadratic
+Manipulating the cone decomposition \( v - u = w \), \( v, u \in \calK \), we
+obtain the equivalent conditions \( \tilde X u \geq (-\tilde X w)_+ \) and
+\( v = w + u \).
+Given \( \rho \geq 0 \), and \( b = (-\tilde X u)_+ \), the regularized
+one-sided quadratic
 \begin{equation}\label{eq:cd-approx}
-    \textbf{CD-A}: \, \min_{w} \half
+    \textbf{CD-A}: \, \min_{u} \half
     \|
-    (b - \tilde X w)_+
+    (b - \tilde X u)_+
     \|_2^2
-    + \rho \norm{w}_2,
+    + \rho \norm{u}_2,
 \end{equation}
 approximates the exact cone-decomposition as follows:
 \begin{restatable}{proposition}{approxDecompBounds}\label{prop:approx-decomp-bounds}
-    Suppose \( \tilde w \) is a minimizer of \eqref{eq:cd-approx} and let \( \tilde v = u + \tilde w \).
+    Suppose \( \tilde u \) is a minimizer of \eqref{eq:cd-approx} and let \(
+    \tilde v = w + \tilde u \).
     If \( X \) is full row-rank, then
     \[
-        \|(\tilde X \tilde w)_-\|_2 + \|(\tilde X \tilde v)_-\|_2
+        \|(\tilde X \tilde u)_-\|_2 + \|(\tilde X \tilde v)_-\|_2
         \leq \frac{2\rho}{\sigma_{\text{min}}(\tilde X)}.
     \]
-    Furthermore, if \( \rho > 0 \), then the norm bound in \cref{prop:socp-decomp} also holds for the approximate solution \( (\tilde v, \tilde w) \).
+    Furthermore, if \( \rho > 0 \), then the norm bound in
+    \cref{prop:socp-decomp} also holds for the approximate solution
+    \( (\tilde v, \tilde u) \).
 
     Alternatively, suppose \( X \) is not full row-rank.
-    As \( \rho_k \rightarrow 0 \), every convergent subsequence of \( (\tilde v_k, \tilde w_k) \) is a feasible cone decomposition.
+    As \( \rho_k \rightarrow 0 \), every convergent subsequence of
+    \( (\tilde v_k, \tilde u_k) \) is a feasible cone decomposition.
     Moreover, at least one such sequence exists.
 \end{restatable}
-Proof in \cref{app:optimization}, where we also provide \cref{prop:approx-decomp-submatrices},
-an alternative characterization in terms of sub-matrices \( \tilde X_{\calJ} \).
-\autoref{prop:approx-decomp-bounds} shows it is straightforward to control the quality of the approximation by tuning \( \rho \).
-In practice, we find CD-A with \( \rho \approx 10^{-10} \) yields competitive performance and is easily solved using R-FISTA.
+Proof in \cref{app:optimization}, where we also provide
+\cref{prop:approx-decomp-submatrices}, an alternative characterization in terms
+of sub-matrices \( \tilde X_{\calJ} \).
+\autoref{prop:approx-decomp-bounds} shows it is straightforward to control the
+quality of the approximation by tuning \( \rho \).
+In practice, we find CD-A with \( \rho \approx 10^{-10} \) yields competitive
+performance and is easily solved using R-FISTA.
 
 \subsection{Solving the ReLU Problem}\label{sec:al-method}
 
 The main difficulty in solving C-ReLU is the constraints.
-%Projecting onto \( \calK_i \) is a quadratic program, making proximal-gradient methods unfeasible.
-Interior point methods~\citep{nesterov1994interior} and specialized conic solvers~\citep{odonoghue2016scs} can handle \( \calK_i \), but such methods require second-order information or repeated linear-system solves and scale poorly in both \( n \) and \( d \).
-Instead, we develop an augmented Lagrangian (AL) method that uses R-FISTA as a sub-routine.
+Projecting onto \( \calK_i \) is a quadratic program, making proximal-gradient
+methods unfeasible.
+Interior point methods~\citep{nesterov1994interior} and specialized conic
+solvers~\citep{odonoghue2016scs} can handle \( \calK_i \), but such methods
+require second-order information or repeated linear-system solves and scale
+poorly in both \( n \) and \( d \).
+Instead, we develop an augmented Lagrangian (AL) method that uses R-FISTA as a
+sub-routine.
 
 Recall \cref{thm:cone-elimination} established a sub-sampled problem equivalent to the full C-ReLU problem for which each \( \calK_i \) is non-singular.
 These cones have an interior point if and only if they are non-singular (see \cref{lemma:affine-characterization}), implying the sub-sampled problem is strictly feasible and satisfies strong duality.
 Letting \( \gamma, \zeta \in \R^{|\tilde \calD| \times n} \) be estimates of the optimal Lagrange multipliers, the augmented Lagrangian for~\eqref{convex-forms:eq:convex-relu-mlp} is
 \begin{equation}\label{eq:augmented-lagrangian}
     \begin{aligned}
-        \calL_\delta & (v, w, \gamma, \zeta) := (\delta / 2)  \sum_{D_i \in \tilde \calD}  \big[\|(\gamma_i / \delta -  \tilde X_i v_i)_+\|_2^2 \\
-                     & \hspace{2em} + \|(\zeta_i / \delta - \tilde X_i w_i)_+\|_2^2 \big] + F(v,w),
+        \calL_\delta & (v, u, \gamma, \zeta) := (\delta / 2)  \sum_{D_i \in \tilde \calD}  \big[\|(\gamma_i / \delta -  \tilde X_i v_i)_+\|_2^2 \\
+                     & \hspace{2em} + \|(\zeta_i / \delta - \tilde X_i u_i)_+\|_2^2 \big] + F(v,w),
     \end{aligned}
 \end{equation}
-where \( F(v, w) \) is the primal objective and \( \tilde X_i = (2 D_i - I) X \).
-Eq.~\ref{eq:augmented-lagrangian} is a penalty method and can recover an optimal primal-dual pair from \( \rbr{v_k, w_k} \in \argmin \calL_{\delta_k}(v, w, 0, 0) \) as \( \delta_k \into \infty \) \citep{nocedal1999numerical}.
+where \( F(v, u) \) is the primal objective and \( \tilde X_i = (2 D_i - I) X \).
+Eq.~\ref{eq:augmented-lagrangian} is a penalty method and can recover an optimal primal-dual pair from \( \rbr{v_k, u_k} \in \argmin \calL_{\delta_k}(v, u, 0, 0) \) as \( \delta_k \into \infty \) \citep{nocedal1999numerical}.
 However, choosing \( \delta_k \) is challenging in practice.
 
 \begin{figure*}[t]
@@ -202,24 +214,24 @@ However, choosing \( \delta_k \) is challenging in practice.
 
 Instead, the AL method performs proximal-point iterations on the dual \citep{rockafellar1976monotone, rockafellar1976augmented} via the iterations,
 \begin{align}
-    \rbr{v_{k+1}, w_{k+1}}
-                & = \argmin_{v, w} \calL_{\delta}(v, w, \gamma_k, \zeta_k), \label{eq:al-subroutine} \\
+    \rbr{v_{k+1}, u_{k+1}}
+                & = \argmin_{v, u} \calL_{\delta}(v, u, \gamma_k, \zeta_k), \label{eq:al-subroutine} \\
     \gamma_{k + 1}
     = (\gamma_k & - \delta \tilde X_i v_i)_+, \quad
-    \zeta_{k + 1} = (\zeta_k - \delta \tilde X_i w_i)_+. \nonumber
+    \zeta_{k + 1} = (\zeta_k - \delta \tilde X_i u_i)_+. \nonumber
 \end{align}
 The dual iterates of the AL method converge as \( O(1/\delta \cdot \epsilon) \). See \cref{thm:al-convergence-rate} for a proof going through proximal-point.
 
 \subsubsection{Reliable Constrained Optimization}\label{sec:reliable-co}
 
-AL methods are typically \emph{exterior point} solvers: \( (v_k, w_k) \) will approach the constraint set only as the dual problem is solved.
+AL methods are typically \emph{exterior point} solvers: \( (v_k, u_k) \) will approach the constraint set only as the dual problem is solved.
 The complexity of maximizing the dual depends on the penalty strength, with \( \delta \gg 1 \) producing fast convergence.
 However, \( \delta \) also affects the Lipschitz smoothness of \( \calL_\delta \) --- large \( \delta \) increases the curvature of the (one-sided) quadratic penalties --- and can make solving~\eqref{eq:al-subroutine} prohibitively expensive for first-order methods.
 Thus, we choose \( \delta \) to balance convergence on the primal and dual problems.
 
 \textbf{Choosing the Penalty Strength}:
 it is common to set \( \delta \) to aggressively decrease the constraint gap~\citep{conn2013lancelot, murtagh1983minos},
-\[ c_{\text{gap}} = \sum_{D_i \in \tilde \calD} \|(\tilde X_i v_i)_-|^2_2 + \|(\tilde X_i w_i)_-\|^2_2. \]
+\[ c_{\text{gap}} = \sum_{D_i \in \tilde \calD} \|(\tilde X_i v_i)_-|^2_2 + \|(\tilde X_i u_i)_-\|^2_2. \]
 These rules pre-suppose second-order solvers and lead to very poor conditioning of \( \calL_\delta \).
 Instead, we propose a simple ``windowing'' heuristic:
 when solving Eq.~\ref{eq:al-subroutine} for \( \rbr{\gamma_1, \zeta_1} \), take \( \delta \) to ensure that \( c_{\text{gap}} \in \sbr{r_{\text{l}}, r_{\text{u}}} \).
@@ -227,7 +239,7 @@ This condition can be checked and enforced with minimal overhead by using a mild
 We found \( [r_{\text{l}}, r_{\text{u}}] = [0.01, 0.1] \) works well.
 
 \textbf{Warm Starts}: The contours of \( \calL_\delta\rbr{\cdot, \cdot, \gamma_{k+1}, \zeta_{k+1}} \) typically change slowly when \( \delta \) is moderate.
-In such cases, minimizing the augmented Lagrangian can be greatly sped-up by warm-starting with \( \rbr{v_k, w_k} \).
+In such cases, minimizing the augmented Lagrangian can be greatly sped-up by warm-starting with \( \rbr{v_k, u_k} \).
 
 We obtain an efficient and robust AL method by combining warm-starts, our heuristic for \( \delta \), and the R-FISTA sub-solver.
 

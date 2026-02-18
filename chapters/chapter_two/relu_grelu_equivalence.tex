@@ -11,14 +11,14 @@ All proofs are deferred to \cref{app:relu-grelu-equivalence}.
 \begin{figure}
     \centering
     \input{figures/chapter_two/cone_decomp}
-    \caption{An illustration of the Cone Decomposition (CD) procedure: \( u_i \) is decomposed onto the Minkowski difference \( \calK_i - \calK_i \).}%
+    \caption{Illustration of the Cone Decomposition (CD) procedure: \( w_i
+        \) is decomposed onto the Minkowski difference \( \calK_i - \calK_i \).}%
     \label{fig:cone-decomp}
-    \vspace{-0.3cm}
 \end{figure}
 
 Let \( \lambda = 0 \) and consider the C-GReLU problem~\eqref{convex-forms:eq:unconstrained-relu-mlp}.
-For each \( D_i \in \tilde \calD \), we seek to decompose the optimal data-local models as \( u^*_i = v_i - w_i \in \calK_i - \calK_i \).
-If these decompositions exist, collecting them into \( (v, w) = \cbr{(v_i, w_i)} \) gives a feasible point for the C-ReLU problem with the same optimal objective value as C-GReLU.
+For each \( D_i \in \tilde \calD \), we seek to decompose the optimal data-local models as \( w^*_i = v_i - u_i \in \calK_i - \calK_i \).
+If these decompositions exist, collecting them into \( (v, u) = \cbr{(v_i, u_i)} \) gives a feasible point for the C-ReLU problem with the same optimal objective value as C-GReLU.
 The next proposition gives sufficient conditions on the data for this to happen.
 \begin{restatable}{proposition}{nonSingularCones}\label{prop:non-singular-cones}
     If \( X \) is full row-rank, then \( \calK_i - \calK_i = \R^d  \) for every \( D_i \in \calD_{\calX} \).
@@ -58,8 +58,8 @@ This is sufficient to recover the C-ReLU problem as \cref{thm:cone-elimination} 
 %% MP:This figure looks great!
 \subsection{Approximating ReLU by Cone Decompositions}
 
-We have seen that decomposing \( u_i^* = v_i - w_i \) allows us to map the C-GReLU problem into the C-ReLU problem.
-However, triangle inequality shows \( \norm{u_i^*}_2 \leq \norm{v_i}_2 + \norm{w_i}_2 \), meaning the cone decomposition can only increase the norm of the model (see \cref{fig:cone-decomp}).
+We have seen that decomposing \( w_i^* = v_i - u_i \) allows us to map the C-GReLU problem into the C-ReLU problem.
+However, triangle inequality shows \( \norm{u_i^*}_2 \leq \norm{v_i}_2 + \norm{u_i}_2 \), meaning the cone decomposition can only increase the norm of the model (see \cref{fig:cone-decomp}).
 For \( \lambda > 0 \), this increases the penalty term in the objective (Eq.~\ref{convex-forms:eq:convex-relu-mlp}), although the loss \( \calL \) is unchanged.
 This section develops cone decomposition algorithms for which we know the blow-up of the norm is not too large.
 As a result, we obtain approximation guarantees for solving C-ReLU by solving C-GReLU.
@@ -83,9 +83,9 @@ decomposition.
 In general, we cannot hope for constant approximations since \( n \gg d \) implies
 the cones \( \calK \) are very ``narrow''.
 \begin{restatable}{proposition}{worstCaseNorm}\label{prop:worst-case-norm}
-    There does not exist a decomposition \( u = v - w \), where \( v, w \in \calK \), such that
+    There does not exist a decomposition \( w = v - u \), where \( v, u \in \calK \), such that
     \[
-        \norm{v}_2 + \norm{w}_2 \leq C \norm{u},
+        \norm{v}_2 + \norm{u}_2 \leq C \norm{w},
     \]
     holds for an absolute constant \( C \).
 \end{restatable}
@@ -96,48 +96,56 @@ the cones \( \calK \) are very ``narrow''.
         \STATE {\bfseries Input:} data \( (X, y) \), \( \lambda \geq 0 \), num. samples \( p \), objective \( R \).
         \STATE \textbf{Sample}: \( \tilde \calD \!=\! \cbr{\diag(\mathds{1}(X g_i \geq 0)) :  g_i \!\sim \!\calN(0, I), i \in [p] } \)
         \STATE \textbf{Solve C-GReLU}:
-        \STATE \hspace{1em} \( u^* \in \argmin_{u} \calL(\sum_{\tilde \calD} D_i X u_i, y) + \lambda \sum_{\tilde \calD} \norm{u_i}_2\)
+        \STATE \hspace{1em} \( w^* \in \argmin_{u} \calL(\sum_{\tilde \calD} D_i X w_i, y) + \lambda \sum_{\tilde \calD} \norm{w_i}_2\)
         \STATE \textbf{Solve Cone Decomposition}:
-        \STATE \hspace{1em} \( \bar v, \bar w \in \argmin_{v, w} \cbr{ R(v, w) : u_i^* = v_i - w_i, i \in [p] } \)
-        \STATE \textbf{Return}: \((\bar v, \bar w)\)
+        \STATE \hspace{1em} \( \bar v, \bar u \in \argmin_{v, u} \cbr{ R(v, w) : w_i^* = v_i - u_i, i \in [p] } \)
+        \STATE \textbf{Return}: \((\bar v, \bar u)\)
     \end{algorithmic}
 \end{algorithm}
 \vspace{-1ex}
 When \( X \) is not full row-rank, we can solve
 \begin{equation}\label{eq:decomposition-program}
     \begin{aligned}
-        \textbf{CD}: \quad \min_{v, w \in \calK} \cbr{ R(v, w) : v - w = u },
+        \textbf{CD}: \quad \min_{v, w \in \calK} \cbr{ R(v, u) : v - u = w },
     \end{aligned}
 \end{equation}
 where \( R : \R^{d \times d} \mapsto \R \) is some loss function.
-Taking \( R(v, w) = 0 \) reduces to a linear feasibility problem which can be handled by off-the-shelf LP solvers.
-Choosing \( R(v,w) = \norm{v}_2 + \norm{w}_2 \) yields a second-order cone program (SOCP) for which we have the following guarantee.
+Taking \( R(v, u) = 0 \) reduces to a linear feasibility problem which can be
+handled by off-the-shelf LP solvers.
+Choosing \( R(v,u) = \norm{v}_2 + \norm{u}_2 \) yields a second-order cone
+program (SOCP) for which we have the following guarantee.
 \begin{restatable}{proposition}{socpDecomp}\label{prop:socp-decomp}
-    For every \( u \in \R^d \), if \( \rbr{\bar v, \bar w} \) is a solution to the cone-decomposition program~\eqref{eq:decomposition-program} with
-    \( R(v,w) = \norm{v}_2 + \norm{w}_2 \), then there exists \( \calJ \subseteq [n] \) such that
+    For every \( w \in \R^d \), if \( \rbr{\bar v, \bar u} \) is a solution to
+    the cone-decomposition program~\eqref{eq:decomposition-program} with
+    \( R(v,u) = \norm{v}_2 + \norm{u}_2 \), then there exists \( \calJ \subseteq [n] \) such that
     \[
-        \norm{\bar v}_2 + \norm{\bar w}_2 \leq \rbr{1 + 2 \kappa(\tilde X_{\calJ})} \norm{u}_2.
+        \norm{\bar v}_2 + \norm{\bar u}_2 \leq \rbr{1 + 2 \kappa(\tilde X_{\calJ})} \norm{w}_2.
     \]
 \end{restatable}
 
-Note that the general setting incurs a penalty of \( \kappa(\tilde X_{\calJ}) \) compared to \cref{prop:closed-form-decomp}.
+Note that the general setting incurs a penalty of \( \kappa(\tilde X_{\calJ})
+\) compared to \cref{prop:closed-form-decomp}.
 Intuitively, this term measures the narrowness of \( \calK \) and the difficulty of the decomposition.
 Combining \cref{prop:socp-decomp} with \cref{thm:cone-elimination} gives our main approximation result.
 \begin{restatable}{theorem}{approxResult}\label{thm:approx-result}
     Let \( \lambda \geq 0 \) and let \( p^* \) be the optimal value of the full
     C-ReLU problem with training set \( (X, y) \).
     There exists \( \calJ \subseteq [n] \) such that the C-GReLU problem with
-    patterns \( \calD_X \setminus \calS(\calD_X) \), minimizer \( u^* \),
+    patterns \( \calD_X \setminus \calS(\calD_X) \), minimizer \( w^* \),
     and optimal value \( d^* \) satisfies,
     \[
         d^*
         \leq p^*
         \leq d^*
-        + 2 \lambda \kappa(\tilde X_{\calJ}) \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2.
+        + 2 \lambda \kappa(\tilde X_{\calJ}) \sum_{D_i \in \tilde \calD} \norm{w_i^*}_2.
     \]
 \end{restatable}
-As a consequence of \cref{thm:approx-result}, \cref{alg:cone-decomp} is guaranteed to approximate the C-ReLU problem if \( R(v,w) = \norm{v}_2 + \norm{w}_2 \) and \( p \) is sufficiently large.
-As \( \lambda \into 0 \), this result smoothly recovers \cref{thm:cone-elimination}, implying we can control the approximation by adjusting the regularization.
+As a consequence of \cref{thm:approx-result}, \cref{alg:cone-decomp} is
+guaranteed to approximate the C-ReLU problem if 
+\( R(v,u) = \norm{v}_2 + \norm{u}_2 \) and \( p \) is sufficiently large.
+As \( \lambda \into 0 \), this result smoothly recovers
+\cref{thm:cone-elimination}, implying we can control the approximation by
+adjusting the regularization.
 
 \begin{figure}
     \centering

@@ -58,8 +58,8 @@ The proof proceeds by studying a relative interior point of \( \calK_i \).
     \cref{lemma:affine-characterization} now implies that \( \calK_i - \calK_i = \R^d \).
 
     Let \( u^* \) be an optimal solution to the C-GReLU problem with \( \tilde \calD = \calD_X \).
-    Since the Minkowski difference \( \calK_i - \calK_i \) spans \( \R^d \) for every \( D_i \in \calD_X \), we can find \( v_i, w_i \)  such that \( u_i^* = v_i - u_i \).
-    Moreover, we can always reparameterize the optimal solution to the C-ReLU problem as \( u_i = v_i^* - w_i^* \).
+    Since the Minkowski difference \( \calK_i - \calK_i \) spans \( \R^d \) for every \( D_i \in \calD_X \), we can find \( v_i, u_i \)  such that \( u_i^* = v_i - u_i \).
+    Moreover, we can always reparameterize the optimal solution to the C-ReLU problem as \( u_i = v_i^* - u_i^* \).
     A simple reduction argument now shows the two problems are equivalent.
     Applying theorems~\ref{thm:duality-free} and~\ref{thm:unconstrained-equivalence} extends the equivalence to NC-ReLU and NC-GReLU.
 \end{proof}
@@ -246,8 +246,8 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
     patterns.
     For every \( D_i \in \tilde \calD \setminus \calS(\tilde\calD) \),
     \( \calK_i - \calK_i = \R^d \) by construction.
-    Thus, there exists \( v_i, w_i \in \calK_i \) such that
-    \( v_i - w_i = u_i^* \).
+    Thus, there exists \( v_i, u_i \in \calK_i \) such that
+    \( v_i - u_i = u_i^* \).
     It is now straightforward to conclude that,
     \[
         p^* =
@@ -255,39 +255,39 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
             D_i X u_i^*, y}
         =
         \calL\rbr{\sum_{D_i \in \tilde \calD \setminus \calS(\tilde\calD)}
-            D_i X (v_i - w_i), y}
+            D_i X (v_i - u_i), y}
         \geq d^*,
     \]
-    since \( v_i, w_i \) are feasible for the C-ReLU problem.
-    Letting \( v^*, w^* \) be a solution to the C-ReLU problem,
+    since \( v_i, u_i \) are feasible for the C-ReLU problem.
+    Letting \( v^*, u^* \) be a solution to the C-ReLU problem,
     we obtain the opposite inequality immediately be noting that
-    \( u_i = v^*_i - w^*_i \) is feasible for the C-GReLU problem.
+    \( u_i = v^*_i - u^*_i \) is feasible for the C-GReLU problem.
     Thus, the two problems are equivalent when singular cones are omitted.
     Now let us show that singular cones do not affect the optimal value
     of the C-ReLU problem.
 
-    Assume \( \lambda \geq 0 \) and let \( (v^*, w^*) \) be a solution to the
+    Assume \( \lambda \geq 0 \) and let \( (v^*, u^*) \) be a solution to the
     C-ReLU problem with patterns \( \tilde\calD \) and \( p^* \) the optimal
     value.
     For every \( D_i \in \calD_{X} \), we either have \( \calK_i - \calK_i = \R^d \), or not.
-    If the former condition holds, take \( r_i^* = v_i^* \) and \( q_i^* = w_i^* \).
+    If the former condition holds, take \( r_i^* = v_i^* \) and \( q_i^* = u_i^* \).
     Otherwise, invoke \cref{prop:cone-containment} to obtain \( D_j \in \calD_{X} \)
     such that \( \calK_i \subset \calK_j \) and \( \calK_j - \calK_j = \R^d \).
     By the construction in the proof of \cref{prop:cone-containment},
     if \( \sbr{D_j}_{kk} \neq \sbr{D_i}_{kk} \),
-    then \( x_k \) is orthogonal to \( v_i^*, w_i^* \in \calK_i \) and we deduce
+    then \( x_k \) is orthogonal to \( v_i^*, u_i^* \in \calK_i \) and we deduce
     \[
-        D_j X (v_i^* - w_i^*)  = D_i X (v_i^* - w_i^*).
+        D_j X (v_i^* - u_i^*)  = D_i X (v_i^* - u_i^*).
     \]
     We may therefore merge the two neurons as \( r^*_j = v^*_j + v^*_i \),
-    \( q_j^* = w_j^* + w_i^* \) and update
+    \( q_j^* = w_j^* + u_i^* \) and update
     \( \tilde \calD' = \tilde \calD \setminus D_i \) without changing the
     (optimal) prediction of the C-ReLU model.
     In this way, we obtain a sub-sampled C-ReLU problem with activation patterns
     \( \tilde \calD \setminus \calS(\tilde \calD) \),
     for which
     \begin{align*}
-        p^* & = \calL\rbr{\sum_{D_i \in \tilde \calD} D_i X (v_i^* - w_i^*), y}
+        p^* & = \calL\rbr{\sum_{D_i \in \tilde \calD} D_i X (v_i^* - u_i^*), y}
         + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{v_i^*}_2
         \\
             & \geq \calL\rbr{\sum_{D_j \in \tilde \calD \setminus \calS(\tilde \calD)} D_j X (r_j^* - q_j^*), y}
@@ -432,11 +432,11 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
     \begin{align*}
         d^*
          & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2                                                                                                                                               \\
-         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - w_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^* - w_i^*}_2                                                                                                                            \\
-         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - w_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{w_i^*}_2                                                                                                                   \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^* - u_i^*}_2                                                                                                                            \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{u_i^*}_2                                                                                                                   \\
          & = p^*                                                                                                                                                                                                                                                                  \\
-         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v'_i - w_i', y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{w_i'}_2                                                                                                                       \\
-         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{w_i'}_2                                                                                                                                \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v'_i - u_i', y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{u_i'}_2                                                                                                                       \\
+         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{u_i'}_2                                                                                                                                \\
          & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2 + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2 \\
          & = p^* + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2.
     \end{align*}

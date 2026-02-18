@@ -21,7 +21,7 @@ In some applications, such as image classification, it is useful to generate spa
 However, these strategies yield no guarantees with respect to a non-convex model.
 
 An alternative approach comes from viewing (stochastic) optimization of a ReLU network as an active set method in the space of activation patterns.
-Let \( h_{W_1, w_2} \) be a two-layer neural network with ReLU activations with \( m < |\calD_X| \) neurons and consider optimizing the network with an arbitrary method that generates iterates \( \rbr{W_1^t, w_2^t} \).
+Let \( f_{W^{(1)}, W^{(2)}} \) be a two-layer neural network with ReLU activations with \( m < |\calD_X| \) neurons and consider optimizing the network with an arbitrary method that generates iterates \( \rbr{W_1^t, w_2^t} \).
 The forward operator for the network at iteration \( t \) may be re-written as
 \begin{align*}
 	h_{W^t_1, w^t_2}(X)
