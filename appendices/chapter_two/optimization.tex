@@ -1,6 +1,6 @@
-\section{Efficient Global Optimization:\ Proofs}\label{app:optimization}
-%!TEX root = ../main.tex
+%!TEX root = ../../main.tex
 
+\section{Efficient Global Optimization:\ Proofs}\label{app:optimization}
 
 \gatedComplexity*
 \begin{proof}
@@ -23,57 +23,57 @@
 \begin{proof}
 	First-order optimality conditions for \( \tilde w \) imply
 	\begin{align*}
-		-\tilde X^\top \rbr{b - \tilde X \tilde w}_+
-		 & \in \rho \cdot \partial \norm{\tilde w}_2.
+		-\tilde X^\top \rbr{b - \tilde X \tilde u}_+
+		 & \in \rho \cdot \partial \norm{\tilde u}_2.
 	\end{align*}
-	Noting that every vector in \( \partial \norm{\tilde w}_2 \) has norm at most
+	Noting that every vector in \( \partial \norm{\tilde u}_2 \) has norm at most
 	\( 1 \), we deduce
 	\begin{align*}
-		\norm{\tilde X^\top \rbr{b - \tilde X \tilde w}_+}_2
+		\norm{\tilde X^\top \rbr{b - \tilde X \tilde u}_+}_2
 		 & \leq \rho                                        \\
 		\implies
-		\norm{\rbr{b - \tilde X \tilde w}_+}_2
+		\norm{\rbr{b - \tilde X \tilde u}_+}_2
 		 & \leq \frac{\rho}{\sigma_{\text{min}}(\tilde X)}  \\
-		\iff \norm{\rbr{\max\cbr{- \tilde X u, 0} - \tilde X \tilde w}_+}_2
+		\iff \norm{\rbr{\max\cbr{- \tilde X w, 0} - \tilde X \tilde u}_+}_2
 		 & \leq \frac{\rho}{\sigma_{\text{min}}(\tilde X)}.
 		\intertext{since \( \tilde X \) is full row-rank and by definition of \( b \).
 			Using the fact that only positive elements contribute to the norm, we obtain the following two inequalities:}
-		\norm{\rbr{\tilde X \tilde w}_-}_2
+		\norm{\rbr{\tilde X \tilde u}_-}_2
 		 & \leq \frac{\rho}{\sigma_{\text{min}}(\tilde X)}  \\
-		\norm{\rbr{\tilde X (u + \tilde w)}_-}_2
+		\norm{\rbr{\tilde X (w + \tilde u)}_-}_2
 		 & \leq \frac{\rho}{\sigma_{\text{min}}(\tilde X)},
 	\end{align*}
-	Recalling \( \tilde v = u + \tilde w \) and summing gives the first result.
+	Recalling \( \tilde v = w + \tilde u \) and summing gives the first result.
 
 	If \( \rho > 0 \), then it is easy to observe
-	(i.e. by arguing via contradiction) that \( \tilde w \) must
-	have smaller norm than any \( w' \) in a feasible decomposition \( (v', w') \).
-	Thus, it must also have smaller norm than \( \bar w \) from the SOCP cone
+	(i.e. by arguing via contradiction) that \( \tilde u \) must
+	have smaller norm than any \( u' \) in a feasible decomposition \( (v', u') \).
+	Thus, it must also have smaller norm than \( \bar u \) from the SOCP cone
 	decomposition:
-	\[ \norm{\tilde w}_2 \leq \norm{\bar w}_2. \]
+	\[ \norm{\tilde u}_2 \leq \norm{\bar u}_2. \]
 	Since the proof of \cref{prop:socp-decomp} relies on controlling
-	only the norm of \( \bar w \), the conclusion of that theorem also applies
-	to \( (\tilde v, \tilde w) \).
+	only the norm of \( \bar u \), the conclusion of that theorem also applies
+	to \( (\tilde v, \tilde u) \).
 
 	Finally, suppose \( X \) is not full row-rank. For \( \rho > 0 \),
 	\cref{eq:cd-approx} is equivalent to solving
 	\begin{equation}\label{eq:cd-approx-constr}
-		\textbf{CD-A}: \, \min_{w} g(w, \rho) : =
+		\textbf{CD-A}: \, \min_{w} g(u, \rho) : =
 		\half
 		\|
-		(b - \tilde X w)_+
+		(b - \tilde X u)_+
 		\|_2^2
-		+ \rho P(w) \quad \text{s.t.} \norm{w}_2 \leq \norm{\bar w}_2,
+		+ \rho P(u) \quad \text{s.t.} \norm{u}_2 \leq \norm{\bar u}_2,
 	\end{equation}
-	where \( \bar w \) is the norm of the minimum-norm (with respect to \( w \)
+	where \( \bar u \) is the norm of the minimum-norm (with respect to \( u \)
 	only) solution to the cone decomposition problem.
 	This is a minimization problem with compact constraint set;
-	since \( g \) is continuous in both \( w \) and \( \rho \),
+	since \( g \) is continuous in both \( u \) and \( \rho \),
 	we may apply Berge's maximum theorem~\citep{ausubel1993generalized}
 	to obtain find
 	\[
-		g^*(\rho) = \min_{w}
-		\cbr{ g(w, \rho) : \norm{w}_2 \leq \norm{\bar w}_2},
+		g^*(\rho) = \min_{u}
+		\cbr{ g(u, \rho) : \norm{w}_2 \leq \norm{\bar u}_2},
 	\]
 	is continuous.
 	Since the cone decomposition is realizable at \( \rho = 0 \),
@@ -81,52 +81,53 @@
 	satisfies
 	\( \lim_k g^*(\lambda_k) = 0 \).
 
-	Let \( \tilde w_k \) be the sequence of minimizers associated with \( \rho_k \).
-	Since \( \tilde w_k \) is bounded, it has at least one convergent subsequence.
-	Let \( \tilde w_0 \) be the associated limit point.
-	Since \( g \) is continuous in \( w \) and \( \rho \), we find
-	\[ g(w_0, 0) = \lim_k g(\tilde w_k, \rho_k) = \lim_k g^*(\rho_k) = 0, \]
-	which shows that \( \tilde w_0 \) is a feasible decomposition.
+	Let \( \tilde u_k \) be the sequence of minimizers associated with \( \rho_k \).
+	Since \( \tilde u_k \) is bounded, it has at least one convergent subsequence.
+	Let \( \tilde u_0 \) be the associated limit point.
+	Since \( g \) is continuous in \( u \) and \( \rho \), we find
+	\[ g(u_0, 0) = \lim_k g(\tilde u_k, \rho_k) = \lim_k g^*(\rho_k) = 0, \]
+	which shows that \( \tilde u_0 \) is a feasible decomposition.
 	This completes the proof.
 \end{proof}
 
 \begin{restatable}{proposition}{approxDecompSubmatrices}\label{prop:approx-decomp-submatrices}
-	Suppose \( \tilde w \) is a minimizer of \eqref{eq:cd-approx} and let \( \tilde v = u + \tilde w \).
-	There exists \( \calJ \subseteq [n] \) such that
+    Suppose \( \tilde u \) is a minimizer of~\eqref{eq:cd-approx} and let 
+    \( \tilde v = w + \tilde u \). 
+    There exists \( \calJ \subseteq [n] \) such that
 	\[
-		\|(\tilde X \tilde w)_-\|_2 + \|(\tilde X \tilde v)_-\|_2
+		\|(\tilde X \tilde u)_-\|_2 + \|(\tilde X \tilde v)_-\|_2
 		\leq \frac{2\rho}{\sigma_{\text{min}}(\tilde X_{\calJ})},
 	\]
 	where \( \sigma_{\text{min}}(\tilde X_{calJ}) \) is the minimum
 	(possibly zero) singular value of the sub-matrix \( \tilde X_{\calJ} \).
 \end{restatable}
 \begin{proof}
-	First-order optimality conditions for \( \tilde w \) imply
+	First-order optimality conditions for \( \tilde u \) imply
 	\begin{align*}
-		-\tilde X^\top \rbr{b - \tilde X \tilde w}_+
-		 & \in \rho \cdot \partial \norm{\tilde w}_2.
+		-\tilde X^\top \rbr{b - \tilde X \tilde u}_+
+		 & \in \rho \cdot \partial \norm{\tilde u}_2.
 	\end{align*}
-	Let \( \calJ = \cbr{i \in [n] : b_i - \abr{\tilde x_i, \tilde w} > 0 } \)
+	Let \( \calJ = \cbr{i \in [n] : b_i - \abr{\tilde x_i, \tilde u} > 0 } \)
 	and define \( B \) be a diagonal matrix such that \( B_{jj} = 1 \) if
 	\( j \in \calJ \) and \( 0 \) otherwise.
 	In this notation, the optimality conditions can be written as
 	\begin{align*}
-		-\tilde X^\top B\rbr{b - \tilde X \tilde w}
-		 & \in \rho \cdot \partial \norm{\tilde w}_2  \\
+		-\tilde X^\top B\rbr{b - \tilde X \tilde u}
+		 & \in \rho \cdot \partial \norm{\tilde u}_2  \\
 		\iff
-		-(B \tilde X^\top)\rbr{b - \tilde X \tilde w}
-		 & \in \rho \cdot \partial \norm{\tilde w}_2.
+		-(B \tilde X^\top)\rbr{b - \tilde X \tilde u}
+		 & \in \rho \cdot \partial \norm{\tilde u}_2.
 	\end{align*}
-	Noting that every vector in \( \partial \norm{\tilde w}_2 \) has norm at most
+	Noting that every vector in \( \partial \norm{\tilde u}_2 \) has norm at most
 	\( 1 \), we deduce
 	\begin{align*}
-		\norm{(B \tilde X)^\top \rbr{b - \tilde X \tilde w}}_2
+		\norm{(B \tilde X)^\top \rbr{b - \tilde X \tilde u}}_2
 		 & \leq \rho                                                \\
 		\iff
-		\norm{\tilde X_{\calJ}^\top \rbr{b - \tilde X \tilde w}_{\calJ}}_2
+		\norm{\tilde X_{\calJ}^\top \rbr{b - \tilde X \tilde u}_{\calJ}}_2
 		 & \leq \rho                                                \\
 		\implies
-		\norm{\rbr{b - \tilde X \tilde w}_{\calJ}}_2
+		\norm{\rbr{b - \tilde X \tilde u}_{\calJ}}_2
 		 & \leq \frac{\rho}{\sigma_{\text{min}}(\tilde X_{\calJ})}.
 	\end{align*}
 	Recalling the definition of \( \calJ \) and proceeding as in the proof of
@@ -193,9 +194,9 @@ We can use data normalization to partially achieve this goal.
 
 In the remainder of this section, we restrict ourselves to the C-GReLU problem with squared loss,
 \[
-	\min_{v} \; \half \norm{\sum_{D_i \in \tilde \calD} D_i X v_i - y}_2^2 + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2.
+	\min_{w} \; \half \norm{\sum_{D_i \in \tilde \calD} D_i X w_i - y}_2^2 + \lambda \sum_{D_i \in \tilde \calD} \norm{w_i}_2.
 \]
-The Hessian of the smooth component of this problem is \( \nabla^2 f(v) = M^\top M \), where \( M \) is the ``expanded'' data matrix \( M = \sbr{D_1 X \; D_2 X \; \ldots D_{|\tilde \calD|} X} \).
+The Hessian of the smooth component of this problem is \( \nabla^2 f(w) = M^\top M \), where \( M \) is the ``expanded'' data matrix \( M = \sbr{D_1 X \; D_2 X \; \ldots D_{|\tilde \calD|} X} \).
 Let \( h \in \R^{d}, h_i = \norm{X_{\cdot,i}}_2 \) and \( H = \text{diag}(h) \).
 That is, \( H \) is a diagonal matrix with the column-norms of \( X \) along the diagonal.
 Finally, define the column-normalized version of \( X \) to be \( N = H^{-1} X \).
@@ -218,6 +219,6 @@ This establishes the claim in Section~\ref{sec:efficient-fista} that data normal
 
 Moving on to computation of the gradient, note that the Hessian \( \tilde N^\top \tilde N \) will be low-rank as long as \( |\tilde \calD| * d > n \).
 In fact, this is nearly always the case since we typically choose \( \tilde \calD \) to be as large as possible.
-Thus, although the condition number of \( \nabla^2 f(v) \) is not well-defined, it is possible to reduce the maximum expansion entailed by the Hessian via column normalization.
-Observing \( \nabla f(v) = \nabla^2 f(v) v - \tilde N^\top y \), we may expect conditioning of the gradient computation to improve.
-Finally, since the C-GReLU is a linear model, transforming the weights as \( v_i' = H^{-1} v_i \) after optimization can be used to project the model back into the original data space, ensuring that data normalization has no effects outside of optimization.
+Thus, although the condition number of \( \nabla^2 f(w) \) is not well-defined, it is possible to reduce the maximum expansion entailed by the Hessian via column normalization.
+Observing \( \nabla f(w) = \nabla^2 f(w) w - \tilde N^\top y \), we may expect conditioning of the gradient computation to improve.
+Finally, since the C-GReLU is a linear model, transforming the weights as \( w_i' = H^{-1} w_i \) after optimization can be used to project the model back into the original data space, ensuring that data normalization has no effects outside of optimization.

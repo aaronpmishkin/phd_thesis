@@ -18,19 +18,19 @@ We considered two hyper-parameters for our methods: regularization strength,
 and the proportion of examples active in each local model (ie. the number of
 non-zeros in each \( D_i \) matrix).
 For regularization strength, we optimized over a logarithmic grid with values
-	{ \small \(
-		\cbr{1\times 10^{-8},
-			3.59\times 10^{-8},
-			1.29\times 10^{-7},
-			4.64\times 10^{-7},
-			1.67\times 10^{-6},
-			5.99\times 10^{-6},
-			2.15\times 10^{-5},
-			7.74\times 10^{-5},
-			2.78\times 10^{-4},
-			1.0\times 10^{-3}}
-		\)
-	}.
+\begin{align*}
+     & \big\{1\times 10^{-8},
+    3.59\times 10^{-8},
+    1.29\times 10^{-7},
+    4.64\times 10^{-7},
+    1.67\times 10^{-6},       \\
+     & \hspace{3em}
+    5.99\times 10^{-6},
+    2.15\times 10^{-5},
+    7.74\times 10^{-5},
+    2.78\times 10^{-4},
+    1.0\times 10^{-3}\big\}.
+\end{align*}
 For the proportion of active examples, we considered (1) setting the bias term
 for each neuron to enforce \( 50 \% \) of examples to be active or (2)
 setting the bias to \( 0 \) and allowing the proportion to be random.
@@ -42,20 +42,20 @@ the random trees in the ensemble (\( \cbr{2, 4, 10, 25, 50}\))
 and over the number of trees in the ensemble (\( \cbr{5, 10, 100, 1000} \)).
 We used the standard soft-margin SVM with and chose regularization parameter from
 the range
-\( \cbr{1.\times 10^{-5}, 1.\times 10^{-4}, 1.\times 10^{-3}, 1.\times 10^{-2}, 1.\times 10^{-1}, 1} \)
+\[
+    \cbr{1.\times 10^{-5}, 1.\times 10^{-4}, 1.\times 10^{-3}, 1.\times 10^{-2}, 1.\times 10^{-1}, 1}
+\]
 for linear SVMs and
-\( \cbr{1\times 10^{-5},
-	1.78\times 10^{-4},
-	3.16\times 10^{-3},
-	5.62\times 10^{-2},
-	1} \)
+\[
+    \cbr{1\times 10^{-5}, 1.78\times 10^{-4}, 3.16\times 10^{-3}, 5.62\times 10^{-2}, 1}
+\]
 for SVMs with an RBF kernel.
 For RBF SVMs, the RBF bandwidth was optimized over the grid \( \cbr{1\times 10^{-4},
-	1.58\times 10^{-3},
-	2.51\times 10^{-2},
-	3.98\times 10^{-1},
-	6.31,
-	100.0} \).
+    1.58\times 10^{-3},
+    2.51\times 10^{-2},
+    3.98\times 10^{-1},
+    6.31,
+    100.0} \).
 To obtain final test accuracies, we re-trained each method on the full training
 set.
 For our methods, we report the best test accuracy out of five random restarts.
