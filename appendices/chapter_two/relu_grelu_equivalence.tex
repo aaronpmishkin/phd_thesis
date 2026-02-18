@@ -163,7 +163,7 @@ We show now that there exists a choice of signed half-spaces for which the inter
     Let \( x_1, \ldots x_m \) be a collection of vectors in \( \R^d \) and \( X \in \R^{m \times d} \) the matrix formed by stacking these vectors.
     Then there exists a diagonal matrix \( \tilde D \), where \( \tilde D_{jj} \in \cbr{-1, 1} \), such that
     \[
-        \text{aff} (\cbr{ w : \tilde D X w \succeq 0}) = \R^d.
+        \text{aff} \rbr{\cbr{ w : \tilde D X w \succeq 0}} = \R^d.
     \]
 \end{lemma}
 \begin{proof}
@@ -192,7 +192,6 @@ We show now that there exists a choice of signed half-spaces for which the inter
     Taking \( \calK_{t+1} = \calK_t \) and \( \calD_{t+1, t+1} = -1 \) completes the case.
 
     The desired result follows by induction.
-
 \end{proof}
 
 We now use \cref{lemma:sign-assignment} to show that every singular cone is contained in a non-singular cone.
@@ -239,7 +238,7 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
     The equivalence of the C-ReLU and C-GReLU problems with sub-sampled
     patterns \( \tilde \calD \setminus \calS(\tilde\calD) \) follows
     immediately from cone decompositions.
-    Let \( u^* \) be a solution to the C-GReLU problem with
+    Let \( w^* \) be a solution to the C-GReLU problem with
     \( \tilde \calD \setminus \calS(\tilde\calD) \)
     and \( p^* \) the optimal value.
     Let \( d^* \) be the optimal value of the C-ReLU problem with the same
@@ -247,12 +246,12 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
     For every \( D_i \in \tilde \calD \setminus \calS(\tilde\calD) \),
     \( \calK_i - \calK_i = \R^d \) by construction.
     Thus, there exists \( v_i, u_i \in \calK_i \) such that
-    \( v_i - u_i = u_i^* \).
+    \( v_i - u_i = w_i^* \).
     It is now straightforward to conclude that,
     \[
         p^* =
         \calL\rbr{\sum_{D_i \in \tilde \calD \setminus \calS(\tilde\calD)}
-            D_i X u_i^*, y}
+            D_i X w_i^*, y}
         =
         \calL\rbr{\sum_{D_i \in \tilde \calD \setminus \calS(\tilde\calD)}
             D_i X (v_i - u_i), y}
@@ -261,7 +260,7 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
     since \( v_i, u_i \) are feasible for the C-ReLU problem.
     Letting \( v^*, u^* \) be a solution to the C-ReLU problem,
     we obtain the opposite inequality immediately be noting that
-    \( u_i = v^*_i - u^*_i \) is feasible for the C-GReLU problem.
+    \( w_i = v^*_i - u^*_i \) is feasible for the C-GReLU problem.
     Thus, the two problems are equivalent when singular cones are omitted.
     Now let us show that singular cones do not affect the optimal value
     of the C-ReLU problem.
@@ -362,83 +361,96 @@ We now use \cref{lemma:sign-assignment} to show that every singular cone is cont
             - 1 & \alpha \\
         \end{bmatrix}
     \end{equation}
-    The cone corresponding to positive activations for both examples is \( \calK = \cbr{x \in \R^d : x_2 \geq - x_1 / \alpha, x_2 \geq x_1 / \alpha  } \).
-    Consider decomposing the vector \( u = [2, 0] \) onto \( \calK - \calK \).
-    Clearly \( u \not \in \calK \); by inspection, we see that the minimum norm decomposition is given by \( v = [1, 1/\alpha] \), and \( w = [-1, 1/\alpha] \).
-    Taking \( \alpha \rightarrow 0 \), we find \( \norm{v}_2 = \norm{w}_2 \rightarrow \infty \).
+    The cone corresponding to positive activations for both examples is
+    \[
+        \calK = \cbr{x \in \R^d : x_2 \geq - x_1 / \alpha, x_2 \geq x_1 / \alpha  }.
+    \]
+    Consider decomposing the vector \( w = [2, 0] \) onto \( \calK - \calK \).
+    Clearly \( w \not \in \calK \);
+    by inspection, we see that the minimum norm decomposition is given by
+    \( v = [1, 1/\alpha] \), and \( u = [-1, 1/\alpha] \).
+    Taking \( \alpha \rightarrow 0 \), we find \( \norm{v}_2 = \norm{u}_2 \rightarrow \infty \).
 \end{proof}
 
 \socpDecomp*
 \begin{proof}
-    First, we re-parameterize the problem: \( u = v - w \) implies \( u + w = v \), giving the equivalent program
+    First, we re-parameterize the problem: \( w = v - u \) implies \( u + w = v \),
+    giving the equivalent program
     \begin{equation}
         \begin{aligned}
-            \min_{w \in \calK} \norm{w}_2 + \norm{u + w}_2^2.
+            \min_{u \in \calK} \norm{u}_2 + \norm{u + w}_2^2.
         \end{aligned}
     \end{equation}
-    In order to character the solution, we re-write the constraints into a single system of linear inequalities as follows:
+    In order to characterize the solution, we re-write the constraints into a
+    single system of linear inequalities as follows:
     \begin{align*}
         \calF
-              & = \cbr{w : \tilde X w \succeq 0, \tilde X w \succeq - \tilde X u} \\
-              & = \cbr{w : \tilde X w \succeq 0, \tilde X w \succeq b},
-        \intertext{where we have introduced \( b = - \tilde X u \). It is possible to combine these inequalities by taking the element-wise maximum as follows:}
-        \calF & = \cbr{w : \tilde X w \succeq \max\rbr{0, b}}                     \\
-              & = \cbr{w : \tilde X w \succeq \rbr{b}_+}.
+              & = \cbr{u : \tilde X u \succeq 0, \tilde X u \succeq - \tilde X w} \\
+              & = \cbr{u : \tilde X u \succeq 0, \tilde X u \succeq b},
+        \intertext{where we have introduced \( b = - \tilde X w \). It is possible to combine these inequalities by taking the element-wise maximum as follows:}
+        \calF & = \cbr{u : \tilde X u \succeq \max\rbr{0, b}}                     \\
+              & = \cbr{u : \tilde X u \succeq \rbr{b}_+}.
     \end{align*}
-    Let \( \bar w \in \calF \) be a optimal point for the reparameterized program.
+    Let \( \bar u \in \calF \) be a optimal point for the reparameterized program.
     Relaxing the objective using triangle inequality gives,
     \begin{align*}
-        \norm{\bar w}_2 + \norm{u + \bar w}_2
-         & = \min_{w \in \calF} \norm{w}_2 + \norm{u + w}_2  \\
-         & \leq \min_{w \in \calF} 2\norm{w}_2 + \norm{u}_2.
+        \norm{\bar u}_2 + \norm{w + \bar u}_2
+         & = \min_{u \in \calF} \norm{u}_2 + \norm{u + w}_2  \\
+         & \leq \min_{u \in \calF} 2\norm{u}_2 + \norm{w}_2.
     \end{align*}
-    Let \( w' \) be a solution to the relaxation.
-    The KKT conditions imply there exists a submatrix \( \tilde X_{\calJ} \) for which the inequality constraints are tight:
+    Let \( u' \) be a solution to the relaxation.
+    The KKT conditions imply there exists a submatrix \( \tilde X_{\calJ} \)
+    for which the inequality constraints are tight:
     \[
-        \tilde X_{\calJ} w' = \rbr{b_{\calJ}}_+.
+        \tilde X_{\calJ} u' = \rbr{b_{\calJ}}_+.
     \]
-    The set of vectors satisfying this equality is \( \cbr{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+ + z : z \in \text{null} (X_{\calJ})} \).
+    The set of vectors satisfying this equality is 
+    \( \cbr{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+ + z : z \in \text{null} (X_{\calJ})} \).
     Choosing \( z \neq 0 \) can only increase the value of the objective, from which we deduce \( w' = \sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+ \).
     We obtain
     \begin{align*}
-        \norm{\bar w}_2 + \norm{\bar v}_2
-         & \leq 2\norm{w'}_2 + \norm{u}_2                                                                                  \\
-         & = 2 \norm{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+} + \norm{u}_2                                        \\
-         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\rbr{b_{\calJ}}_+}_2 + \norm{u}_2                    \\
-         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{b_{\calJ}}_2 + \norm{u}_2                            \\
-         & =  \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\tilde X_{\calJ} u}_2 + \norm{u}_2                     \\
-         & \leq \rbr{1 + 2\frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})}} \norm{u}_2.
+        \norm{\bar u}_2 + \norm{\bar v}_2
+         & \leq 2\norm{u'}_2 + \norm{w}_2                                                                                  \\
+         & = 2 \norm{\sbr{\tilde X_{\calJ}}^\dagger \rbr{b_{\calJ}}_+} + \norm{w}_2                                        \\
+         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\rbr{b_{\calJ}}_+}_2 + \norm{w}_2                    \\
+         & \leq \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{b_{\calJ}}_2 + \norm{w}_2                            \\
+         & =  \frac{2}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{\tilde X_{\calJ} w}_2 + \norm{w}_2                     \\
+         & \leq \rbr{1 + 2\frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})}} \norm{w}_2.
     \end{align*}
 \end{proof}
 
 \approxResult*
 \begin{proof}
     The proof is straightforward given our existing results.
-    Let \( u^* \) be the solution to the full (potentially regularized) C-GReLU problem.
+    Let \( w^* \) be the solution to the full (potentially regularized) C-GReLU problem.
     For every \( D_i \in \calD_{X} \), we either have \( \calK_i - \calK_i = \R^d \), or not.
-    If the former condition holds, take \( r_i^* = u_i^* \).
+    If the former condition holds, take \( r_i^* = w_i^* \).
     Otherwise, invoke \cref{prop:cone-containment} to obtain \( D_j \in \calD_{X} \) such that \( \calK_i \subset \calK_j \) and \( \calK_j - \calK_j = \R^d \).
     By the construction in the proof of \cref{prop:cone-containment}, if \( \sbr{D_j}_{kk} \neq \sbr{D_i}_{kk} \), then \( x_k \) is orthogonal to \( \calK_i \) and we deduce
     \[
-        D_j X u^*_i = D_i X u^*_i.
+        D_j X w^*_i = D_i X w^*_i.
     \]
-    We may therefore merge the two neurons as \( r^*_j = u^*_j + u^*_i \) and update \( \tilde \calD' = \tilde \calD \setminus D_i \) without changing the loss component of the C-GReLU program.
-    Furthermore, since \( \norm{r^*_j} \leq \norm{u^*_j}_2 + \norm{u^*_i}_2 \), merging these neurons can only decrease the regularization term.
-    \footnote{In fact, we know that one of \( u^*_j, u^*_i \) is zero or they are collinear}
-    In this way, we obtain a sub-sampled C-GReLU problem with activation patterns \( \tilde \calD \) and optimal value \( d^* \).
+    We may therefore merge the two neurons as \( r^*_j = w^*_j + w^*_i \) and update 
+    \( \tilde \calD' = \tilde \calD \setminus D_i \) without changing the 
+    loss component of the C-GReLU program.
+    Furthermore, since \( \norm{r^*_j} \leq \norm{w^*_j}_2 + \norm{w^*_i}_2 \), 
+    merging these neurons can only decrease the regularization term.
+    \footnote{In fact, we know that one of \( w^*_j, w^*_i \) is zero or they are collinear}
+    In this way, we obtain a sub-sampled C-GReLU problem with activation
+    patterns \( \tilde \calD \) and optimal value \( d^* \).
 
     Let \( \rbr{v^*, u^*} \) be the optimal solution to full C-ReLU problem.
-    Applying \cref{prop:socp-decomp} for each \( D_i \in \tilde \calD \) gives decompositions \( u_i^* = v_i' - u_i' \) such that
+    Applying \cref{prop:socp-decomp} for each \( D_i \in \tilde \calD \) gives decompositions \( w_i^* = v_i' - u_i' \) such that
     \begin{align*}
         d^*
-         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2                                                                                                                                               \\
+         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X w_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{w_i^*}_2                                                                                                                                               \\
          & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^* - u_i^*}_2                                                                                                                            \\
          & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v^*_i - u_i^*, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i^*}_2 + \norm{u_i^*}_2                                                                                                                   \\
          & = p^*                                                                                                                                                                                                                                                                  \\
          & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X v'_i - u_i', y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{u_i'}_2                                                                                                                       \\
-         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{u_i'}_2                                                                                                                                \\
-         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X u^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{u_i^*}_2 + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2 \\
-         & = p^* + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{u_i^*}_2.
+         & = \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X w^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i'}_2 + \norm{u_i'}_2                                                                                                                                \\
+         & \leq \mathcal{L}\Big(  \sum_{D_i \in \tilde \calD} D_i X w^*_i, y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{w_i^*}_2 + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{w_i^*}_2 \\
+         & = p^* + \lambda \sum_{D_i \in \tilde \calD} 2 \frac{\sigma_{\text{max}}(\tilde X_{\calJ})}{\sigma_{\text{min}}(\tilde X_{\calJ})} \norm{w_i^*}_2.
     \end{align*}
     We have abused notation here and omitted the dependence on \( i \) in \( \tilde X_{\calJ} = \rbr{2 D_i -I} X_{\calJ_i} \).
     However, observe that \( 2D_i - I \) is orthonormal so that \( \sigma_{\text{max}}(\tilde X_{\calI}) = \sigma_{\text{max}}(X_{\calI}) \) and \( \sigma_{\text{min}}(\tilde X_{\calI}) = \sigma_{\text{min}}(X_{\calI}) \) for all \( \calI \).
