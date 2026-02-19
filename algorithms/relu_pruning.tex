@@ -2,21 +2,21 @@
 	\caption{Approximate ReLU Pruning}
 	\label{alg:pruning-solutions-nn}
 	\begin{algorithmic}
-		\STATE {\bfseries Input:} data matrix \( Z \), weights \( W_{1}, w_{2} \),
+		\STATE {\bfseries Input:} data matrix \( Z \), weights \( W^{(1)}, W^{(2)} \),
 		score function \( s \).
-		\STATE \( m \gets \abs{\act(W_1)} \)
-		\STATE \( (W_1^0, w_2^0) \gets (W_{1}, w_2) \).
-		\STATE \( q^0_i \gets (X W^0_{1i})_+ w^0_2 \)
+		\STATE \( m \gets \abs{\act(W^{(1)})} \)
+        \STATE \( (\leftindex_0{W}^{(1)}, \leftindex_0{W}^{(2)}) \gets (W^{(1)}, W^{(2)}) \).
+        \STATE \( q^0_i \gets (X \leftindex_0{W}^{(1)}_{\cdot, i})_+ \leftindex_0{W}^{(2)}_{i} \)
 		\FOR {\( k = 0 \text{ to } m -1 \)}
-		\STATE \( j^k = \argmin_{i \in \act(W_{1i}^k)} s(W_{1i}^k) \)
+		\STATE \( j^k = \argmin_{i \in \act(\leftindex_k{W}^{(1)}_{\cdot, i})} (\leftindex_k{W}^{(1)}_{\cdot, i}) \)
 		\STATE \( \beta^k = \argmin_{\beta} \norm{ \sum_{i \neq j^k} \beta_{i} q^k_i - q_{j^k}^k}_2^2 \)
-		\STATE \( i^k \gets \argmax_{i} \cbr{|\beta_i| : i \in \act(W_{1i}^k)}  \)
+		\STATE \( i^k \gets \argmax_{i} \cbr{|\beta_i| : i \in \act(\leftindex_k{W}^{(1)}_{\cdot, i})}  \)
 		\STATE \( t^k \gets 1/|\beta_{i^k}| \)
-		\STATE \( (W_{1i}^{k+1}, w_{2i}^{k+1}) \gets (W_{1i}^k, w_{2i}^k)
+        \STATE \( (\leftindex_{k+1}{W}^{(1)}_{\cdot, i}, \leftindex_{k+1}{W}^{(2)}_{i} \gets (\leftindex_k{W}^{(1)}_{\cdot, i}, \leftindex_{k}{W}^{(2)}_{i})
 		\cdot (1 - t^k \beta_i)^{1/2} \)
 		\STATE \( q^{k+1}_i \gets q_i^{k} \cdot (1 - t^k \beta_i) \)
 		\ENDFOR
-		\STATE {\bfseries Output:} final weights \( W_1^k, w_2^k \)
+        \STATE {\bfseries Output:} final weights \( \leftindex_{k}{W}^{(1)}, \leftindex_{k}{W}^{(2)} \)
 	\end{algorithmic}
 \end{algorithm}
 
