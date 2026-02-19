@@ -1,0 +1,186 @@
+%!TEX root=../main.tex
+
+\begin{restatable}{lemma}{boundedSolutionsCGL}\label{lemma:bounded-solutions-cgl}
+	Every solution to the constrained group lasso problem
+	is bounded by an absolute constant independent of \( \lambda \).
+	Specifically, every \( w \in \solfn(\lambda) \) satisfies
+	\[
+		\sum_{\bi \in \calB} \norm{\wi}_2 \leq \sum_{\bi \in \calB} \norm{\bar w_\bi}_2.
+	\]
+	where \( \bar w \in \solfn(0) \) is the least-squares solution with minimum \( \ell_2 \)-norm.
+\end{restatable}
+\begin{proof}
+	Let \( h(w) = \sum_{\bi \in \calB} \norm{\wi}_2 \),
+	and define \( W_{g} \) to be the set of least squares solutions with
+	minimum group norm,
+	\[
+		W_{g} = \argmin \cbr{h(w) : w \in \solfn(0) }.
+	\]
+	Let \( w_g \in W_g \),
+	and suppose that \( h(w_{g}) < h(w(\lambda)) \)
+	for some \( \lambda > 0 \), \( w \in \solfn(\lambda) \).
+	Since
+	\[
+		\half \norm{X w_g - y}_2^2
+		\leq \half \norm{X w(\lambda) - y}_2^2
+	\]
+	we deduce
+	\[
+		\half \norm{X w_g - y}_2^2 + \lambda h(w_g) <
+		\half \norm{X \w(\lambda) - y}_2^2
+		+ \lambda h(\w(\lambda)),
+	\]
+	which is a contradiction.
+	So \( h(\w(\lambda)) \leq h(w_g) \) for all \( \lambda > 0 \).
+	Observing \( h(w_g) \leq h(\bar w) \) since \( \bar w \) may not be in
+	\( W_{g} \) gives the result.
+	Since \( h(\bar w) \) is independent of \( \lambda \),
+	we conclude that \( \solfn(\lambda) \) is bounded independent
+	of \( \lambda \).
+\end{proof}
+
+\valueContinuityCGL*
+\begin{proof}
+	Define the joint objective function
+	\[
+		f(w, \lambda) = \half \norm{X w - y}_2^2 + \lambda \sum_{b_i \in \calB} \norm{\wi}_2.
+	\]
+	Clearly \( f(w, \lambda) \) is jointly continuous in \( w \) and \( \lambda \).
+	By \cref{lemma:bounded-solutions-cgl}, minimization of
+	\( f(w, \lambda) \) subject to \( \Ki^\top \wi \leq 0 \)
+	is equivalent to the constrained minimization problem,
+	\[
+		p^*(\lambda) = \min_{w} f(w, \lambda) \quad \text{s.t.} \; \sum_{\bi \in \calB} \norm{\wi}_2 \leq C, \, \Ki^\top \wi \leq 0,
+	\]
+	where \( C \) is a finite absolute constant.
+	Note that this expression is also valid when \( \lambda = 0 \) as the
+	min-norm solution to the unregularized least squares problem
+	obeys the constraint.
+
+	Thus, \( \solfn \) is a continuous optimization problem over a continuous
+	(constant in this case)
+	compact constraint set and the classical result of \citet{berge1997topological}
+	(see also \citet{hogan1973point}[Theorem 7]) implies
+	\( p^* \) is continuous.
+\end{proof}
+
+\mapContinuityCGL*
+\begin{proof}
+	Joint continuity of the objective
+	\[
+		f(w, \lambda) = \half \norm{X w - y}_2^2 + \lambda \sum_{b_i \in \calB} \norm{\wi}_2,
+	\]
+	combined with continuity of the (constant) constraint allows us to use
+	\citet[Theorem 1]{robinson1974sufficient} to obtain that
+	that \( \solfn \) is upper semi-continuous.
+	Since \( \solfn \) is convex and bounded, it is compact.
+	It is thus also uniformly compact and upper semi-continuity is
+	equivalent to closedness \citep{hogan1973point}[Theorem 3].
+	We conclude that \( \solfn \) is closed as claimed.
+
+	If \( X \) is full column rank, then the constrained group
+	lasso solution is unique for all \( \lambda \geq 0 \).
+	The solution map is a singleton on \( \R^+ \), and closedness
+	and openness are equivalent properties for singleton maps.
+	Since we have already shown it is closed, the solution map
+	must also be open.
+	An identical argument shows that the solution map is open
+	at on any interval over which the solution is unique.
+
+	Now we show the reverse implication by proving the contrapositive.
+	Assume \( X \) is not full column-rank and suppose \( \Ki = 0 \)
+	for each \( \bi \in \calB \).
+	The solution map at \( \lambda = 0 \) is the solution set to
+	the least squares problem,
+	\[
+		\min_w \half \norm{X w - y}_2^2,
+	\]
+	which is known to be \( \solfn(0) = \cbr{\wmin(0) + z : z \in \Null(X)} \).
+	While \( \solfn(0) \) is unbounded, it holds that
+	\( \solfn(\lambda) \subset C \) for some bounded \( C \) for
+	every \( \lambda > 0 \) (\cref{lemma:bounded-solutions-cgl}).
+	As a result, there exist uncountably many solutions in \( \solfn(0) \)
+	which are not limit points of solutions in \( \solfn(\lambda_k) \)
+	as \( \lambda_k \rightarrow 0 \).
+	In other words, \( \solfn(0) \) is not open at \( 0 \).
+\end{proof}
+
+
+\modelFitContinuity*
+\begin{proof}
+	Consider the dual problem from \cref{lemma:lagrange-dual},
+	\begin{equation*}
+		\begin{aligned}
+			\max_{\eta} \;
+			 & - \half (\eta - X^\top y) (X^\top X)^+ (\eta - X^\top y) + \half \norm{y}_2^2                                  \\
+			 & \quad \quad \text{s.t.} \quad \eta \in \Row(X), \; \norm{\eta_\bi}_2 \leq \lambda \; \forall \; \bi \in \calB.
+		\end{aligned}
+	\end{equation*}
+	The objective function is a convex quadratic and continuous in \( \eta \).
+	The constraint set is
+	\begin{align*}
+		\calC(\lambda)
+		 & = \cbr{ \eta : \eta \in \Row(X), : \norm{\eta_\bi}_2 \leq \lambda \; \forall \; \bi \in \calB}.
+	\end{align*}
+	Let's show that \( \calC \) is continuous.
+
+	Let \( \lambda_k \geq 0 \), \( \lambda_k \into \bar \lambda \)
+	and \( \eta_k \in \calC(\lambda_k) \) such that \( \eta_k \into \bar \eta \).
+	Since \( \eta_k \in \Row(X) \), \( \bar \eta \in \Row(X) \).
+	Moreover,
+	\[
+		\norm{[\eta_k]_\bi}_2 \leq \lambda_k,
+	\]
+	so that taking
+	limits on both sides implies \( \norm{\bar \eta_k}_2 \leq \bar \lambda \).
+	Thus, \( \bar \eta \in \calC(\bar \lambda) \), showing that \( \calC \)
+	is closed.
+
+	\citet[Theorem 12]{hogan1973point} states that \( \calC(\lambda) \)
+	is open at \( \bar \lambda \) if for each \( \bi \in \calB \), \( g_\bi(\lambda, \eta) = \norm{\eta_\bi}_2 - \lambda \)
+	is continuous on \( \bar \lambda \times \calC(\lambda) \), convex in
+	\( \eta \), and for fixed \( \lambda \), and there exists \( \bar \eta \)
+	such that such that \( g(\lambda, \bar \eta) < 0  \).
+
+	Let us check these conditions.
+	First, observe that \( g_\bi \) is continuous and convex in \( \eta \) for
+	any choice of \( \lambda \).
+	Taking \( \bar \eta = 0 \), we find
+	\[
+		g_\bi(\lambda, 0) = -\lambda < 0,
+	\]
+	as long as \( \lambda > 0 \).
+	Thus, \( \calC(\lambda) \) is open at each \( \lambda > 0 \).
+
+	At \( \lambda = 0 \), \( \calC(\lambda) = \cbr{0} \).
+	Since \( \calC \) is closed everywhere, we conclude it is open at
+	\( \lambda = 0 \).
+	Putting these results together proves that \( \calC \) is continuous.
+
+	Recall that the dual solution satisfies \( \eta^*_\bi = \ci \),
+	so that it is always unique.
+	Combining this fact with \citet[Theorem 1]{robinson1974sufficient}
+	implies that \( \lambda \mapsto \eta^*(\lambda) \) is a continuous
+	function.
+	Since we have
+	\[
+		\eta^*(\lambda) = c(\lambda) = X^\top (y - X w^*(\lambda)),
+	\]
+	it must be that the model fit \( \hat y(\lambda) = X w^*(\lambda) \)
+	is continuous as well (any discontinuities must be in \( \Null(X) \),
+	but \( \hat y \) is orthogonal to \( \Null(X) \)).
+
+	Finally, using \cref{prop:value-continuity-cgl}, we have
+	\[
+		p^*(\lambda) - \half \norm{\hat y(\lambda) - y}_2^2 = \lambda \sum_{\bi \in \calB} \norm{\wi}_2,
+	\]
+	is a sum of continuous functions and thus continuous.
+	Writing
+	\[
+		g(\lambda) = \sum_{\bi \in \calB} \norm{\wi}_2 = \sbr{\lambda \sum_{\bi \in \calB} \norm{\wi}_2} \sbr{\frac{1}{\lambda}},
+	\]
+	as the product of continuous functions shows
+	\( g(\lambda) \) is continuous at every \( \lambda > 0 \).
+\end{proof}
+
+

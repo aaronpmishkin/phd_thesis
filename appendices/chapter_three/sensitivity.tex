@@ -1,0 +1,224 @@
+%!TEX root=../main.tex
+
+\constraintReduced*
+\begin{proof}
+	Let \( w \) be as in the theorem statement.
+	We starting by showing that \( w \) obtains the optimal objective value
+	for the reduced problem:
+	\begin{align*}
+		\half \norm{\Xa \w_\act - y}_2^2 + \lambda \sum_{\bi \in \act} \norm{\wi}_2
+		 & =
+		\min_{w : \Ki \wi \leq 0} \,
+		\half \norm{X w - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2                                   \\
+		 & \leq
+		\min_{\wa : \Ka \wa \leq 0} \, \half \norm{\Xa \wa - y}_2^2 + \lambda \sum_{\bi \in \act} \norm{\wi}_2 \\
+		 & \leq \half \norm{\Xa \w_\act - y}_2^2 + \lambda \sum_{\bi \in \act} \norm{\wi}_2,
+	\end{align*}
+	where the last inequality makes explicit use of feasibility of \( \w_\act \).
+	Since \( \w_\act \) is feasible for the reduced problem and attains the
+	minimum objective value, it must be optimal.
+	Note that it is straightforward to check that the active blocks of the min-norm
+	dual parameter \( \rmin_\act \) are dual optimal for the reduced problem.
+
+	Now, let \( \wa' \) be an optimal solution to the reduced problem.
+	Since \( \rmin_\act \) is dual optimal for the reduced problem,
+	\cref{prop:sol-fn-cgl} implies
+	\[
+		\wi' = \alpha_\bi' \vi,
+	\]
+	for every \( \bi \in \act \), with \( \alpha_\bi' \geq 0 \).
+	Since \( \Xa \wa' = \Xa \wa \), we deduce
+	\[
+		\sum_{\bi \in \act} (\alpha_\bi - \alpha_\bi')\Xbi \bi = 0,
+	\]
+	which contradicts minimality of \( \w \) unless \( \alpha_\bi = \alpha_\bi' \).
+	That is, \( \wa' = \wa \).
+	We conclude that the reduced problem provides the unique minimal solution
+	with support \( \act \).
+\end{proof}
+
+\begin{lemma}\label{lemma:second-order-stationary}
+	Let \( w \in \solfn(\lambda) \) be minimal.
+	Then \( w \) is a second-order stationary point of the reduced problem
+	(\cref{eq:constraint-reduced}).
+\end{lemma}
+\begin{proof}
+	Define \( M(w) \) to be the block-diagonal projection matrix given by
+	\begin{equation}\label{eq:projection-matrix-block}
+		M(w)_\bi
+		= \frac{1}{\norm{\wi}_2} \rbr{I - \frac{\wi}{\norm{\wi}_2}\frac{\wi^\top}{\norm{\wi}_2}}.
+	\end{equation}
+	The Hessian of the Lagrangian of the reduced problem with respect to
+	\( w \) is exactly
+	\[
+		\nabla^2_w \calL(\wa, \ra) =
+		\Xa^\top \Xa + \lambda M_\act(w).
+	\]
+	A sufficient condition for \( w \) to be second-order stationary is
+	that this Hessian is positive-definite.
+	We now shows this fact holds.
+
+	Clearly \( \nabla^2_w \calL(\wa, \ra) \) is positive semi-definite
+	as it is the sum of a PSD projection matrix
+	and a Gram matrix, which is always PSD.
+	Let \( \bar w \in \R^{|\act|} \) such that \( \bar w \neq 0 \).
+	Suppose that
+	\begin{align*}
+		0
+		 & = \bar w^\top \nabla^2_w \calL(\wa, \ra) \bar w                    \\
+		 & = \bar w^\top \Xa^\top \Xa \bar w + \bar w^\top\lambda M(w) \bar w \\
+		 & = \norm{\Xa w}_2^2 + \lambda w^\top M(w) w.
+	\end{align*}
+	Since \( M(\bar w) \) is PSD,
+	it must hold that
+	\[
+		\bar w^\top M(w) \bar w = 0,
+	\]
+	which is true if and only if \( \bwi = \beta_\bi \wi \),
+	\( \beta_\bi \in \R \), for each \( \bi \in \act \).
+	As a result, we find that
+	\[
+		\Xa w - \Xa \bar w = \sum_{\bi \in \act} (1 - \beta_\bi) \alpha_{\bi} \Xbi \vi = 0,
+	\]
+	which contradicts minimality of \( \bar w \) unless \( \beta_{\bi} = 1 \)
+    for each \( \bi \in \act \).
+	But then \( \norm{\Xa w}_2^2 > 0 \) and
+	we conclude that the Hessian is positive-definite as desired.
+\end{proof}
+
+\localSolFn*
+\begin{proof}
+	Recall from \cref{prop:constraint-reduced} that \( \wa \) is the unique
+	solution to the reduced group lasso problem.
+	In fact, as we show in \cref{lemma:second-order-stationary}, \( \wa \) is
+	a second order stationary point for the reduced problem.
+	Now, combining this fact with LICQ and SCS
+	and using standard results on differential sensitivity from optimization
+	theory (see, e.g. \citet[Theorem 5.1]{fiacco1990sensitivity} and
+	the references therein)
+	we obtain the following:
+
+	For \( (\lambda, y) \) in a neighborhood of \( \bar \lambda, \bar y \),
+	there exists a unique once continuously differentiable function
+	\[
+		\tilde l(\lambda, y) =
+		\begin{bmatrix}
+			\tilde h(\lambda, y) \\
+			\tilde g(\lambda, y),
+		\end{bmatrix}
+	\]
+	such that \( \tilde h(\bar \lambda, \bar y) = \wa \),
+	\( \tilde g(\bar \lambda, \bar y) = \rmin_\act \),
+	and \( \tilde l(\lambda, y) \) is a primal-dual solution to the reduced
+	problem.
+
+	Now we show that \( \tilde l \) can be extended from the reduced problem
+	to obtain a local solution function for the constrained group lasso.
+	Define \( h(\lambda, y) \) such that
+	\( h_\act(\lambda, y) = \tilde h(\lambda, y) \)
+	and \( h_{\calB \setminus \act}(\lambda, y) = 0 \).
+	We shall show how to extend \( g \) shortly.
+	For \( \bi \in \act \), the pair
+	\( h_{\bi}(\lambda, y), g_\bi(\lambda, y) \)
+	verifies the KKT conditions (which are separable over block)
+	since it verifies them for the reduced problem.
+	So, we need only consider \( \bi \in \calB \setminus \act \).
+
+	First, consider \( \bi \in \calB \setminus \equi \).
+	In this case, we have
+	\[
+		\norm{\Xbi^\top (\bar y - X h(\bar \lambda, \bar y)) + \Ki \ri(\bar \lambda, \bar y)}_2
+		< \bar \lambda,
+	\]
+	Since this inequality is strict and
+	\[
+		z(\bar\lambda, \bar y) = \Xbi^\top (\bar y - X h(\bar \lambda, \bar y)),
+	\]
+	is continuous in \( \bar \lambda, \bar y \),
+	there exists a neighborhood of \( \bar \lambda, \bar y \)
+	on which
+	\[
+		\norm{z(\lambda, y) + \Ki \ri(\bar \lambda, \bar y)}_2
+		\leq \lambda.
+	\]
+	Since \( \ri(\bar \lambda, \bar y) \geq 0 \) and \( \wi = 0 \),
+	dual feasibility and complementary slackness hold.
+	We conclude that the extension
+	\( g_\bi(\lambda, y) = \ri(\bar \lambda, \bar y) \)
+	satisfies KKT conditions on this neighbourhood.
+
+	Now suppose \( \bi \in \equi(\bar \lambda, \bar y) \setminus \act \).
+	If
+	\[
+		\norm{\Xbi^\top (y - X h(\lambda, y))}_2 = \lambda,
+	\]
+	then taking \( g_\bi(y, \lambda) = 0 \) satisfies KKT conditions.
+	Otherwise, observe that
+	\[
+		\norm{\Xbi^\top (\bar y - X h(\bar \lambda, \bar y)) + \Ki \ri(\bar \lambda, \bar y)}_2
+		= \bar \lambda,
+	\]
+	must hold for some dual parameter \( \ri(\bar \lambda, \bar y) \)
+	by KKT conditions.
+	Moreover, SCS implies that we can choose the dual parameter to satisfy,
+	\[ \ri(\bar \lambda, \bar y) > 0, \]
+	since \( \Ki^\top \wi(\bar \lambda, \bar y) = 0 \).
+	Finally, because
+	\[ \Xbi^\top (y - X h(\lambda, y)) \]
+	is a continuous function of \( (y, \lambda) \), taking
+	\( \lambda, y \) sufficiently close to \( \bar \lambda, \bar y \)
+	implies there exists \( \ri(\lambda, y) \geq 0 \) such that
+	\[
+		\norm{\Xbi^\top (y - X h(\lambda, y)) + \Ki \ri(\lambda, y)}_2
+		\leq \lambda.
+	\]
+	Now we choose our extension to be
+	\( g_\bi(\lambda, y) = \ri(\lambda, y) \)
+	so that \( (h_\bi, g_\bi) \) satisfies stationarity of the Lagrangian
+	as well.
+	Since \( g_\bi \) is feasible and \( h_\bi \)  is the zero function,
+	primal feasibility, dual feasibility, and complementary slackness also hold.
+
+	Since \( l = (g, h) \) satisfies the KKT conditions in a local neighborhood
+	of \( \bar \lambda, \bar y \), it is exactly a local solution function.
+	Moreover, since \( g_{\calB \setminus \calA}(\lambda, y) = 0 \)
+	over this neighborhood, it is easy to see that the gradient
+	for parameter blocks in \( \calB \setminus \calA \)
+	is \( 0 \).
+	For \( g_\act \), \citet[Theorem 5.1]{fiacco1990sensitivity} implies that the
+	gradients are given as follows:
+
+	Recall from \cref{lemma:second-order-stationary},
+	that \( M_\act \) is a block-diagonal projection matrix
+	with blocks given by
+	\[
+		M(\bar w)_\bi = \frac{1}{\norm{\bwi}_2} \rbr{I - \frac{\bwi}{\norm{\bwi}_2}\frac{\bwi^\top}{\norm{\bwi}_2}}.
+	\]
+	Then, the Jacobian of \( \nabla_w \calL(\bar \wa, \bar \ra) \)
+	for the reduced problem with respect to the primal-dual parameters is
+	given by
+	\[
+		D =
+		\begin{bmatrix}
+			\Xa^\top \Xa + M(\bar w) & \Ka                            \\
+			\bar \ra \odot \Ka       & \text{diag}(\Ka^\top \bar \wa)
+		\end{bmatrix}.
+	\]
+	It also holds that \( D \) is invertible.
+	Finally, let \( u_i = \frac{w_i}{\norm{\wi}_2} \)
+	and \( u \) the concatenation of these vectors.
+	We are now able to write the
+	Jacobians of \( w(y, \lambda) \)
+	with respect to \( y \) and \( \lambda \)
+	as follows:
+	\[
+		\nabla_\lambda w(\bar \lambda, \bar y)
+		= - [D^{-1}]_\act u_\act
+		\quad \quad
+		\nabla_y w(\bar \lambda, \bar y)
+		= [D^{-1}]_\act \Xa^\top,
+	\]
+	where \( [D_\act^{-1}]_\act \) is the \( |\act| \times |\act| \)
+	dimensional leading principle submatrix of \( D \).
+\end{proof}
+

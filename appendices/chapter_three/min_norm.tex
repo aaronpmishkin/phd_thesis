@@ -1,0 +1,445 @@
+%!TEX root=../main.tex
+
+\begin{proposition}\label{prop:min-norm-interp}
+	Consider the min group-norm interpolation problem,
+	\[
+		\min_{w} \sum_{\bi \in \calB} \norm{\wi}_2 \quad \text{s.t.} \, \, X w = y.
+	\]
+	There exist \( X, y \) such that
+	the minimum-group-norm solution to this problem
+	is unique and not in \( \Row(\Xas) \).
+\end{proposition}
+\begin{proof}
+	We provide a counter-example where the solution is not the row space of
+	the active set.
+	Choose
+	\[
+		X =
+		\left[
+			\begin{array}{cc|c}
+				1 & 2 & 0 \\
+				1 & 0 & 2 \\
+			\end{array}
+			\right],
+		\quad
+		y = \begin{bmatrix}
+			1 \\
+			1
+		\end{bmatrix},
+	\]
+	where the vertical line indicates the block structure, i.e.,
+	\( b_1 = \cbr{1, 2} \) and \( b_2 = \cbr{3} \).
+
+	Clearly a solution using only \( b_2 \) cannot interpolate the data,
+	so the active set must be \( \cbr{b_1, b_2} \)  or \( \cbr{b_1} \).
+	If the active set is \( b_1 \), then the minimum norm interpolating solution
+	can only be \( w = [1 \; 0 \; 0]^\top \), which has group norm \( 1 \).
+
+	Now, consider when the active set is \( \cbr{b_1, b_2} \).
+	The interpolating solution in \( \Row(X) \) satisfies the following
+	system
+	\begin{align*}
+		\left[
+			\begin{array}{cc|c}
+				1 & 2 & 0 \\
+				1 & 0 & 2 \\
+			\end{array}
+			\right]
+		\rbr{
+			\alpha
+			\begin{bmatrix}
+				1 \\ 2\\ 0
+			\end{bmatrix}
+			+
+			\beta
+			\begin{bmatrix}
+				1 \\ 0\\ 2
+			\end{bmatrix}
+		}
+		 & = \begin{bmatrix}
+			     1 \\
+			     1
+		     \end{bmatrix} \\
+		\implies
+		\begin{bmatrix}
+			5 \alpha + \beta \\
+			\alpha + 5 \beta
+		\end{bmatrix}
+		 & =
+		\begin{bmatrix}
+			1 \\
+			1
+		\end{bmatrix}.
+	\end{align*}
+	Solving for \( \alpha \) and \( \beta \) yields
+	\( \alpha = 1 - 5 \beta \) and \( 24 \beta = 4 \),
+	which implies \( \beta = 1/6 \) and \( \alpha = 1/6 \).
+	The optimal \( w^* \) is thus
+	\[
+		w^* =
+		\begin{bmatrix}
+			1/3 \\
+			1/3 \\
+			1/3
+		\end{bmatrix},
+	\]
+	and the group norm of \( w^* \) is
+	\[
+		\sum_{\bi \in \calB} \norm{\wi^*}_2 = \sqrt{2/9} + 1/3  = (1 + \sqrt{2}) / 3 < 1.
+	\]
+    Thus, we can discount the interpolating solution using only \( b_1 \).
+
+	Now let's see if we can reduce the norm by including directions in \( \Null(X) \).
+	The Null space is orthogonal to both rows of \( X \), from which we conclude
+	\[
+		\Null(X) =
+		\cbr{
+			\gamma z : z =
+			\begin{bmatrix}
+				-2/3 \\
+				1/3  \\
+				1/3
+			\end{bmatrix},
+			\gamma \in \R
+		}.
+	\]
+	Any vector \( w' = w^* + \gamma z \) is an interpolating solution,
+	so it only remains to check if there is a choice of \( \gamma \)
+	that decreases the group norm.
+	Assuming \( \gamma > -1 \),
+	\begin{align*}
+		\sum_{\bi \in \calB} \norm{\wi^*}_2
+		 & \leq \sum_{\bi \in \calB} \norm{\wi'}_2                                                                             \\
+		\iff \frac{1 + \sqrt{2}}{3}
+		 & = \sqrt{(\frac{1}{3} - \frac{2 \gamma}{3})^2 + (\frac{1}{3} + \frac{\gamma}{3})^2}
+		+ \abs{\frac{1 + \gamma}{3}}                                                                                           \\
+		\iff \frac{1 + \sqrt{2}}{3} - \frac{1 + \gamma}{3}
+		 & \leq \sqrt{(\frac{1}{3} - \frac{2 \gamma}{3})^2 + (\frac{1}{3} + \frac{\gamma}{3})^2} \tag{since \( \gamma > -1 \)} \\
+		\iff \rbr{\frac{1 + \sqrt{2}}{3} - \frac{1 + \gamma}{3}}^2
+		 & \leq (\frac{1}{3} - \frac{2 \gamma}{3})^2 + (\frac{1}{3} + \frac{\gamma}{3})^2                                      \\
+		\iff \rbr{\sqrt{2} - \gamma}^2
+		 & \leq (1 - 2 \gamma)^2 + (1 + \gamma)^2
+	\end{align*}
+	The left-hand side satisfies
+	\[
+		\rbr{\sqrt{2} - \gamma}^2 = 2 - 2\sqrt{2}\gamma + \gamma^2,
+	\]
+	while the right-hand side is
+	\[
+		(1 - 2 \gamma)^2 + (1 + \gamma)^2 = 1 - 4 \gamma + 4 \gamma^2 + 1 + 2 \gamma + \gamma^2
+		=  2 - 2 \gamma + 5 \gamma^2.
+	\]
+	As a result,
+	\begin{align*}
+		\sum_{\bi \in \calB} \norm{\wi^*}_2
+		                                                                  & \leq \sum_{\bi \in \calB} \norm{\wi'}_2 \\
+		\iff 2 - 2 \gamma + 5 \gamma^2 - 2 - \gamma^2 + 2 \sqrt{2} \gamma & \geq 0                                  \\
+		\iff 2 (\sqrt{2} - 1)\gamma + 4 \gamma^2                          & \geq 0.
+	\end{align*}
+	However, it is easy to check that this fails for \( \gamma \in ((1 - \sqrt{2})/2, 0) \).
+	So the minimum-group-norm interpolating solution is not in \( \Row(\Xas) \).
+
+    Now let's show that the minimum-group-norm solution is unique.
+    This holds if the group norm as a function of \( \gamma \),
+    \[
+    g(\gamma) = \sqrt{(\frac{1}{3} - \frac{2 \gamma}{3})^2 + (\frac{1}{3} + \frac{\gamma}{3})^2}
+		+ \abs{\frac{1 + \gamma}{3}},
+    \]
+    is strictly convex. 
+    The function \( h_2(\gamma) = \abs{\frac{1 + \gamma}{3}} \) is convex,
+    so we need only show that 
+    \[
+        h_1(\gamma) = \sqrt{(\frac{1}{3} - \frac{2 \gamma}{3})^2 + (\frac{1}{3} + \frac{\gamma}{3})^2}
+        = \frac{1}{3} \sqrt{2 - 2\gamma + 5 \gamma^2},
+    \]
+    is strictly convex.
+    Taking the second derivative, we find
+    \[
+        h_1''(\gamma) = \frac{3}{\rbr{2 - 2\gamma + 5 \gamma^2}^{3/2}} > 0
+    \]
+    for all \( \gamma \). 
+    This completes the proof.
+\end{proof}
+
+\begin{lemma}\label{lemma:lambda-convergence}
+	Let \( W_{g} \) be the set of least squares solutions with minimum group norm.
+	That is,
+	\[
+		W_{g} = \argmin_{w} \cbr{\sum_{\bi \in \calB} \norm{\wi}_2 : X^\top X w = X^\top y }.
+	\]
+	Then every limit point of the min-norm group lasso solution
+	as \( \lambda \rightarrow 0 \) lies in \( W_g \).
+\end{lemma}
+\begin{proof}
+	Let \( \lambda_k \rightarrow 0 \)
+	and observe that \( \wmin(\lambda_k) \) has at least one limit point
+	since it is bounded (\cref{lemma:bounded-solutions-cgl}).
+	Since \( \norm{\ci(\lambda_k)}_2 \leq \lambda_k \),
+	we see that \( \lim_{k} \norm{\ci(\lambda_k)}_2 = 0 \)
+	and thus \( \lim_k \ci(\lambda_k) = 0 \).
+
+	FO optimality conditions imply
+	\begin{equation}
+		(X^\top X) \wmin(\lambda) = X^\top y - c(\lambda),
+	\end{equation}
+	which, taking limits on both sides,
+	gives
+	\begin{equation}
+		\lim_k (X^\top X) \wmin(\lambda_k) = X^\top y.
+	\end{equation}
+	That is, every limit point \( \bar w \) of \( \wmin(\lambda_k) \) is
+	a least squares solution satisfying \( h(\bar w) \leq h(w_g) \).
+	We conclude that \( \bar w \in W_g \).
+\end{proof}
+
+\rowCE*
+\begin{proof}
+	Consider the setting of \cref{prop:min-norm-interp},
+	with
+	\[
+		X =
+		\left[
+			\begin{array}{cc|c}
+				1 & 2 & 0 \\
+				1 & 0 & 2 \\
+			\end{array}
+			\right],
+		\quad
+		y = \begin{bmatrix}
+			1 \\
+			1
+		\end{bmatrix},
+	\]
+	where the vertical line indicates the block structure, i.e.,
+	\( b_1 = \cbr{1, 2} \) and \( b_2 = \cbr{3} \).
+	We have shown that the min group norm interpolant is unique,
+	is supported on \( b_1 \) and \( b_2 \), and does not lie
+	in \( Row(X) \).
+	Let \( w_g \) be this solution.
+
+	Let \( \lambda_k \downarrow 0 \).
+	By \cref{lemma:lambda-convergence}, every limit point of
+	\( \wmin(\lambda_k) = w_g \).
+	Thus, \( \lim_k \wmin(\lambda_k) \) exists and is exactly
+	\( w_g \).
+	Moreover, \( \wmin(\lambda_k) \) must be supported
+	on \( b_1 \) and \( b_2 \) for all \( k \) sufficiently large.
+
+	Decomposing \( w_g = a + b \) and \( \wmin(\lambda_k) = r_k + n_k \)
+	where \( a, r_k \in \Row(X) \) and \( b, n_k \in \Null(X) \), we see
+	that
+	\[
+		\norm{w_g - \wmin(\lambda_k)}_2^2
+		= \norm{a - r_k}_2^2
+		+ \norm{b - n_k}_2^2 \rightarrow 0,
+	\]
+	implying that \( n_k \neq 0 \) for sufficiently large \( k \).
+	In other words, the min-norm solution to the group lasso problem
+	fails to fall in \( \Row(X) \) for some \( \lambda > 0 \).
+\end{proof}
+
+
+\minNormProgram*
+\begin{proof}
+	Let \( w \in \solfn(\lambda) \).
+	By \cref{prop:sol-fn-cgl}, \( \wi = \alpha_\bi \vi \)
+	where \( \alpha_\bi \geq 0 \).
+	Moreover, \( \alpha_\bi = 0 \) for every
+	\( \bi \in \calB \setminus \calS_\lambda \).
+	As a result,
+	\begin{align*}
+		\norm{\w}^2_2
+		 & = \norm{\we}^2_2                                         \\
+		 & = \sum_{\bi \in \calS_\lambda} \norm{\alpha_\bi \vi}^2_2 \\
+		 & = \lambda \norm{\alpha}_2^2,
+	\end{align*}
+	where the last equality follows from \( \bi \in \calS_\lambda \implies \bi \in \equi \),
+	which enforces \( \norm{\vi}_2 = \lambda \).
+
+	Now suppose \( \alpha^* \) is optimal for the cone program
+	and let \( w \in \R^d \) such that \( \wi = \alpha_\bi^* \vi \).
+	By construction, \( \alpha^*_\bi = 0 \)
+	for all \( \bi \in \calB \setminus \calS_\lambda \)
+	(or it could not be optimal)
+	so that \( \wi = 0 \) for all \( \bi \in \calB \setminus \calS_\lambda \).
+	Moreover,
+	\[
+		X w = \sum_{\bi \in \calS_\lambda} \alpha_\bi^* \Xbi \vi = \hat y,
+	\]
+	Thus, \( w \) solves
+	\[
+		\begin{aligned}
+			\argmin_{w} \norm{w}_2^2
+			\, \, \text{ s.t.} \, \,
+			 & \forall \, \bi \in \calS_\lambda, \, \wi = \alpha_\bi \vi, \alpha_\bi \geq 0, \, \\
+			 & \forall \, b_j \in \calB \setminus \calS_\lambda, \w_{b_j} = 0, \,
+			X w = \hat y.
+		\end{aligned}
+	\]
+	Invoking \cref{prop:sol-fn-cgl} now proves that \( w \) is the min-norm solution.
+\end{proof}
+
+
+\begin{restatable}{lemma}{l2Reformulation}\label{lemma:l2-reformulation}
+	The \( \ell_2 \)-penalized group lasso problem in \cref{eq:l2-penalized-cgl}
+	is equivalent to the following CGL problem:
+	\begin{equation}\label{eq:l2-reformulation}
+		\begin{aligned}
+			\min_{w} \,
+			 & \half \norm{\tilde X w - \tilde y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
+			 & \quad \text{s.t.} \quad \Ki^\top \wi \leq 0  \text{ for all } \bi \in \calB.
+		\end{aligned}
+	\end{equation}
+	where we have defined the extended data matrix and targets
+	\[
+		\tilde X =
+		\begin{bmatrix}
+			X \\
+			\sqrt{\delta} I
+		\end{bmatrix}
+		\quad \quad
+		\tilde y =
+		\begin{bmatrix}
+			y \\
+			0
+		\end{bmatrix}.
+	\]
+    Moreover, \( \tilde X \) is full column-rank and thus the CGL solution is
+    unique.
+\end{restatable}
+\begin{proof}
+	It is straightforward to show the equivalence by direct calculation.
+	For any \( w \in \R^d \),
+	\begin{align*}
+		\half \norm{\tilde X \w - \tilde y}_2^2
+		 & = \half \norm{X w - y}_2^2 + \half \norm{\sqrt{\delta} I w - 0}_2^2 \\
+		 & = \half \norm{X w - y}_2^2 + \frac{\delta}{2} \norm{w}_2^2,
+	\end{align*}
+	Substituting this identity into \cref{eq:l2-reformulation} establishes the
+	equivalence.
+
+	It is clear by inspection that \( \tilde X \) is full column rank.
+	Then \( \Null(X_\calC) = \emptyset \) for all \( \calC \subset \calB \)
+	and the solution is unique by \cref{prop:sol-fn-cgl}.
+\end{proof}
+
+\penConvergence*
+\begin{proof}
+	First we show that \( \norm{w^\delta(\lambda)}_2 \leq \norm{w^*(\lambda)}_2 \).
+	Suppose by way of contradiction that
+	\( \norm{w^\delta(\lambda)}_2 > \norm{w^*(\lambda)}_2 \)
+	for some \( \delta > 0 \).
+	Since
+	\begin{align*}
+		\half \norm{Xw^*(\lambda) - y}_2^2
+		+ \lambda \sum_{\bi \in \calB} \norm{\wi^*(\lambda)}_2
+		 & =
+		\min_{w : \Ki \wi \leq 0} \half \norm{Xw - y}_2^2
+		+ \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
+		 & \leq
+		\half \norm{Xw^\delta(\lambda) - y}_2^2
+		+ \lambda \sum_{\bi \in \calB} \norm{\wi^\delta(\lambda)}_2,
+	\end{align*}
+	we deduce
+	\[
+		\half \norm{Xw^*(\lambda) - y}_2^2
+		+ \lambda \sum_{\bi \in \calB} \norm{\wi^*(\lambda)}_2
+		+ \frac{\delta}{2} \norm{w^*(\lambda)}_2^2
+		<
+		\half \norm{Xw^\delta(\lambda) - y}_2^2
+		+ \lambda \sum_{\bi \in \calB} \norm{[w^\delta(\lambda)]_\bi}_2
+		+ \frac{\delta}{2} \norm{w^\delta(\lambda)}_2^2,
+	\]
+	which contradicts optimality of \( w^\delta(\lambda) \).
+	So \( \norm{w^\delta(\lambda)}_2 \leq \norm{w^*(\lambda)}_2 \)
+	for all \( \delta > 0 \).
+	As a result, the sequence
+	\( \cbr{w^{\delta_k}(\lambda)}_{\delta_k} \), where \( \delta_k \downarrow 0 \),
+	is bounded and admits at least one convergent subsequence.
+	Let \( \bar w(\lambda) \) be the limit point associated with one
+	such subsequence;
+	clearly \( \norm{\bar w(\lambda)}_2 \leq \norm{w(\lambda)^*}_2 \).
+
+	Let's show that \( \bar w(\lambda) \) is a solution to the group lasso
+	problem by checking the KKT conditions.
+	Suppose \( \lambda > 0 \).
+	Stationarity of the Lagrangian is
+	\[
+		X^\top (Xw^{\delta_k}(\lambda) - y) + K \rho^{\delta_k}(\lambda) + s^{\delta_k}(\lambda) + \delta_k w^{\delta_k}(\lambda) = 0,
+	\]
+	where \( s_\bi^{\delta_k}(\lambda) \in \partial \lambda \norm{\wi^{\delta_k}}_2 \).
+	Since \( \norm{s_\bi^{\delta_k}(\lambda)}_2 \leq \lambda \) and \( w^{\delta_k}(\lambda) \)
+	is bounded, clearly \( K \rho^{\delta_k}(\lambda) \) is also bounded.
+
+	Dropping to a subsequence if necessary, let \( \lim_{k} w^{\delta_k}(\lambda) = \bar w \)
+	and \( \lim_k \Ki \ri^{\delta_k} = \bar{z}_{\bi} \).
+	Define
+	\[
+		R_{1/n} = \cbr{\ri : \norm{\Ki \ri - \bar{z}_{\bi}}_\infty \leq \frac{1}{n}, \ri \geq 0}.
+	\]
+	The sequence of sets \( R_{1/n} \) is polyhedral and thus retractive.
+	Moreover, for each \( n \in \bbN \), there exists \( k \) such that
+	\[ \norm{\Ki \ri^{\delta_k} - \bar{z}_{\bi}}_\infty \leq 1 / n, \]
+	since \( \Ki \ri^{\delta_k} \rightarrow \bar{z}_{\bi} \).
+	Recalling \( \ri^{\delta_k} \geq 0 \) shows that \( \R_{1/n} \) is non-empty.
+	The limit of a sequence of nested, non-empty, retractive sets is also
+	non-empty \citep[Proposition 1.4.10]{bertsekas2009convex}.
+	Moreover, since the limit is exactly
+	\[
+		\bar R = \cbr{\ri : \Ki \ri = \bar{z}_{\bi}, \ri \geq 0},
+	\]
+	we deduce that there exists \( \bar \rho \geq 0 \) such that
+	\( \Ki \bar \ri = \bar{z}_{\bi} \).
+
+	Taking limits on either side of the stationarity condition, we find
+	\begin{align*}
+		\Xbi^\top (y - X\bar w(\lambda)) - \Ki \bar \rho(\lambda) = \bar s_\bi,
+	\end{align*}
+	where the limit point \( \bar s_\bi \) satisfies \( \norm{\bar s_\bi} \leq \lambda \).
+	If \( \bi \in \calB \setminus \act(\bar w(\lambda)) \),
+	then \( \bwi \) satisfies stationarity.
+
+	Let \( \bi \in \act(\bar w(\lambda)) \).
+	Since \( \w^{\delta_k}(\lambda) \rightarrow \bar w(\lambda) \),
+	\( \norm{\wi^{\delta_k} - \bar \wi}_2 \rightarrow 0 \)
+	and it must happen that
+	\( \wi^{\delta_k} > 0 \) for all \( k \) sufficiently large.
+	That is,
+	\( \calA(w^{\delta_k}(\lambda)) \supseteq \calA(\bar w) \)
+	for all \( k \geq k' \).
+	Using \( \bi \in \calA(w^{\delta_k}(\lambda)) \)
+	provides a closed-form expression for \( s_\bi^{\delta_k} \):
+	\begin{align*}
+		\lim_{k} s^{\delta_k}(\lambda)
+		 & = \lambda \lim_{k} \frac{\wi^{\delta_k}(\lambda)}{\norm{\wi^{\delta_k}(\lambda)}_2} \\
+		 & = \lambda \frac{\bwi(\lambda)}{\norm{\bar \wi(\lambda)}_2},
+	\end{align*}
+	which shows that \( \bar s_\bi \) is a subgradient of \( \lambda \norm{\wi}_2 \).
+	We conclude that the Lagrangian is stationary in \( \bwi \) as well.
+
+	Let us check the remainder of the KKT conditions.
+	For feasibility, it is straightforward to observe that
+	\[
+		\Ki^\top \wi^{\delta_k}(\lambda) \leq 0 \quad \forall \, k \implies \Ki^\top \bwi(\lambda) \leq 0.
+	\]
+	Similarly,
+	\[
+		\abr{\ri^{\delta_k}, \Ki^\top \wi^{\delta_k}} = 0 \quad \forall \, k \implies \abr{\bar \ri, \Ki^\top \bwi} = 0,
+	\]
+	which, combined with \( \bar \rho \geq 0 \), is sufficient to establish
+	complementary slackness.
+	We have shown the subsequential limits \( (\bar w, \bar \rho) \)
+	satisfies the KKT conditions and thus \( \bar w \)
+	is a solution to the constrained group lasso problem.
+
+	Since the min-norm solution is unique and
+	\( \norm{\bar w(\lambda)}_2 \leq \norm{w^*(\lambda)}_2 \),
+	it must be that \( \bar w(\lambda) = w^*(\lambda) \).
+	Noting that this holds for every limit point implies
+	\( \lim_{\delta \downarrow 0} w^{\delta}(\lambda) \) exists and is \( w^*(\lambda) \).
+	This completes the proof for \( \lambda > 0 \).
+
+	If \( \lambda = 0 \), then the proposition follows similarly with
+	the additional observation that \( s^{\delta_k}(0) = 0 \)
+	for all \( k \).
+\end{proof}

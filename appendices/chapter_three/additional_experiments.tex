@@ -1,0 +1,206 @@
+%!TEX root = ../../main.tex
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/chapter_three/uci_pruning_full_paper.pdf}
+    \caption{Pruning neurons on five datasets from the UCI repository.
+        This figure extends \cref{fig:uci-pruning-acc} with training
+        accuracy in addition to the test accuracies shown in the main paper.
+    }
+    \label{fig:uci-pruning-full}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/chapter_three/uci_pruning_full_appendix.pdf}
+    \caption{Pruning neurons on five additional datasets from the UCI repository.
+        See \cref{fig:uci-pruning-acc} for details.
+        Our method (\textbf{Optimal/LS}) preservers test accuracy for longer
+        than the baseline methods, leading to compact models with better
+        generalization.
+    }
+    \label{fig:uci-pruning-appendix}
+\end{figure}
+
+In this section we provide additional experimental results as well as
+the necessary details to replicate our pruning experiments.
+Code to replicate all of our experiments is provided at
+\url{https://github.com/pilancilab/relu_optimal_sets}.
+
+\subsection{Additional Results}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/chapter_three/cifar_pruning_full.pdf}
+    \caption{Pruning experiments on binary classification tasks
+        from the CIFAR-10 dataset.
+        This figure reproduces results from \cref{fig:cifar-pruning-acc}
+        with training accuracies added and also includes results for
+        an additional task,
+        \texttt{cats vs dogs}, not presented in the main paper.
+    }
+    \label{fig:cifar-pruning-full}
+\end{figure}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/chapter_three/mnist_pruning_full.pdf}
+    \caption{Pruning experiments on three binary classification tasks
+        taken from MNIST.
+    }
+    \label{fig:mnist-pruning-full}
+\end{figure}
+
+\input{results/chapter_three/uci_tuning_full}
+
+\textbf{Tuning} \cref{table:tuning-full} shows results for our tuning
+task on an additional 7 datasets, as well as the 10 given in \cref{table:tuning-small}.
+We report the interquartile range as well as median test accuracies for each
+method.
+We observe similar results as presented in the main text.
+Only one dataset (\texttt{tic-tac-toe}) shows no variation in test
+accuracy as we explore the optimal set.
+
+\textbf{Pruning}: \cref{fig:uci-pruning-full} shows train and test
+accuracy for our
+optimal/least-squares pruning method as well as magnitude/gradient-based pruning
+and random pruning on the same five datasets from the UCI repository as
+presented in \cref{fig:uci-pruning-acc}.
+Our approach shows significantly less decay in train accuracy as neurons are
+pruned; this matches the intuition of the least-squares heuristic for pruning,
+which selects the coefficients \( \beta \) to best preserve the model fit.
+
+We observe that both our pruning method and pruning by neuron/gradient norm
+show very similar training accuracy until most of the neurons have been pruned.
+While this behavior is expected from our theory-based approach, it is somewhat
+surprising that pruning by neuron/gradient-norm also maintains train accuracy
+nearly as well.
+This behavior suggests that there are many neurons with very small norm which
+can be eliminated without significantly affecting the model prediction.
+
+\cref{fig:uci-pruning-appendix} presents results for neuron pruning on
+five additional datasets from the UCI repository, while
+\cref{fig:mnist-pruning-full} shows results for three binary classification
+tasks taken from the MNIST dataset.
+The trends are generally the same as in \cref{fig:uci-pruning-full},
+with our approach (\textbf{Theory/LS}) outperforming the baselines.
+Finally \cref{fig:cifar-pruning-full} extends the results on CIFAR-10
+given in \cref{fig:cifar-pruning-acc} with one additional task
+and with training accuracies.
+
+\subsection{Experimental Details}
+
+Now we give the details necessary to reproduce our experiments.
+Our experiments use the pre-processed versions of UCI datasets provided by
+\citet{delgado2014hundreds}, but do we do not use their evaluation procedure as
+it is known to have data leakage.
+
+\subsubsection{Tuning}
+
+We select 17 binary classification datasets from the UCI
+repository.
+For each dataset we use a random 60/20/20 split of the data
+into train, validation, and test sets.
+We use the commercial interior point method MOSEK \citep{aps2022mosek}
+through the interface provided by CVXPY \citep{diamond2016cvxpy}
+to compute the initial model which is then tuned.
+We modify the tolerances of this method to use \( \tau = 10^{-8} \) for measuring
+both primal convergence and violation of the constraints.
+For each dataset, we use fixed \( \lambda = 0.001 \) and a maximum of 1000
+neurons.
+To compute the min \( \ell_2 \)-norm optimal model,
+we use the MOSEK and the optimization problem given in \cref{prop:min-norm-program}.
+
+To approximate the maximum \( \ell_2 \)-norm model, we solve the
+following program:
+\begin{equation*}
+    \begin{aligned}
+        \alpha^* = \argmax_{\alpha \geq 0} \sum_{\bi \in \calS_\lambda} \alpha_\bi
+        \, \, \text{ s.t.} \, \,
+        \sum_{\bi \in \calS_\lambda} \alpha_{\bi} \Xbi \vi = \hat y.
+    \end{aligned}
+\end{equation*}
+This is a linear program which is straightforward to solve using
+interior point methods.
+Moreover, we have
+\[
+    \norm{w^*}_2^2 = \lambda^2 \sum_{\bi} (\alpha_\bi^*)^2,
+\]
+so that \( \sum_{\bi} \alpha_\bi \) acts as an approximation, where we recall
+\( \alpha_\bi \geq 0 \) necessarily.
+
+To tune each model with respect to the validation/test MSE, we solve the following optimization problem:
+\[
+    \min_{w} \cbr{ \half \norm{\tilde X w - \tilde y}_2^2 : w \in \solfn(\lambda) },
+\]
+with respect to the parameters of the convex formulation.
+Here, \( (\tilde X, \tilde y) \) is either the validation or test
+set.
+We repeat each experiment five times with different random splits of the
+data and random resamplings of \( 500 \) activation patterns \( D_i \).
+This guarantees that each non-convex network has at most \( 1000 \) neurons
+after optimization, although it may have less due to the sparsity inducing
+penalty.
+
+\subsubsection{Pruning}
+
+\textbf{Methods}:
+We use the augmented Lagrangian method of \citet{mishkin2022convex} to compute
+the starting model which is then pruned.
+We modify the tolerances of this method to use \( \tau = 10^{-8} \) for measuring
+both primal convergence and violation of the constraints.
+
+Pruning by neuron magnitude is straightforward: we sort the neurons
+by \( \norm{W_{1i} w_{2i}}_2 \), which measures the total magnitude of the
+neuron, and then drop the smallest one.
+For pruning by gradient norm, we compute
+\( G_{1i} = \nabla_{W_{1i}} L(f_{W_1, w_2}(Z), y) \),
+\( g_{2i} = \nabla_{W_{2i}} L(f_{W_1, w_2}(Z), y) \) and then score each
+neuron as
+\[
+    s_i = \norm{W_{1i} \cdot G_{1i} w_{2i} g_{2i}}_2,
+\]
+where \( \cdot \) indicates the element-wise product.
+The neuron with smallest score is zeroed.
+This is consistent the existing implementations of pruning by
+gradient norm \citep{bialock2020pruning} and attempts to measure the
+variation of a linearization of the loss in neuron \( i \).
+For Random, we simply select a neuron from a uniform random distribution.
+
+For Optimal/LS, we start by using \cref{alg:pruning-solutions} to prune
+until no linear dependence exists amongst the neuron fits \( D_i Z W_{1i} \).
+At this point, we choose \( \beta \) to minimize the squared-error
+in the training fit.
+We choose the neuron to prune by selecting the index that minimizing the residual
+in the least-squares fit,
+\[
+    i_k = \argmin_{j} \min_{\beta}
+    \half \norm{\sum_{i \neq j} \beta_i D_i Z w_i  - D_j Z w_j}.
+\]
+This produced the best result in all of our experiments, although you can
+also select \( i_k \) using neuron magnitude or any other rule in the literature
+on structured pruning.
+
+\textbf{UCI Datasets}:
+We select 10 moderately-sized binary classification datasets from the UCI repository.
+For each dataset we use a random 50/50 split of the data
+into train and test sets,
+fixed \( \lambda = 0.01 \), and sample 25
+activation patterns \( D_i \).
+This results in a maximum of 50 neurons in each final model;
+since the datasets are low dimensional, randomly sampling activation patterns
+typically results in fewer than 50 neurons.
+All results are repeated for five different random splits and we
+plot the median and interquartile ranges of the results.
+
+\textbf{MNIST and CIFAR-10}:
+We select three binary classification tasks from each dataset such that
+no task shares a target with another task.
+For each dataset we use a random 50/50 split of the data
+into train and test sets.
+For MNIST, we use \( \lambda - 0.01 \), while we used \( \lambda = 0.05 \)
+for CIFAR-10.
+We sample 50 activation patterns \( D_i \) for each tasking,
+which produces a maximum of 100 neurons in each final model.
+All results are repeated for five different random splits and we
+plot the median and interquartile ranges of the results.

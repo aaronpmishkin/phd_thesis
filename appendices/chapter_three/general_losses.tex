@@ -1,0 +1,41 @@
+%!TEX root = ../main.tex
+
+In this section, we briefly discuss how to extend our results to general loss
+functions.
+Although we use the least-squares error throughout our derivations, this can be
+generalized to a smooth and strictly convex loss function \( L : \R^n \times \R^n \into \R \)
+without difficulty.
+To do so, consider the more general problem,
+\begin{equation}\label{eq:general-gl}
+	\begin{aligned}
+		p^*(\lambda) \!=\! \min_{w} \,
+		 & F_\lambda(w) \!:=\! \half L(X w, y) + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
+		 & \quad \text{s.t.} \quad \Ki^\top \wi \leq 0  \text{ for all } \bi \in \calB.
+	\end{aligned}
+\end{equation}
+If \( L \) is strictly convex, then uniqueness of the
+optimal model fit \( \hat y(\lambda) = X w \) follows from straightforward
+adaption of \cref{lemma:unique-fit-cgl}.
+Indeed, the only property of the squared-error used in this lemma is strict
+convexity.
+
+Since the model fit is constant in \( \solfn \) and \( L \) is both smooth and strictly convex,
+the gradient \( \nabla_w L( X w, y) \), which is given by
+\[
+	X^\top \nabla_{\hat y} L( \hat y, y),
+\]
+must also be constant over \( \solfn \).
+Thus, it is straightforward to replace the correlation vector \( \ci = \Xbi^\top (y - X w) \) with \( \Xbi^\top \nabla_{\hat y} L(\hat y, y) \)
+throughout our derivations.
+
+We form a Lagrange dual problem for CGL for one continuity-type result.
+\cref{prop:model-fit-continuity} uses the Lagrange dual to
+show that the correlation vector \( \ci \) is the unique solution to a convex
+optimization program and applies standard sensitivity results to obtain continuity
+of \( \hat y \).
+In this same fashion, \( \Xbi^\top \nabla_{\hat y} L(\hat y, y) \) is the
+unique solution to a Lagrange dual problem where the dual objective uses
+the convex conjugate \( L^* \), rather than the dual of the quadratic penalty.
+If \( \nabla_{\hat y} L(\hat y, y) \) is continuous in \( \hat y \), then
+this is sufficient to deduce continuity of the model fit using the same
+argument.

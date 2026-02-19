@@ -1,0 +1,74 @@
+%!TEX root = ../main.tex
+
+Through convex reformulations, we have characterized the optimal sets of ReLU
+networks, computed minimal networks, and provided sensitivity results.
+Our goal in this section is to illustrate the power of our framework for
+analyzing ReLU networks and developing new algorithms.
+
+\textbf{Tuning}:
+We first consider a tuning task on 10 binary classification
+datasets from the UCI repository~\citep{dua2019uci}.
+For each dataset, we do a train/validation/test split, fit a two-layer
+ReLU model on the training set, and then compute the minimum \( \ell_2 \)-norm
+model.
+We use this to explore the optimal set in three ways:
+(i) we compute an extreme point that (approximately)
+maximizes the model's \( \ell_2 \)-norm; (ii)
+we minimize the validation MSE over
+\( \solfn(\lambda) \); (iii) we minimize test MSE over \( \solfn(\lambda) \).
+These procedures select for different optimal models,
+have no effect on the training objective, and are only possible
+because we know \( \solfn \).
+
+The results are summarized in \cref{table:tuning-small}.
+We see that optimal models can perform very differently at test time despite
+having exactly the same training error and model norm.
+Indeed, 9/10 datasets show at least a 10 percent gap between the best
+and worst models and 4/10 have a gap exceeding 20 percent accuracy.
+We conclude that the training objective is badly under-determined even for
+shallow neural networks, implying that implicit regularization is critical
+in practice.
+See \cref{app:additional-experiments} for results on additional datasets.
+
+\begin{figure}[t]
+	\centering
+	\includegraphics[width=0.48\textwidth]{figures/chapter_three/cifar_pruning_acc.pdf}
+	\vspace{-2.5ex}
+	\caption{Pruning neurons from two-layer ReLU networks on two binary
+		classification tasks drawn from the CIFAR-10 dataset.
+		We compare our method (\textbf{Optimal/LS}) against baselines;
+		see \cref{fig:uci-pruning-acc} for details.
+		Our approach, which makes use of a weight correction after pruning,
+		outperforms every baseline.
+	}
+	\label{fig:cifar-pruning-acc}
+	\vspace{-2ex}
+\end{figure}
+
+\textbf{Pruning}:
+We also consider several neuron pruning tasks.
+We use two-layer ReLU networks and start pruning from the model given
+by optimizing the convex reformulation.
+We compare four strategies:
+(i) pruning neurons optimally using
+\cref{alg:pruning-solutions-nn} until \( \cbr{(XW_{1i})_+}_\act \) are linearly
+independent and then approximately using least-squares fits;
+and (ii) by removing the neuron with the smallest magnitude,
+\( \norm{W_{1i} \cdot w_{2i}} \);
+(iii) by removing the neuron with the smallest weighted gradient;
+and (iv) by random pruning.
+
+\cref{fig:uci-pruning-acc} shows test performance of the these methods for five
+UCI datasets.
+Our theory-based pruning method has better test performance
+than the baselines on every dataset considered;
+on \texttt{hill-valley}, the gap between our approach and
+magnitude-based pruning is approximately \( 40\% \).
+\cref{fig:cifar-pruning-acc} presents similar results for two binary tasks
+taken from the CIFAR-10 dataset \citep{krizhevsky2009learning}.
+We provide experiments on additional datasets, including MNIST
+\citep{lecun1998gradient},
+and experimental details in
+\cref{app:additional-experiments}.
+
+

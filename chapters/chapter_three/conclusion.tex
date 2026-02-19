@@ -1,0 +1,35 @@
+%!TEX root=../main.tex
+
+We study the structure and properties of solution sets for shallow
+neural networks with (gated) ReLU activations.
+Unlike previous work, we avoid non-convexity of neural networks
+by studying the constrained group lasso,
+a generalized linear model which unifies the convex reformulations of both
+ReLU and gated ReLU networks.
+We derive analytical expressions for the optima and all stationary
+points of the training objective for two-layer ReLU networks.
+Building on this characterization, we develop
+conditions for the optimal neural network to be p-unique,
+an algorithm for optimal pruning of neural networks,
+and sensitivity results.
+We demonstrate the utility of our framework
+in experiments on MNIST, CIFAR-10, and the UCI datasets.
+
+There is still much work to do in this area.
+For example, we conjecture that the min-norm CGL solution,
+which corresponds to the network minimizing a fourth-power penalty,
+always has a continuous regularization path.
+More generally, it remains to extend our characterization of the solution set to
+deeper networks and vector-output models.
+
+
+%We derive analytical expressions for the optimal set of the constrained
+%group lasso, conditions for uniqueness of the solution,
+%an algorithm for computing minimal solutions, and continuity/sensitivity results;
+%by mapping back into the non-convex parameterization, we obtain comparable
+%theorems characterizing two-layer neural networks.
+%Highlights these results include an expression for every stationary point of a
+%two-layer ReLU network and an effective algorithm for pruning neurons.
+
+
+

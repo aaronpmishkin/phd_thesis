@@ -1,0 +1,18 @@
+\begin{algorithm}[tb]
+	\caption{Optimal Solution Pruning}
+	\label{alg:pruning-solutions}
+	\begin{algorithmic}
+		\STATE {\bfseries Input:} data matrix \( X \), solution \( w \).
+		\STATE \( k \gets 0 \).
+		\STATE \( w^k \gets w \).
+		\WHILE {\( \exists \beta \neq 0 \) s.t. \( \sum_{\bi \in \act(w^k)} \beta_\bi \Xbi \wi^k = 0 \)}
+		\STATE \( \bi^k \gets \argmax_{\bi} \cbr{|\beta_\bi| : \bi \in \act(w^k)}  \)
+		\STATE \( t^k \gets 1/|\beta_{\bi^k}| \)
+		\STATE \( \w^{k+1} \gets \w^k (1 - t^k \beta_\bi) \)
+		\STATE \( k \gets k + 1 \)
+		\ENDWHILE
+		\STATE {\bfseries Output:} final weights \( \w^k \)
+	\end{algorithmic}
+\end{algorithm}
+
+

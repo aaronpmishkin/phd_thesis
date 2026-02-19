@@ -1,0 +1,179 @@
+%!TEX root=../main.tex
+
+\aaron{TODO: remove this section and incorporate text into ReLU section.}
+
+Let \( X \in \R^{n \times d} \) be a data matrix, \( y \in \R^n \) the
+associated vector of targets,
+and \( \calB = \cbr{b_1, \ldots, b_m} \) a disjoint partition of the feature indices
+\( \cbr{1, \ldots, d} \).
+Given a regularization parameter \( \lambda \geq 0 \), the linear group lasso
+solves the following regularized regression problem:
+\begin{equation}\label{eq:group-lasso}
+	p^*(\lambda) = \min_{w} \half \norm{X w - y}_2^2 + \lambda \sum_{b_i \in \calB} \norm{\wi}_2.
+\end{equation}
+Solutions to \cref{eq:group-lasso} are block sparse when \( \lambda \) is sufficiently large, meaning \( \wi = 0 \) for some subset of \( \bi \).
+This is similar to the feature sparsity given by the lasso,
+to which the group lasso naturally reduces when \( \bi = \cbr{i} \) for each
+\( \bi \in \calB \).
+
+Our primary interest in this work is the solution map or
+``regularization path'',
+\[
+	\solfn(\lambda) := \argmin_w f_\lambda(w).
+\]
+For a general data matrix, \( f_\lambda \) is not strictly convex and
+the linear group lasso problem may admit multiple solutions.
+As such, \( \solfn \) is a point-to-set map and
+only the min-norm solution,
+\[
+	\wmin(\lambda) = \argmin \cbr{ \norm{w}_2 : w \in \solfn(\lambda) },
+\]
+defines a function.
+Even in the non-unique case, the model fit \( \hat y(\lambda) = X w \) is the
+same for all \( w \in \solfn(\lambda) \) \citep[Lemma 2]{vaiter2012dof}.
+Moreover, if \( \lambda > 0 \), then it is straightforward to deduce that the sum of group norms
+\( \sum_{i \in \calB} \norm{\wi}_2 \) is also constant over \( \solfn(\lambda) \).
+Uniqueness of \( \hat y(\lambda) \) extends to the residual vector
+\( r(\lambda) = y - \hat y(\lambda) \)
+and the block correlation vectors \( \ci(\lambda) = \Xbi^\top r(\lambda) \).
+We write \( c \in \R^d \) as the concatenation of the \( \ci \)
+blocks.
+
+Unlike the lasso, the group lasso solution map is not piece-wise linear
+in general \citep{yuan2006model}.
+This prevents us from obtaining an explicit expression for the solution
+path between transition point, where features enter or exit the active set.
+We overcome this difficulty by relying only on an \emph{implicit} characterization
+of the path provided by the implicit function theorem.
+We start towards this goal by developing optimality conditions for the group
+lasso problem.
+
+Since \cref{eq:group-lasso} is a convex optimization problem, first-order (FO)
+optimality conditions are both necessary and sufficient for weights \( w \)
+to be globally optimal.
+Sub-differentiating the optimization problem gives the following FO conditions:
+\begin{equation}\label{eq:fo-optimality}
+	\begin{aligned}
+		\ci(\lambda) := \Xbi^\top (y - X w) \in
+		\begin{cases}
+			\cbr{\lambda \frac{\wi}{\norm{\wi}_2}} & \mbox{if \( \wi \neq 0 \)} \\
+			\cbr{v : \norm{v}_2 \leq \lambda }     & \mbox{otherwise,}
+		\end{cases}
+	\end{aligned}
+\end{equation}
+showing that \( \wi = 0 \) when \( \norm{\ci}_2 < \lambda \).
+As a result, the equicorrelation set
+\begin{equation}\label{eq:equi}
+	\equi := \cbr{\bi \in \calB : \norm{\Xbi^\top (y - Xw)}_2 = \lambda},
+\end{equation}
+contains all blocks which may be active for fixed \( \lambda \).
+The complement of \( \equi \) in \( \calB \) is the inactive set,
+denoted \( \inact \).
+Our first result combines FO conditions with uniqueness of \( \hat y(\lambda) \)
+to characterize the solution map in terms of \( \Null(\Xe) \).
+\begin{restatable}{proposition}{solutionFunctionAlt}\label{prop:sol-fn-alt}
+	Suppose \( \lambda > 0 \).
+	Then the solution function for the group lasso is given by
+	\begin{equation}
+		\begin{aligned}
+			\solfn(\lambda) =
+			\bigg\{ w \in \R^d : \,
+			 & \forall \, \bi \in \equi, \, \wi = \alpha_\bi \ci, \alpha_\bi \geq 0, \, \\
+			 & \forall \, b_j \in \calB \setminus \equi, \w_{b_j} = 0, \,
+			X w = \hat y.
+			\bigg\}
+		\end{aligned}
+	\end{equation}
+\end{restatable}
+As an immediate consequence, the solution map is a particular subset
+of directions in \( \Null(\Xe) \).
+\begin{corollary}\label{cor:uniqueness-cond}
+	If \( w, w' \in \solfn \),
+	then \cref{prop:sol-fn-alt} implies
+	\[
+		w - w' \in \calN_\lambda := \Null(\Xe) \cap \cbr{z : \zi \in \Span(\ci), i \in \equi }.
+	\]
+	As a result, the group lasso solution is unique when \( \calN_\lambda = \emptyset \).
+\end{corollary}
+\cref{cor:uniqueness-cond} extends a similar result for the lasso
+to the group lasso \citep[Eq. 9]{tibshirani2013unique} and
+implies the group lasso solution is unique for all \( \lambda \geq 0 \) if
+the columns of \( X \) are linearly independent;
+however, we can also use it to obtain the following refined condition
+for uniqueness.
+%\begin{restatable}{proposition}{GGP}[Group General Position]\label{prop:unique-sol}
+%    Suppose for every \( \calE \subseteq \calB \), \( \abs{\calE} \leq n +1 \),
+%    there do not exist unit vectors \( \zi \in \R^{\abs{\bi}} \)
+%    such that for any \( j \in \calE \),
+%    \[
+%        X_{b_j} z_{b_j} \in
+%        \text{affine}(\cbr{\Xbi \zi : \bi \in \calE \setminus b_j}).
+%    \]
+%    Then the group lasso solution is unique for all \( \lambda > 0 \).
+%\end{restatable}
+We call this uniqueness condition \emph{group general position}
+(GGP) because it naturally extends general position to groups of column vectors.
+General position itself is an extension of affine independence and is sufficient for the lasso solution
+to be unique \citep{tibshirani2013unique}.
+We note that GGP is strictly weaker than linear independence of the columns of \( X \),
+but neither implies nor is implied by general position (\cref{prop:general-position-relation}).
+
+\subsection{Properties of the Solution Map}
+
+Now we prove several general results about the solution map \( \solfn \).
+First we provide standard definitions for continuity-type properties of
+a point-to-set map.
+
+\begin{definition}[Closed Map]
+	A point-to-set map \( T : \calX \into \calZ \) is closed if
+	\( \cbr{\xk} \subset \calX \), \( \xk \into \bar x \) and \( z_k \in T(\xk) \),
+	\( z_k \into \bar z \) implies \( \bar z \in T(\bar x) \).
+\end{definition}
+
+\begin{definition}[Open Map]
+	A point-to-set map \( T : \calX \into \calZ \) is open if
+	\( \cbr{\xk} \subset \calX \), \( \xk \into \bar x \) and \( \bar z \in T(\bar x) \),
+	implies there exists \( k' \in \bbN \), \( z_k \in T(\xk) \) for \( k \geq k' \),
+	such that \( z_k \into \bar z \).
+\end{definition}
+
+We say that \( T \) is \emph{continuous} if it is both closed and open.
+If \( T(x) \) is a singleton for all \( x \in \calX \),
+then openness/closedness of \( T \) are equivalent to the standard
+notion of continuity.
+
+Our first result of this section establishes continuity of the optimal
+objective value.
+
+\begin{restatable}{proposition}{valueContinuity}\label{prop:value-continuity}
+	The optimal function value \( p^* \) is continuous for all
+	\( \lambda \geq 0 \).
+\end{restatable}
+
+By analyzing the dual problem, we can extend continuity to the
+model fit and the sum of group norms.
+
+%\begin{restatable}{proposition}{modelFitContinuity}\label{prop:model-fit-continuity}
+%    The optimal model fit \( \hat y(\lambda)  \) is continuous for all \( \lambda \geq 0 \) the penalty \( \sum_{\bi \in \calB} \norm{\wi(\lambda)}_2 \) is continuous
+%    for \( \lambda > 0 \).
+%\end{restatable}
+
+It is straightforward to extend this characterization to closedness
+of \( \solfn \), but openness is not possible in the general setting.
+
+\begin{restatable}{proposition}{mapContinuity}\label{prop:map-continuity}
+	The solution map \( \solfn \) is closed on \( \R_+ \)
+	and open on \( R^+ \) if only if \( X \) has full column rank.
+	However, if GGP holds, then \( \solfn \) is open for every \( \lambda > 0 \).
+\end{restatable}
+
+Continuity of \( \solfn \) is impossible in the general setting because, as \citet{hogan1973point} shows, openness is essentially a stability property, one which cannot be satisfies when the equicorrelation set changes.
+Continuity of the unique solution path is an immediate corollary of
+these developments.
+
+\begin{corollary}
+	The group lasso solution is unique and continuous for every \( \lambda > 0 \)
+	when GGP holds and is also continuous at \( \lambda = 0 \) when \( X \)
+	is full column rank.
+\end{corollary}
+

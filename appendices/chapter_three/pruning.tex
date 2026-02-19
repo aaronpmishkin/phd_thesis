@@ -1,0 +1,273 @@
+%!TEX root=../main.tex
+
+\minimalSols*
+\begin{proof}
+	Let \( w \in \solfn(\lambda) \) and assume that
+	the vectors \( \cbr{\Xbi \wi}_{\calA(w)} \) are linearly independent.
+	By way of contradiction, assume there exists \( w' \in \solfn(\lambda) \)
+	with strictly smaller support.
+	By \cref{prop:sol-fn-cgl}, we have
+	\[
+		\wi' = \beta_\bi \wi,
+	\]
+	for some \( \beta_\bi \geq 0 \).
+	This holds for each \( \bi \in \act(\w) \)
+	(with \( \beta_\bi = 0 \) when \( \bi \in \act(w) \setminus \act(w') \)) so that
+	\[
+		X w = X w' \implies \sum_{\bi \in \act(w)} (1 - \beta_\bi) \Xbi \wi = 0,
+	\]
+	which is a contradiction.
+
+	For the reverse direction, assume that \( w \) is minimal, but that
+	\( \cbr{\Xbi \wi}_{\calA(w)} \) are not linearly independent.
+	Then the correctness of \cref{alg:pruning-solutions}
+	(see \cref{prop:pruning-correctness}) implies
+	\( w \) is not minimal.
+\end{proof}
+
+
+\begin{proposition}\label{prop:pruning-correctness}
+	\cref{alg:pruning-solutions} returns a minimal solution to the
+	constrained group lasso problem in at most \( O(n^3l + nd) \)
+	time, where \( l \) is the number of non-zero groups in the
+	initial solution.
+\end{proposition}
+\begin{proof}
+	\textbf{Correctness}:
+	Let \( w \in \solfn(\lambda) \)
+	and \( \calA \) be the associated active set.
+	If \( w^0 = w \) is minimal, then \cref{prop:minimal-solutions}
+	implies \( \cbr{\Xbi \wi}_\calA \) are linearly independent
+	the algorithm returns a minimal solution.
+
+	Let \( k \geq 0 \) and suppose \( w^k \) is not minimal.
+	Then there exist weights \( \beta_\bi \) such that
+	\[
+		\sum_{\bi \in \calA} \beta_\bi \Xbi w^k = 0.
+	\]
+	Let \( \wi^t = (1 - t \beta_\bi) \wi \) and let \( t^k \)
+	be as defined in the algorithm.
+	By construction, \( t^k \) is the smallest magnitude \( t \) such that
+	\( (1 - t \beta_\bi) = 0 \) for some \( \bi \in \calA \).
+	We assume without loss of generality that \( t^k > 0 \).
+
+	Fix \( 0 < t < t^k \). Let's show that \( w^t \) is a solution to the
+	constrained problem.
+	Firstly, we have
+	\[
+		X w^t = X w^k - t \sum_{\bi \in \calA} \beta_\bi \Xbi \wi^k = X w^k,
+	\]
+	showing that the model fit preserved.
+	Moreover,
+	\[
+		\wi^t = (1 - t \beta_\bi) \wi^k = (1 - t \beta_\bi) \alpha_\bi \vi,
+	\]
+	where \( (1 - t \beta_\bi) \alpha_\bi > 0 \) by the choice of \( t \).
+	We conclude that \( w^t \) is optimal by \cref{prop:sol-fn-cgl}.
+
+	By construction,
+	\[
+		\lim_{t \uparrow t^k} w^t = w^{k+1}.
+	\]
+	Since \( w^t \) is an optimal solution,
+	it has the (unique) optimal squared error and sum of group norms.
+	Taking limits as \( t \uparrow t^k \),
+	we see that
+	\[
+		X w^{k+1} = X w^k,
+		\quad \sum_{\bi \in \calB} \norm{\wi^{k+1}}_2
+		=
+		\sum_{\bi \in \calB} \norm{\wi}_2,
+		\quad
+		K^\top w^{k+1} \leq 0,
+	\]
+	which implies that \( w^{k+1} \) obtains the optimal objective
+	value and is feasible.
+	Thus \( w^{k+1} \) is also a solution.
+	Finally, \( \calA(w^{k+1}) \) is strictly smaller than
+	\( \calA(w^k) \), as required.
+
+	Arguing by induction now implies that \cref{alg:pruning-solutions}
+	returns an minimal solution in a finite number of steps.
+
+	\textbf{Complexity}:
+	First, observe that we can pre-compute the block-wise model fits
+	\( q_\bi = \Xbi \wi \) before running the
+	algorithm. The complexity is at most \( O(nd) \).
+	At each iteration of the algorithm, we must do two things: (i)
+	compute a non-trivial solution to a homogeneous equation and (ii)
+	update the weights of the model fits.
+	For (i), it is clear that any set of \( n+1 \) of the \( q_\bi \) vectors
+	will be linearly dependent, so that we compute a non-trivial
+	solution to the homogeneous equation using the SVD in an at most
+	\( O(n^3) \) operations.
+	For (ii), updating at most \( n \) of the \( \beta_{\bi} \)'s
+	requires \( O(n) \) time.
+	Since the algorithm runs at most \( l \) iterations, we obtain a final
+	complexity of \( O(n^3l + nd) \), as claimed.
+\end{proof}
+
+\begin{definition}\label{def:group-dependence}
+	We say that \( X \) satisfies \emph{group dependence} if for every choice of
+	vectors \( z_{\bi} \in \R^{|\bi|} \) and partition
+	\( \calD \cup \calI = \calB \), \( \calD \cap \calI = \emptyset \) such
+	that
+	\[
+		g_{\calD} := \sum_{b_j \in \calD} X_{b_j} z_{b_j}
+		\in \text{Span}\rbr{\cbr{\Xbi z_{\bi} : \bi \in \calI}},
+	\]
+	it holds that
+	\[
+		\text{Span}\rbr{\cbr{X_{b_j} z_{b_j} : b_j \in \calD}}
+		\subseteq \text{Span}\rbr{\cbr{\Xbi z_{\bi} : \bi \in \calI}}.
+	\]
+	In other words, linear dependence of
+	\( g_{\calD} \)  and \( \cbr{\Xbi z_{\bi} : \bi \in \calI} \) implies
+	linear dependence of \( X_{b_j} z_{b_j} \) and
+	\( \cbr{\Xbi z_{\bi} : \bi \in \calI} \) for every \( b_j \in \calD \).
+\end{definition}
+
+
+\begin{lemma}\label{lemma:pruning-span}
+	If \( X \) satisfies group dependence, then each step of the
+	\cref{alg:pruning-solutions} preserves the span of \( \cbr{\Xbi \wi^k } \).
+	That is, only linearly dependent vectors are removed.
+\end{lemma}
+\begin{proof}
+	Let \( \calV = \Span\cbr{\Xbi \wi } \) be the span of the initial solution.
+	Since \( w^0 = w \) by definition, the base case holds trivially.
+
+	Now, suppose \( \Span(\Xbi \wi^{k}) = \calV \) and let
+	\( \calD^k = \act(w^{k}) \setminus \act(w^{k+1}) \).
+	For every \( b_j \in \calD^k \), it holds that \( \beta_{b_j} = \beta_{\bi^k} \),
+	meaning
+	\[
+		\sum_{j \in \calD^k} X_{b_j} w_{b_j}^k \in \text{Span}\rbr{\cbr{\Xbi \wi^k : \bi \in \act(w^{k+1})}}.
+	\]
+	Group dependence now implies for every \( b_j \in \calD^k \) there exists \( \zeta^j \)
+	such that
+	\[
+		X_{b_j} w_{b_j}^k = \sum_{\bi \in \act(w^k)} \zeta^j_{\bi} \Xbi \wi^k.
+	\]
+	Let \( v \in \calV \) and observe that
+	\begin{align*}
+		v
+		 & = \sum_{\bi \in \act(w^k)} \alpha_\bi \Xbi \wi^k                  \\
+		 & = \sum_{\bi \in \act(w^{k+1})} \alpha_\bi \Xbi \wi^k
+		+ \sum_{b_j \in \calD^k} \alpha_{b_j} X_{b_j} w_{b_j}^{k}            \\
+		 & = \sum_{\bi \in \act(w^{k+1})} \alpha_\bi \Xbi \wi^k
+		+ \sum_{b_j \in \calD^k}
+		\sum_{\bi \in \act(w^{k+1})} \alpha_{b_j} \zeta_{b_i}^j \Xbi \wi^{k} \\
+		 & = \sum_{\bi \in \act(w^{k+1})}
+		\rbr{\alpha_\bi + \sbr{\sum_{b_j \in \calD^k} \alpha_{b_j} \zeta_{b_i}^j}}
+		\Xbi \wi^{k}                                                         \\
+		 & = \sum_{\bi \in \act(w^{k+1})}
+		\rbr{\frac{\alpha_\bi + \sbr{\sum_{b_j \in \calD^k}
+					\alpha_{b_j} \zeta_{b_i}^j}}{1 - t^k \beta_\bi}}
+		\Xbi \wi^{k+1},
+	\end{align*}
+	Thus, \( \Span(\Xbi \wi^{k+1}) = \calV  \).
+	Arguing by induction completes the proof.
+\end{proof}
+
+\begin{lemma}\label{lemma:pruning-paths-equiv}
+	Let \( \calX = \cbr{x_1, \ldots, x_k} \) be a set of linearly dependent vectors.
+	Every linearly independent subset of \( \calX \) obtained by iteratively removing
+	linearly dependent vectors has the same cardinality.
+\end{lemma}
+\begin{proof}
+	Let \( \calY, \calY' \subset \calX \) be linearly independent subsets
+	obtained by pruning linearly dependent vectors from \( \calX \) and assume
+	\( |\calY'| < |\calY| \).
+	Since \( \calY \) and \( \calY' \) are obtained by pruning only linearly
+	dependent vectors, it must be that
+	\[ \Span\rbr{\calY'} = \Span\rbr{\calY} = \Span\rbr{\calX}. \]
+	Let \( c = \text{dim}\rbr{\Span\rbr{\calX}} \).
+	Only a set of \( c \) linearly independent vectors can span
+	\( \Span\rbr{\calX} \);
+	thus, \( |\calY| = c \) must hold and \( \calY' \) cannot span \( \Span\rbr{\calX} \).
+	This is a contradiction.
+	We conclude
+	\( |\calY'| = |\calY| \)
+	as claimed.
+\end{proof}
+
+\begin{lemma}\label{lemma:maximal-sol}
+	There exists a solution to CGL with support exactly \( \calS_\lambda \).
+\end{lemma}
+\begin{proof}
+	By definition, there exists \( w \in \solfn(\lambda) \) such that
+	\( \wi \neq 0 \) for every \( \bi \in \calS_\lambda \).
+	Taking convex combination of these solutions yields \( w' \) with support
+	exactly \( \calS_\lambda \).
+	Since \( \solfn(\lambda) \) is convex, \( w' \) is also a solution.
+	This completes the proof.
+\end{proof}
+
+\begin{lemma}\label{lemma:one-step-pruning}
+	Let \( w \) be a minimal solution and \( \bar w \) be a solution with support
+	\( \calS_\lambda \), which exists by \cref{lemma:maximal-sol}.
+	Then, \( \bar w \) can be pruned in one step to obtain \( w \).
+\end{lemma}
+\begin{proof}
+	Suppose \( \bar w \) is minimal.
+	Then \( \cbr{\Xbi \bwi}_{\calS_\lambda} \) are linearly independent,
+	which implies \( \cbr{\Xbi \vi}_{\calS_\lambda} \) are also linearly independent.
+	We conclude \( \bar w \) is the unique solution to CGL by \cref{lemma:unique-cgl}
+	and the claim holds trivially.
+
+	Suppose \( \bar w \) is not minimal.
+	Since \( \act(w) \subset \calS_\lambda \),
+	\( \Span\cbr{\Xbi \wi} \subset \Span\cbr{\Xbi \bwi} \)
+	so that every vector \( \Xbi \wi \) can be written as a linear combination
+	of vectors in \( \cbr{\Xbi \bwi} \).
+	Thus, we find that
+	\begin{align*}
+		\sum_{\bi \in \act(\bar w)} \Xbi \bwi
+		 & = \hat y
+		= \sum_{\bi \in \act(w)} \Xbi \wi \\
+		\implies
+		\sum_{\bi \in \calS_\lambda \setminus \act(w)} \Xbi \bwi +
+		\sum_{\bi \in \act(w)} \beta_{\bi} \Xbi \bwi
+		 & = 0,
+	\end{align*}
+	where \( \beta_{\bi} = 1 - \frac{\alpha_\bi}{\bar \alpha_\bi} \) for
+	\( \wi = \alpha_\bi \vi \),
+	\( \bwi = \bar \alpha_\bi \vi \).
+	Thus, \( \cbr{\Xbi \bwi} \) are linearly dependent and it is possible
+	to prune the solution.
+
+	Now we show that we can, in fact, prune all vectors in \( \calS_\lambda \setminus \act(w) \)
+	in one pruning step.
+	First, observe that \( \frac{\alpha_\bi}{\bar \alpha_\bi} > 0 \) so that \( \beta_\bi < 1 \)
+	for every \( \bi \in \act(w) \).
+	Following the proof of \cref{prop:pruning-correctness},
+	define
+	\[
+		\wi^t = (1 - t \beta_\bi) \bwi = (1 - t \beta_\bi) \bar \alpha_\bi \vi,
+	\]
+	for \( 0 < t < 1 \).
+	Since \( \beta_\bi < 1 \) for every \( \bi \in \calS_\lambda \),
+	it is straightforward to deduce that \( \wi^t \) is optimal by
+	\cref{prop:sol-fn-cgl}.
+	Arguing as in \cref{prop:pruning-correctness}, we can show
+	\( w^1 \) is also optimal.
+	It remains only to notice that \( \wi^1 = 0 \) for \( \bi \in \calS_\lambda \setminus \act(w) \)
+	and \( \wi^1 = \wi \) for \( \bi \in \act(w) \).
+	Thus, the pruning algorithm can move from \( \bar w \) to \( w \) in one step.
+\end{proof}
+
+
+\minimalSolCharacterization*
+\begin{proof}
+	Suppose \( w \) and \( w' \) are two minimal solutions.
+	Both can be obtained by pruning the maximal solution with support \( \calS_\lambda \) (\cref{lemma:one-step-pruning}).
+	Thus, \( w \) and \( w' \) both span \( \Span(\cbr{\Xbi \wi}) \) by \cref{lemma:pruning-span}.
+	\cref{lemma:pruning-paths-equiv} now implies \( w \) and \( w' \)
+	have the same number of active blocks.
+	This number must be \( c \), otherwise there would be a linearly dependent vector
+	in \( \cbr{\Xbi \wi}_{\act\rbr{w}} \) and \( w \) would not be minimal.
+	This completes the proof.
+\end{proof}
+
+

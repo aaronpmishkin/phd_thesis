@@ -1,0 +1,13 @@
+%!TEX root=../main.tex
+
+We first consider the simple case where \( \calL(\hat y, y) = \half \norm{\hat y - y}_2^2 \) and \( R(w, \alpha) = \half \sum_{i = 1}^p \norm{w_i}_2^2 + \norm{\alpha_i}_2^2 \).
+This is the standard setting with least-squares loss with weight-decay regularization.
+With these choices, \cref{eq:non-convex-relu-mlp} becomes
+\begin{equation}
+	\label{eq:relu-least-squares}
+	\min_{w, \alpha} \half \norm{\sum_{i=1}^p (X w_i)_+ \alpha_i - y} + \frac{\lambda}{2} \sum_{i = 1}^p \norm{w_i}_2^2 + \norm{\alpha_i}_2^2.
+\end{equation}
+Our first result demonstrates that the solution cannot be guaranteed to be continuous in this setting.
+\begin{restatable}{proposition}{oneNeuron}\label{prop:one-neuron}
+	There exists a training set \( (X, y) \) such that the solution function for \cref{eq:relu-least-squares} is discontinuous.
+\end{restatable}

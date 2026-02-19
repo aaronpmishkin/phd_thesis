@@ -1,0 +1,222 @@
+%!TEX root=../main.tex
+\solutionFunctionAlt*
+\begin{proof}
+	Define
+	\[
+		\calX =
+		\bigg\{ w \in \R^d :
+		\wi = \alpha_\bi \ci, \alpha_\bi \geq 0, \forall \, \bi \in \equi, \,
+		\wi = 0 \, \forall \, \bi \in \calB \setminus \equi,
+		X w = \hat y.
+		\bigg\}
+	\]
+	Let \( w \in \solfn(\lambda) \).
+	If \( \wi \neq 0 \), then FO conditions imply
+	\[
+		\lambda \frac{\wi}{\norm{\wi}_2} = \ci \implies \wi = \alpha_\bi \ci,
+	\]
+	for \( \alpha > 0 \).
+	If \( \wi = 0 \), then \( \wi = \alpha_\bi \ci \) holds trivially for
+	\( \alpha_\bi = 0 \).
+	Finally, since \( w \) is optimal, it must satisfy
+	\[
+		X \w = \hat y,
+	\]
+	which implies that \( w \in \calX \).
+
+	Now, suppose that \( w' \in \calX \).
+	Let's check FO conditions for \( w' \):
+	if \( \wi \neq 0 \), then
+	\begin{align*}
+		\wi' = \alpha \ci
+		 & \implies \frac{\wi'}{\norm{\wi'}_2} = \frac{\ci}{\lambda} \\
+		 & \implies \lambda \frac{\wi'}{\norm{\wi'}_2} = \ci,
+	\end{align*}
+	where we have used the fact that \( \norm{\ci}_2 = \lambda \)
+	for all \( \bi \in \equi \).
+	If \( \wi' = 0 \), then
+	\[
+		X w' = \hat y \implies \norm{\Xbi^\top (y - Xw')}_2 \leq \lambda,
+	\]
+	which satisfies FO conditions.
+	We conclude \( w' \in \solfn(\lambda) \).
+\end{proof}
+
+
+\begin{restatable}{lemma}{boundedSolutions}\label{lemma:bounded-solutions}
+	The correlation vector \( v(\lambda) = X^\top (y -  X\wmin(\lambda)) \) is bounded
+	for all \( \lambda \geq 0 \).
+	Moreover, every solution to the group lasso problem
+	is bounded by an absolute constant independent of \( \lambda \).
+	Specifically, every \( w \in \solfn(\lambda) \) satisfies
+	\[
+		\sum_{\bi \in \calB} \norm{\wi}_2 \leq \sum_{\bi \in \calB} \norm{\bwi}_2.
+	\]
+	where \( \bar w \) is the min-norm least-squares solution.
+\end{restatable}
+\begin{proof}
+	As noted, for \( \lambda = 0 \), the min-norm solution reduces to the min-norm least-squares
+	solution and \( v(0) = 0 \) so that the claim trivial holds.
+	For \( \lambda > 0 \), we show boundedness directly.
+	Optimality of \( \wmin \) implies
+	\[
+		\half \norm{X \wmin - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wmin_\bi}_2
+		\leq \half \norm{y}_2^2,
+	\]
+	from which we deduce the residual vector \( r(\lambda) \) is bounded
+	for any choice of \( \lambda \).
+	Thus, the block correlation vectors satisfy,
+	\begin{align*}
+		\norm{\vi(\lambda)}^2_2      & = \norm{\Xbi^\top r(\lambda)}_2^2                                   \\
+		                             & \leq \norm{\Xbi}_2^2 \norm{y}_2^2                                   \\
+		\implies \norm{v(\lambda)}_2 & \leq \sbr{\sum_{\bi \in \calB} \norm{\Xbi}^2_2 \norm{y}^2_2}^{1/2}.
+	\end{align*}
+	The right-hand quantity is independent of \( \lambda \) and
+	so \( v(\lambda) \) is bounded for all \( \lambda \).
+
+	Let \( h(w) = \sum_{\bi \in \calB} \norm{\wi}_2 \),
+	and define \( W_{g} \) to be the set of least squares solutions with
+	minimum group norm.
+	That is,
+	\[
+		W_{g} = \argmin \cbr{h(w) : X^\top X w = X^\top y }.
+	\]
+	Let \( w_g \in W_g \),
+	and suppose that \( h(w_{g}) < h(w(\lambda)) \)
+	for some \( \lambda > 0 \), \( w \in \solfn(\lambda) \).
+	Since
+	\[
+		\min_{w} \half \norm{X w - y}_2^2
+		\leq \min_{w} \half \norm{X w - y}_2^2
+		+ \lambda h(w),
+	\]
+	we deduce
+	\[
+		\half \norm{X w_g - y}_2^2 + \lambda h(w_g) <
+		\half \norm{X \w(\lambda) - y}_2^2
+		+ \lambda h(\w(\lambda)),
+	\]
+	which is a contradiction.
+	So \( h(\w(\lambda)) \leq h(w_g) \) for all \( \lambda > 0 \).
+	Observing \( h(w_g) \leq h(\bar w) \) by definition gives the result.
+	Since \( h(\bar w) \) is independent of \( \lambda \),
+	we conclude that \( \wmin(\lambda) \) is bounded.
+\end{proof}
+
+
+\subsection{Properties of the Solution Map}\label{app:solution-map}
+
+\valueContinuity*
+\begin{proof}
+	Define the joint objective function
+	\[
+		f(w, \lambda) = \half \norm{X w - y}_2^2 + \lambda \sum_{b_i \in \calB} \norm{\wi}_2.
+	\]
+	Clearly \( f(w, \lambda) \) is jointly continuous in \( w \) and \( \lambda \).
+	By \cref{lemma:bounded-solutions}, minimization of
+	\( f(w, \lambda) \) over \( \R^d \) is equivalent to the
+	constrained minimization problem,
+	\[
+		p^*(\lambda) = \min_{w} f(w, \lambda) \quad \text{s.t.} \; \sum_{\bi \in \calB} \norm{\wi}_2 \leq C,
+	\]
+	where \( C \) is a finite absolute constant.
+	Note that this expression is also valid when \( \lambda = 0 \) as the
+	min-norm solution to the unregularized least squares problem
+	obeys the constraint.
+	Thus, \( \solfn \) is a continuous optimization problem over a compact
+	set and the classical result of \citet{berge1997topological}
+	(see also \citet{hogan1973point}[Theorem 7]) implies
+	\( p^* \) is continuous.
+\end{proof}
+
+
+
+\mapContinuity*
+\begin{proof}
+	The result follows from joint continuity of the objective
+	\[
+		f(w, \lambda) = \half \norm{X w - y}_2^2 + \lambda \sum_{b_i \in \calB} \norm{\wi}_2,
+	\]
+	and straightforward application of \citet{robinson1974sufficient}[Theorem 1].
+
+	If \( X \) is full column rank, then the group lasso solution is
+	unique for all \( \lambda \geq 0 \).
+	The solution map is a singleton on \( \R^+ \) and closedness
+	and openness are equivalent properties for singleton maps.
+	Since we have already shown it is closed, the solution map
+	must also be open.
+	An identical argument shows that the solution map is open
+	at every \( \lambda > 0 \) when GGP is satisfied.
+
+	Now we show the reverse implication by proving the contrapositive.
+	Assume \( X \) is not full column-rank.
+	The solution map at \( \lambda = 0 \) is the solution set to the
+	(unregularized) least squares problem,
+	\[
+		\min_w \half \norm{X w - y}_2^2,
+	\]
+	which is known to be \( \solfn(0) = \cbr{\wmin(0) + z : z \in \Null(X)} \).
+	While \( \solfn(0) \) is unbounded, it holds that
+	\( \solfn(\lambda) \subset C \) for some bounded \( C \) for
+	every \( \lambda > 0 \) (\cref{lemma:bounded-solutions}).
+	As a result, there exist uncountably many solutions in \( \solfn(0) \)
+	which are not limit points of solutions in \( \solfn(\lambda_k) \)
+	as \( \lambda_k \rightarrow 0 \).
+	In other words, \( \solfn(0) \) is not open at \( 0 \).
+
+	%Suppose \( X \) is not full column rank.
+	%The solution map \( \solfn \) is open if and only if it is lower semi-continuous
+	%\citep{hogan1973point}.
+	%Recall that a point-to-set map \( T \) is lower semi-continuous at \( x \) if
+	%for every open set \( S \), \( T(x) \cap S \neq \emptyset \), there
+	%exists a neighborhood \( N(x) \) of \( x \) such that for all \( x' \in N(x) \),
+	%\( T(x') \cap S \neq \emptyset \).
+
+	%Suppose that \( \solfn \) is open from the right at \( \lambda = 0 \).
+	%Standard results imply \( \text{aff}(\solfn(0)) = \Null(X) + w \),
+	%where \( w \in \solfn(0) \).
+	%We shall assume that \( w \) is dense.
+	%By openness, for every \( \lambda_k \into 0 \), there exists
+	%\( k' \),
+	%and \( w(\lambda_k) \in \solfn(\lambda_k) \)
+	%for \( k \geq k' \)
+	%such that \( w(\lambda_k) \rightarrow w \).
+	%Then \( w(\lambda_k) \) is also dense for sufficiently
+	%large \( k \) and \( \calE_{\lambda_k} = \calB \).
+	%\cref{cor:uniqueness-cond} now implies
+	%\( \text{aff}(\solfn(\lambda')) \subset \Null(X) \) for all
+	%\( \lambda' \) in a sufficiently small neighbourhood of
+	%\( 0 \).
+
+	%Since \( \solfn \) is open from the right at \( 0 \),
+	%it is lower semi-continuous from the right.
+	%Let
+	%\[
+	%    S = \text{relint}(\solfn(0))
+	%    + B(0, \epsilon) \cap \Row(X),
+	%\]
+	%which is clearly open and satisfies
+	%\( S \cap \solfn(0) = \text{relint}(\solfn(\lambda)) \),
+	%which is always non-empty.
+	%By lower semi-continuity, there exists a neighborhood
+	%\( N(0) \) of \( 0 \) such that for every \( \lambda' \in N(0) \),
+	%\( \solfn(\lambda') \cap S \neq 0 \).
+	%That is, there exists \( w_1 \in \text{relint}(\solfn(0)), z_1 \in B(0, \epsilon) \cap \Row(X) \),
+	%and \( w_2 \in \solfn(\lambda') \)
+	%such that
+	%\[
+	%    w_1 + z_1 = w_2.
+	%\]
+	%But \( w_2 \) must be orthogonal to \( z_1 \)
+	%since \( \text{aff}(w_2) \subset \Null(X) \).
+	%Since \( w_1 \) is also orthogonal to \( z_1 \),
+	%we conclude \( z_1 = 0 \) and \( w_1 = w_2 \).
+
+	%However, this condition cannot happen because
+	%\[
+	%    \norm{\vi(0)}_2 = 0 \neq \lambda' = \norm{\vi(\lambda')}_2.
+	%\]
+	%So, the solution map is not open from the right at \( \lambda = 0 \).
+\end{proof}
+
+

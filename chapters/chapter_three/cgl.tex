@@ -1,0 +1,557 @@
+%!TEX root=../main.tex
+
+In this section, we develop properties of CGL,
+a generalized linear model which captures both the convex ReLU and convex gated
+ReLU programs.
+Let \( \calB = \cbr{b_1, \ldots, b_m} \) be a disjoint partition of the
+feature indices \( [d] \).
+Given regularization parameter \( \lambda \geq 0 \),
+CGL solves the program:
+\begin{equation}\label{eq:constrained-gl}
+	\begin{aligned}
+		p^*(\lambda) \!=\! \min_{w} \,
+		 & F_\lambda(w) \!:=\! \half \norm{X w \!-\! y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
+		 & \quad \text{s.t.} \quad \Ki^\top \wi \leq 0  \text{ for all } \bi \in \calB,
+	\end{aligned}
+\end{equation}
+where \( \Ki \in \R^{|\bi| \times a_\bi} \).
+Solutions to \cref{eq:constrained-gl} are block sparse when \( \lambda \)
+is sufficiently large, meaning \( \wi = 0 \) for a subset of blocks.
+This is similar to the feature sparsity given by the lasso,
+to which CGL naturally reduces when \( \bi = \cbr{i} \)
+and \( \Ki = 0 \) for each \( \bi \in \calB \).
+Although we consider squared-error, our results generalize to
+strictly convex losses --- see \cref{app:general-losses} for comments.
+
+The convex reformulations introduced in the previous section are instances
+of CGL using the basis function \( X = [D_1 Z \ldots D_p Z] \),
+where \( p = |\tilde \calD_Z| \).
+For gated ReLU models, \( \Ki = 0 \) while ReLU models set
+\( \Ki = - Z^\top (2 D_i - I) \).
+For both problems, block sparsity from the group \( \ell_1 \) penalty
+induces neuron sparsity in the final solution.
+
+Our goal is to characterize the solution function of CGL,
+\[
+	\solfn(\lambda) := \argmin_{w \, : \, K_\bi^\top \wi \leq 0} F_\lambda(w)
+\]
+For a general data matrix, \( F_\lambda \) is not strictly convex and
+CGL may admit multiple solutions --- these correspond to networks which
+are not related by permutation.
+As such, \( \solfn \) is a point-to-set map and
+we must use a criterion to define a function;
+for instance, the min-norm solution mapping
+\[
+	\wmin(\lambda) = \argmin \cbr{ \norm{w}_2 : w \in \solfn(\lambda) },
+\]
+defines a function for all \( \lambda \geq 0 \).
+
+Now we introduce notation that will be used throughout this section.
+Let \( \hat y(\lambda) = X w \) for \( w \in \solfn(\lambda) \) denote
+the optimal model fit, which is the same for any choice of optimal \( w \)
+(\cref{lemma:unique-fit-cgl}).
+%Note that the sum of group norms is also constant over
+%\( \solfn(\lambda) \) as a consequence.
+Similarly, define the optimal residual \( r(\lambda) := y - \hat y(\lambda) \)
+and \( \ci(\lambda) := \Xbi^\top r(\lambda) \) as the
+correlation vector for block \( \bi \).
+We write \( c \in \R^d \) for the concatenation
+of these block-vectors.
+%Since \( \hat y(\lambda) \) is the same for all optimal weights,
+%\( r \) and \( c \) are constant over \( \solfn(\lambda) \).
+Finally, let \( \ri \) be the dual parameters for the constraint
+\( \Ki^\top \wi \leq 0 \), \( \rho \) their concatenation,
+and \( K \) the block-diagonal matrix with blocks given by \( \Ki \).
+
+The Lagrangian associated with \cref{eq:constrained-gl} is
+\begin{equation}\label{eq:lagrangian-cgl}
+	\calL(w, \rho) = \half \norm{X w - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 + \abr{K \rho, w}.
+\end{equation}
+The constraints are linear, strong duality attains if feasibility holds,
+and the necessary and sufficient conditions for primal-dual pair \( (w, \rho) \)
+to be optimal are the KKT conditions:
+\begin{equation}\label{eq:kkt-cgl}
+	\begin{aligned}
+		\Xbi^\top (X w - y) + \Ki \ri + s_\bi & = 0                                \\
+		\Ki^\top \wi                          & \leq 0                             \\
+		[\ri]_j \cdot [\Ki]_j^\top \wi        & = 0 \quad \forall \, j \in [a_\bi] \\
+		\ri                                   & \geq 0,
+	\end{aligned}
+\end{equation}
+where \( s_\bi \in \partial \lambda \norm{\wi}_2 \).
+Since the KKT conditions hold for every combination of optimal primal-dual
+pair \citep{boyd2014convex}, we always use the min-norm dual
+optimal parameter \( \rmin \) with no loss of generality.
+To simplify our notations, we define \( \vi := \ci - \Ki \rmin_\bi \).
+In what follows, all proofs are deferred to \cref{app:cgl}.
+
+\subsection{Describing the Optimal Set}
+
+Stationary of the Lagrangian implies the equicorrelation set
+\[
+	\equi = \cbr{ \bi \in \calB : \norm{\vi}_2 = \lambda }.
+\]
+\vspace{-0.5ex}%
+contains all blocks which may be active for fixed \( \lambda \).
+That is, the active set \( \act(w) = \cbr{\bi : \wi \neq 0} \) satisfies
+\( \act(w) \subseteq \equi \) for every \( w \in \solfn(\lambda) \).
+However, not all blocks in \( \equi \) may be non-zero for some solution.
+Thus, we define
+\[
+	\calS_\lambda = \cbr{\bi \in \calB : \exists w \in \solfn(\lambda), \wi \neq 0},
+\]
+which is the set of blocks supported by some solution.
+
+Our first result combines KKT conditions with uniqueness of \( \hat y(\lambda) \)
+to characterize the solution set for fixed \( \lambda > 0 \).
+\begin{restatable}{proposition}{solFnCGL}\label{prop:sol-fn-cgl}
+	Fix \( \lambda > 0 \).
+	The optimal set for the CGL problem is
+	given by
+	\begin{equation}\label{eq:sol-fn-cgl}
+		\begin{aligned}
+			\solfn(\lambda) \!=\!
+			\big\{ & w \! \in \! \R^d \!:\!
+			\forall \, \bi \! \in \! \calS_\lambda,
+			\wi \!= \! \alpha_\bi \vi, \alpha_\bi \!\geq\! 0, \,             \\
+			       & \quad \forall \, b_j \in \calB \setminus \calS_\lambda,
+			\w_{b_j} = 0, \, X w = \hat y
+			\big\}
+		\end{aligned}
+	\end{equation}
+\end{restatable}
+
+\vspace{-1.5ex}%
+Since this characterization is implicit due to the dependence
+on \( \calS_\lambda \), we also give an alternative and explicit
+construction in \cref{prop:cgl-alternate}, which shows that when \( K = 0 \)
+we may replace \( \calS_\lambda \)
+with \( \equi \);
+We prefer \cref{prop:sol-fn-cgl} to \cref{prop:cgl-alternate} since it
+better mirrors this simpler setting.
+However, \cref{prop:cgl-alternate} can be substituted wherever desired.
+
+Now that we know ``shape'' of the solution set, it is
+possible to obtain simple conditions for existence of a unique solution.
+As an immediate consequence of \cref{prop:sol-fn-cgl},
+the solution map is a subset of directions in \( \Null(\Xe) \).
+\begin{corollary}\label{cor:uniqueness-cond-cgl}
+	If \( w, w' \in \solfn(\lambda) \) and \( z' = w - w' \), then
+	\[
+		z_\equi' \in \calN_\lambda \! := \! \Null(\Xe) \cap \cbr{z_\equi :  \forall \bi \in \equi, \, \zi \! = \! \alpha_\bi \vi}.
+	\]
+	As a result, the group lasso solution is unique if \( \calN_\lambda = \cbr{0} \).
+\end{corollary}
+
+\cref{cor:uniqueness-cond-cgl} extends a similar result for the lasso
+to CGL \citep[Eq. 9]{tibshirani2013unique} and
+implies the solution is unique for all \( \lambda \geq 0 \) if
+the columns of \( X \) are linearly independent.
+The corollary also provides a simple check
+for primal uniqueness given a primal-dual solution pair.
+
+\begin{restatable}{lemma}{uniqueCGL}\label{lemma:unique-cgl}
+	Fix \( \lambda > 0 \).
+	The solution to CGL problem is unique
+	if and only if \( \cbr{\Xbi \vi}_{\calS_\lambda} \)
+	are linearly independent.
+\end{restatable}
+
+Note that a dual solution \( \rho \) is necessary to compute \( v \) in general;
+By uniformizing over \( \vi \), we obtain a stronger condition that can be checked
+whenever \( \equi \) is known, yet is still
+weaker than linear independence of the columns
+of \( X \).
+
+\begin{corollary}
+	If the columns of \( X_\equi \) are linearly independent,
+	then the CGL problem has a unique solution.
+\end{corollary}
+
+Finally, we consider the special case when there are no constraints and
+\( K = 0 \).
+In this setting, \( \vi = \ci \) --- the dual parameters are trivially zero
+--- and we can provide a global condition which is much stronger than linear
+independence.
+
+\begin{restatable}{proposition}{GGP}[Group General Position]\label{prop:unique-sol}
+	Suppose for every \( \calE \subseteq \calB \), \( \abs{\calE} \leq n +1 \),
+	there do not exist unit vectors \( \zi \in \R^{\abs{\bi}} \)
+	such that for any \( j \in \calE \),
+	\[
+		X_{b_j} z_{b_j} \in
+		\text{affine}(\cbr{\Xbi \zi : \bi \in \calE \setminus b_j}).
+	\]
+	Then the group lasso solution is unique for all \( \lambda > 0 \).
+\end{restatable}
+We call this uniqueness condition \emph{group general position}
+(GGP) because it naturally extends general position to groups of vectors.
+General position is itself an extension of affine independence and is
+sufficient for the lasso solution to be unique \citep{tibshirani2013unique}.
+GGP is strictly weaker than linear independence of the columns of \( X \),
+but neither implies nor is implied by general position (\cref{prop:general-position-relation}).
+
+\subsection{Computing Dual Optimal Parameters}
+
+The main difficulty of \cref{lemma:unique-cgl}
+is that knowledge of a dual optimal parameter is required to check if a
+unique solution exists.
+A dual optimal parameter is also required to fully leverage our
+characterization of the optimal set.
+As such, now we turn to computing optimal dual parameters.
+
+We give one Lagrange dual problem for CGL in \cref{lemma:lagrange-dual}.
+A nice feature of this dual problem is \( \vi \) attains an
+alternative interpretation as dual variable.
+However, evaluating the dual requires computing \( (X^\top X)^+ \),
+which may be difficult even if \( X \) is structured, as in the convex
+ReLU program.
+Instead, we focus on computing \( \rho \) given a primal solution.
+
+Let \( \w \in \solfn(\lambda) \).
+If \( \wi \neq 0 \), then KKT conditions imply
+\begin{equation}\label{eq:dual-active}
+	\Ki \ri = \ci - \lambda \frac{\wi}{\norm{\wi}_2},
+\end{equation}
+so that the ``dual fit'' \( \hat d_\bi = \Ki \ri \) is easily computed.
+Recovering the dual parameter is a linear feasibility problem:
+\begin{equation}\label{eq:dual-active-lp}
+	\ri \in \cbr{\ri \geq 0 : \Ki \ri = \hat d_\bi}.
+\end{equation}
+If \( \wi = 0 \), then complementary slackness is trivially satisfied and we
+compute the min-norm dual parameter by solving the following program:
+\begin{equation}\label{eq:dual-inactive}
+	\min \cbr{\norm{\ri}_2 : \norm{\ci - \Ki \ri}_2 \leq \lambda, \ri \geq 0 }.
+\end{equation}
+In general, however, we only need \emph{some} dual optimal parameter for
+our results to hold; thus, is is typically easier to find \( \rho \)
+by solving the following non-negative regression:
+\begin{equation}\label{eq:non-negative-regression}
+	\ri = \argmin \cbr{\norm{\Ki \ri - \ci}^2_2 : \ri \geq 0 }.
+\end{equation}
+See \cref{prop:non-negative-regression} for details.
+
+\subsection{Minimal Solutions and Optimal Pruning}\label{sec:pruning}
+
+Often we want the most parsimonious solution, i.e. the one
+using the fewest feature groups.
+We say a primal solution \( w \) is \emph{minimal} if there
+does not exist \( w' \in \solfn(\lambda) \) such that
+\( \act(w') \subsetneq \act(w) \).
+Building on the previous section, we start with a sufficient
+condition for \( w \) to be minimal.
+\begin{restatable}{proposition}{minimalSols}\label{prop:minimal-solutions}
+	For \( \lambda > 0 \), \( w \in \solfn(\lambda) \) is minimal if and only
+	if the vectors \( \cbr{\Xbi \wi}_{\calA(w)} \) are linearly independent.
+\end{restatable}
+
+Linear independence of \( \cbr{\Xbi \wi}_{\calA(w)} \)
+also identifies \( w \) as a vertex of \( \solfn(\lambda) \)
+\citep{bertsekas2009convex},
+meaning minimal models are exactly the extreme points of the optimal set.
+Combining this characterization with our condition
+for uniqueness of a solution (\cref{lemma:unique-cgl}) shows that
+minimal solutions are the only solution on their support.
+
+\begin{corollary}\label{cor:minimal-unique}
+	Suppose \( w \) is a minimal solution.
+	Then \( w \) is the unique solution with support \( \act(w) \).
+\end{corollary}
+
+If \( X \) satisfies \emph{group dependence}
+(\cref{def:group-dependence}), then all minimal solutions have the same
+number of active blocks.
+
+\begin{restatable}{proposition}{minimalSolCharacterization}\label{prop:minimal-sol-characterization}
+	Let \( \calV \!=\! \Span(\cbr{\Xbi \bar \wi}) \) for \( \bar w \in \solfn(\lambda) \).
+	If \( X \) satisfies group dependence, then every minimal solution has
+	\( c = \text{dim}(\calV) \) active blocks.
+\end{restatable}
+
+\input{algorithms/cgl_pruning}
+
+\cref{alg:pruning-solutions} gives a procedure which, starting from
+any optimal solution \( w \), computes a optimal model with minimal
+support in \( O((n^3 l + nd) \) time, where \( l \)
+is the number active blocks in \( w \)
+(see \cref{prop:pruning-correctness}).
+Moreover, if the blocks of \( X \) satisfy a regularity condition, then
+starting model has no affect on the cardinality of the minimal solution found.
+Our algorithm can also be used to verify a minimal solution, since
+if \( w \) minimal then it is unique on its support and
+\cref{alg:pruning-solutions} must return \( w \) immediately.
+This procedure also implies the existence of at least one minimal
+solution.
+
+\begin{corollary}\label{cor:smallest-solution-cgl}
+	There exists \( w \in \solfn(\lambda) \) for which the vectors
+	\(
+	\cbr{\Xbi w(\lambda) : \bi \in \calA(w) }
+	\)
+	are linearly independent.
+\end{corollary}
+
+\cref{cor:smallest-solution-cgl} will be useful tool later when we study
+sensitivity of the model fit to perturbations in \( y \) and \( \lambda \).
+
+A disadvantage of \cref{alg:pruning-solutions} is that it cannot
+continue beyond a minimal solution.
+However, minimal models may still be quite large.
+We can perform approximate pruning in such cases
+using the least squares fit to approximate \( \beta \),
+\[ \tilde \beta = \argmin \norm{A \beta - X_{b_j} w_{b_j}}_2^2, \]
+where \( A = [\Xbi \wi]_{\act \setminus b_j} \) and \( b_j \in \act \) is
+chosen randomly.
+Using \( \tilde \beta \) in
+\cref{alg:pruning-solutions}
+is optimal when \( \cbr{\Xbi \wi}_{\act} \) are dependent
+and chooses the update parameters to minimize degradation
+of the model fit otherwise.
+
+\subsection{Continuity of the Solution Path}
+
+A major concern when learning with regularizers is how to tune the
+parameter \( \lambda \).
+Typical strategies like grid-search on the (cross) validation
+loss are effective only if the solution function satisfies basic continuity
+properties.
+For example, if \( \solfn \) is single-valued but discontinuous in \( \lambda \),
+then the sample complexity of grid-search can be made arbitrarily poor
+by ``hiding'' the optimal \( \lambda \) in a
+discontinuity \citep[Sec. 1.1]{nesterov2018lectures}.
+In this section, we justify grid-search for CGL by proving several
+continuity properties of the solution function, particularly when the
+solution is unique.
+We start with basic definitions of continuity for point-to-set maps.
+
+\begin{definition}[Closed]
+	\( T : \calX \into 2^\calZ \) is closed if
+	\( \cbr{\xk} \subset \calX \), \( \xk \into \bar x \) and \( z_k \in T(\xk) \),
+	\( z_k \into \bar z \) implies \( \bar z \in T(\bar x) \).
+\end{definition}
+
+\begin{definition}[Open]
+	\( T : \calX \into 2^\calZ \) is open if
+	\( \cbr{\xk} \subset \calX \), \( \xk \into \bar x \) and \( \bar z \in T(\bar x) \),
+	implies there exists \( k' \in \bbN \), \( z_k \in T(\xk) \) for \( k \geq k' \),
+	such that \( z_k \into \bar z \).
+\end{definition}
+
+We say that \( T \) is \emph{continuous} if it is both closed and open.
+If \( T(x) \) is a singleton for all \( x \in \calX \),
+then openness/closedness are equivalent and imply continuity.
+We start with (functional) continuity of the optimal objective.
+
+\begin{restatable}{proposition}{valueContinuityCGL}\label{prop:value-continuity-cgl}
+	\( \lambda \mapsto p^*(\lambda) \) is continuous for all
+	\( \lambda \geq 0 \).
+\end{restatable}
+
+While standard sensitivity results imply that \( \solfn \) is closed,
+unfortunately openness is not possible in the general setting.
+
+\begin{restatable}{proposition}{mapContinuityCGL}\label{prop:map-continuity-cgl}
+	While \( \solfn \) is closed on \( \R_+ \),
+	it is open if only if \( X \) is full column rank.
+	However, if the solution is unique on
+	\( \Lambda \subset \R^+ \), then \( \solfn \)
+	is open at every \( \lambda \in \Lambda \).
+\end{restatable}
+
+As a corollary of \cref{prop:map-continuity-cgl}, \( \solfn \) is open
+on \( \R^+ \) if and only if \( X \) is full column rank.
+Continuity of \( \solfn \) is impossible in general because,
+as \citet{hogan1973point} shows, openness is a local stability property;
+since \( \solfn(0) \) is unbounded, many ``unstable'' solutions
+exist at \( \lambda = 0 \) which are not limit points of other solutions.
+Continuity of the unique solution path is an immediate corollary of
+\cref{prop:map-continuity-cgl}.
+
+\begin{corollary}
+	If the CGL solution is unique on an interval \( \Lambda \subset \R_+\),
+	then it is also continuous on \( \Lambda \).
+\end{corollary}
+
+In particular, if \( K = 0 \) and GGP holds, then the group lasso solution
+is continuous for all \( \lambda > 0 \).
+We can strengthen our continuity results when \( \Ki = 0 \) in another way:
+by analyzing the dual of the group lasso problem,
+we extend continuity from \( p^* \) to the optimal model fit.
+
+\begin{restatable}{proposition}{modelFitContinuity}\label{prop:model-fit-continuity}
+	If \( K = 0 \),
+	then \( \hat y(\lambda)  \) is continuous on \( \R_+ \) and the penalty
+	\( \sum_{\bi \in \calB} \norm{\wi(\lambda)}_2 \) is continuous
+	for \( \lambda > 0 \).
+\end{restatable}
+
+\subsection{The Min-Norm Path}\label{sec:min-norm}
+
+Now we turn our attention to the min-norm solution path.
+Min-norm solutions are typically used in under-determined problems since the
+norm of the solution is connected to generalization
+\citep{neyshabur2015bias, gunasekar2017implicit}.
+Furthermore, the min-norm solution is
+a function of \( \lambda \), unlike \( \solfn \).
+Throughout this section, \( \acts = \act(\wmin) \) denotes
+the active set of the min-norm solution.
+
+Unfortunately, studying the min-norm path immediately encounters a
+surprising difficulty:
+as opposed to least-squares problems or the lasso (see \citet{tibshirani2013unique}),
+the min-norm solution may not lie in the row space of the active set.
+
+\begin{restatable}{proposition}{rowCE}\label{prop:row-ce}
+	Suppose \( \Ki = 0 \).
+	There exists \( (X, y) \) and
+	\( \lambda > 0 \) such that
+	\( \wmin_\acts(\lambda) \not \in \Row(\Xas) \).
+\end{restatable}
+
+Since the min-norm solution is not given by projecting onto \( \Row(\Xas) \),
+how can we compute and study it?
+Again, our characterization for the solution set provides a way forward.
+
+\begin{restatable}{proposition}{minNormProgram}\label{prop:min-norm-program}
+	Let \( \lambda > 0 \)
+	and consider the program:
+	\begin{equation}\label{eq:min-norm-program}
+		\begin{aligned}
+			\alpha^* = \argmin_{\alpha \geq 0} \norm{\alpha}_2^2
+			\, \, \text{ s.t.} \, \,
+			\sum_{\bi \in \calS_\lambda} \alpha_{\bi} \Xbi \vi = \hat y.
+		\end{aligned}
+	\end{equation}
+	Then the min-norm solution is given by
+	\( \wmin_\bi = \alpha^*_\bi \vi \).
+\end{restatable}
+
+\cref{eq:min-norm-program} is a quadratic program (QP) that can be solved with
+off-the-shelf software like \textsc{cvxpy} \citep{diamond2016cvxpy}.
+If \( |\calB| \) and \( d \) are large, this QP may be too expensive to handle directly.
+In such situations, we propose to the solve the following elastic-net-type problem
+\begin{equation}\label{eq:l2-penalized-cgl}
+	\begin{aligned}
+		\min_{w} \,
+		 & \half \norm{X w - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2
+		+ \frac{\delta}{2} \norm{w}_2^2                                                 \\
+		 & \quad \text{s.t.} \quad \Ki^\top \wi \leq 0  \text{ for all } \bi \in \calB.
+	\end{aligned}
+\end{equation}
+
+This \( \ell_2 \)-penalized CGL problem is equivalent to
+CGL with modified dataset \( (\tilde X, \tilde y) \) (\cref{lemma:l2-reformulation}).
+Since the optimization problem is strongly convex (\( \tilde X \) is full column rank),
+invoking \cref{prop:map-continuity-cgl} implies the solution \( w^\delta(\lambda) \) is continuous for all \( \lambda \geq 0 \).
+Moreover, as \( \delta \into 0 \), the penalized solution converges
+to the min-norm solution to CGL.
+\begin{restatable}{proposition}{penConvergence}\label{prop:l2-convergence}
+	The solution to the \( \ell_2 \)-penalized problem converges to
+	the min-norm solution as \( \delta \rightarrow 0 \).
+	That is,
+	\[
+		\lim_{\delta \into 0} w^\delta(\lambda) = \wmin(\lambda).
+	\]
+\end{restatable}
+
+\vspace{-2ex}%
+Uniqueness and continuity of the solution path for the penalized CGL
+problem mean we may prefer to solve
+Problem~\eqref{eq:l2-penalized-cgl} with small \( \delta > 0 \) when
+tuning \( \lambda \).
+\cref{prop:l2-convergence} guarantees that the bias induced by \( \delta \)
+will be small and a polishing step with \( \delta = 0 \) can always be used.
+Finally, non-zero \( \delta \) ensures the objective is strongly convex,
+meaning we can use linearly convergent methods to solve the problem.
+
+%Finally, using stationarity of the Lagrangian gives the following
+%closed-form expression for the active blocks of \( w^{\delta}(\lambda) \)
+%given \( \vi \):
+%\begin{equation}\label{eq:penalized-cfs}
+%    w^{\delta}_\acts = \rbr{\Xas^\top \Xas + \delta I}^{-1} \rbr{\Xas^\top y - \vi}.
+%\end{equation}
+
+
+\subsection{Sensitivity}
+
+Now we move onto the problem of sensitivity of a solution
+\( w \in \solfn(\lambda, y) \)
+to perturbations, either in \( \lambda \) or the targets \( y \).
+The main tool for measuring such perturbations are the gradients, for example
+\( \nabla_\lambda w(\lambda, y) \).
+However, since the solution path of the group lasso is non-smooth,
+we must cope with the fact that gradients are not available everywhere.
+
+We show that the gradients of minimal solutions exist
+almost everywhere under additional constraint qualifications (CQs).
+We do so by considering a \emph{reduced} problem and showing that the
+solution to this reduced problem is exactly \( \wa \).
+Define the reduced problem as follows:
+\begin{equation}\label{eq:constraint-reduced}
+	\begin{aligned}
+		\min_{\wa} \,
+		 & \half \norm{\Xa \wa - y}_2^2 + \lambda \sum_{\bi \in \act} \norm{\wi}_2 \\
+		 & \quad \text{s.t.} \quad \Ka^\top \wa \leq 0
+	\end{aligned}
+\end{equation}
+If \( \act(w) \) is the support of a minimal solution, then \( w \) is the only
+solution with support \( \act \) and \cref{eq:constraint-reduced} can be used
+to compute the unique active weights.
+\begin{restatable}{proposition}{constraintReduced}\label{prop:constraint-reduced}
+	Let \( w \in \solfn(\lambda, y) \) be minimal.
+	The active blocks \( \wa \) are the unique solution to
+	Problem~\eqref{eq:constraint-reduced}.
+\end{restatable}
+We use this fact to obtain a local solution function
+for CGL using the implicit function theorem.
+Given a solution \( w \), let
+\[
+	\calB(w) = \bigcup_{\bi \in \act} \cbr{j \in [a_\bi]: [\Ki]_j^\top \wi = 0 },
+\]
+be the active constraints.
+We now need two classical CQs.
+
+\begin{definition}[LICQ]
+	\( w \! \in \! \solfn(\lambda, y) \) satisfies linear independence
+	CQ if \( \cbr{[K]_j : j \! \in \! \calB(w)} \) are linearly independent.
+\end{definition}
+
+\begin{definition}[SCS]
+	Primal solution \( w \in \solfn(\lambda) \) satisfies
+	strict complementary slackness if there exists a dual optimal parameter
+	\( \rho \) such that \( [\rho]_j > 0 \) for every \( j \in \calB \).
+\end{definition}
+
+Now we can state our main differential sensitivity result.
+
+\begin{restatable}{proposition}{localSolFn}\label{prop:local-sol-fn}
+	Let \( w \in \solfn(\bar \lambda, \bar y) \) be minimal and suppose
+	\( w \) satisfies LICQ on the active set \( \act \)
+	and SCS on the equicorrelation set \( \equi \).
+	Then \( w \) has a locally continuous solution function
+	\( (\lambda, y) \mapsto w(\lambda, y) \).
+	Moreover, if
+	\[
+		D =
+		\begin{bmatrix}
+			\Xa^\top \Xa + M(\bar w) & \Ka                            \\
+			\bar \ra \odot \Ka       & \text{diag}(\Ka^\top \bar \wa)
+		\end{bmatrix},
+	\]
+	where \( \odot \) is the element-wise product,
+	\( u_{b_i} = \frac{\wi}{\norm{\wi}_2} \),
+	\( u \) is the concatenation of these vectors,
+	and \( M \) is block-diagonal projection matrix in \cref{eq:projection-matrix-block},
+	then the Jacobians of \( w(\bar \lambda, \bar y) \)
+	with respect to \( \lambda \)
+	and \( y \) are given as follows:
+	\[
+		\nabla_\lambda w(\bar \lambda, \bar y)
+		= - [D^{-1}]_\act u_\act
+		\hspace{0.5em}
+		\nabla_y w(\bar \lambda, \bar y)
+		= [D^{-1}]_\act \Xa^\top,
+	\]
+	where \( [D_\act^{-1}]_\act \) is the \( |\act| \times |\act| \)
+	dimensional leading principle submatrix of \( D \).
+\end{restatable}

@@ -1,0 +1,285 @@
+%!TEX root=../main.tex
+
+\begin{lemma}\label{lemma:unique-fit-cgl}
+	The model fit is the same for all optimal solutions to the
+	CGL problem.
+	That is,
+	\[
+		X w = X w' \quad \text{ for all } w, w' \in \solfn(\lambda).
+	\]
+	As a consequence, the sum of group norms is also constant
+	when \( \lambda > 0 \).
+\end{lemma}
+\begin{proof}
+	This follows in a similar fashion to the classic result for the group lasso.
+	Let \( w, w' \in \solfn(\lambda) \), \( \bar w = \half w + \half w' \),
+	and suppose \( p^* \) is the optimal value of the constrained program.
+	By convexity, we have
+	\begin{align*}
+		\half \norm{X \bar w - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\bwi}_2
+		 & \leq
+		\half p^* + \half p^* = p^*,
+	\end{align*}
+	where the inequality is strict if \( X w \neq X w' \) by strong convexity
+	of \( f(u) = \norm{u - y}_2^2 \).
+	Since \( w, w' \) are both feasible, \( \bar w \) is also feasible and
+	clearly \( \bar w \) cannot obtain an objective value less than \( p^* \).
+	Thus, \( X w = X w' \)  must hold.
+
+	To see the second part of the result, observe that
+	\[
+		\lambda \sum_{\bi \in \calB} \norm{\bwi}_2 = p^* - \half \norm{\hat y(\lambda)  - y}_2^2,
+	\]
+	is also constant over \( \solfn(\lambda) \).
+\end{proof}
+
+\solFnCGL*
+\begin{proof}
+	Fix \( \lambda > 0 \) and let
+	\( w \in \solfn(\lambda) \).
+	If \( \wi \neq 0 \), then the KKT conditions require
+	\[
+		\lambda \frac{\wi}{\norm{\wi}_2} = \vi \implies \wi = \alpha_\bi \vi,
+	\]
+	for \( \alpha > 0 \).
+	If \( \wi = 0 \), then \( \wi = \alpha_\bi \vi \) holds trivially for
+	\( \alpha_\bi = 0 \).
+	Since \( w \) is optimal, it must satisfy
+	\[
+		X \w = \hat y,
+	\]
+	by \cref{lemma:unique-fit-cgl}.
+	Finally, \( \act(w) \subseteq \calS_\lambda \) so that
+	\( w \) satisfies the characterization.
+
+	For the reverse direction, we start by defining
+	\[
+		\begin{aligned}
+			\calX =
+			\bigg\{ w \in \R^d : \,
+			 & \forall \, \bi \in \calS_\lambda, \,
+			\wi = \alpha_\bi \vi, \alpha_\bi \geq 0, \,          \\
+			 & \forall \, b_j \in \calB \setminus \calS_\lambda,
+			\w_{b_j} = 0, \, X w = \hat y
+			\bigg\}
+		\end{aligned}
+	\]
+	Take any \( w' \in \calX \).
+	If \( \wi' \neq 0 \), then \( \bi \in \equi \) and \( \norm{\vi}_2 = \lambda \)
+	so that we may write
+	\begin{align*}
+		\wi' = \alpha_\bi \vi
+		 & \implies \frac{\wi'}{\norm{\wi'}_2} = \frac{\alpha_\bi \vi}{\norm{\alpha_\bi \vi}_2} \\
+		 & \implies \frac{\wi'}{\norm{\wi'}_2} = \frac{\vi}{\lambda}                            \\
+		 & \implies \lambda \frac{\wi'}{\norm{\wi'}_2} = \vi.
+	\end{align*}
+	That is,
+	\[
+		\Xbi^\top (Xw - y) + \lambda \frac{\wi'}{\norm{\wi'}_2} + \Ki \rmin_\bi = 0,
+	\]
+	which is exactly stationarity of the Lagrangian.
+
+	If \( \wi' = 0 \), then \( X w' = \hat y \) implies
+	\[
+		\norm{\Xbi^\top (y - Xw') + K \rmin_\bi}_2
+		= \norm{\Xbi^\top (y - Xw) + K \rmin_\bi}_2
+		\leq \lambda,
+	\]
+	for some \( w \in \solfn(\lambda) \),
+	which also implies the Lagrangian is stationary.
+
+	Now we show optimality of
+	\( w' \) by checking feasibility and complementary slackness.
+	If \( \wi' \neq 0  \)
+	then \( \wi' = \frac{\alpha_\bi'}{\alpha_\bi} \wi \)
+	for some optimal solution \( w \) with \( \alpha_\bi > 0 \).
+	This follows since \( \wi' \neq 0 \) implies \( \bi \in \calS_\lambda \).
+	Thus,
+	\[
+		\Ki^\top \wi' = \frac{\alpha_\bi'}{\alpha_\bi} \wi \leq 0,
+	\]
+	by feasibility of \( \wi \).
+	Similarly, we find that complementary slackness is satisfied as follows:
+	\[
+		[\ri]_j \cdot [\Ki]_j^\top \wi'
+		= \frac{\alpha_\bi'}{\alpha_\bi} [\ri]_j \cdot [\Ki]_j^\top \wi
+		= 0.
+	\]
+	If \( \wi = 0 \), then both feasibility and complementary slackness
+	are trivial.
+	Since \( (w', \rmin) \) are feasible and \( \rmin \) is dual optimal,
+	we conclude the KKT conditions are satisfied and thus
+	\( w' \in \solfn(\lambda) \).
+	This completes the proof.
+\end{proof}
+
+\begin{proposition}\label{prop:cgl-alternate}
+	Fix \( \lambda > 0 \).
+	The optimal set for CGL problem is also
+	given by
+	\begin{equation}\label{eq:sol-fn-cgl-alternate}
+		\begin{aligned}
+			\solfn(\lambda) =
+			\bigg\{ w \in \R^d : \,
+			 & \forall \, \bi \in \equi, \,
+			\wi = \alpha_\bi \vi, \alpha_\bi \geq 0, \,                   \\
+			 & \forall \, b_j \in \calB \setminus \equi, \w_{b_j} = 0, \,
+			X w = \hat y,                                                 \\
+			 & \, K^\top w \leq 0, \,
+			\abr{\rmin, K^\top w} = 0
+			\bigg\}
+		\end{aligned}
+	\end{equation}
+\end{proposition}
+\begin{proof}
+	Fix \( \lambda > 0 \) and let
+	\( w \in \solfn(\lambda) \).
+	If \( \wi \neq 0 \), then the KKT conditions require
+	\[
+		\lambda \frac{\wi}{\norm{\wi}_2} = \vi \implies \wi = \alpha_\bi \vi,
+	\]
+	for \( \alpha > 0 \).
+	If \( \wi = 0 \), then \( \wi = \alpha_\bi \vi \) holds trivially for
+	\( \alpha_\bi = 0 \).
+	Since \( w \) is optimal, it must satisfy
+	\[
+		X \w = \hat y,
+	\]
+	by \cref{lemma:unique-fit-cgl}.
+	Finally, \( \abr{\rmin, K w} = 0 \) and is feasible by KKT conditions
+	so that \( w \) satisfies the characterization.
+
+	For the reverse direction, we start by defining
+	\[
+		\begin{aligned}
+			\calX =
+			\bigg\{ w \in \R^d : \,
+			 & \forall \, \bi \in \equi, \,
+			\wi = \alpha_\bi \vi, \alpha_\bi \geq 0, \,                   \\
+			 & \forall \, b_j \in \calB \setminus \equi, \w_{b_j} = 0, \,
+			X w = \hat y,                                                 \\
+			 & \, K^\top w \leq 0, \,
+			\abr{\rmin, K^\top w} = 0
+			\bigg\}
+		\end{aligned}
+	\]
+	Take any \( w' \in \calX \).
+	If \( \wi' \neq 0 \), then \( \bi \in \equi \) and \( \norm{\vi}_2 = \lambda \)
+	so that we may write
+	\begin{align*}
+		\wi' = \alpha_\bi \vi
+		 & \implies \frac{\wi'}{\norm{\wi'}_2} = \frac{\alpha_\bi \vi}{\norm{\alpha_\bi \vi}_2} \\
+		 & \implies \frac{\wi'}{\norm{\wi'}_2} = \frac{\vi}{\lambda}                            \\
+		 & \implies \lambda \frac{\wi'}{\norm{\wi'}_2} = \vi.
+	\end{align*}
+	That is,
+	\[
+		\Xbi^\top (Xw - y) + \lambda \frac{\wi'}{\norm{\wi'}_2} + \Ki \rmin_\bi = 0,
+	\]
+	which is exactly stationarity of the Lagrangian.
+
+	If \( \wi' = 0 \), then
+	\[
+		X w' = \hat y \implies \norm{\Xbi^\top (y - Xw') + K \rmin_\bi}_2 \leq \lambda,
+	\]
+	which also implies the Lagrangian is stationary.
+
+	Since \( \abr{\rmin, K^\top w'} = 0 \) and
+	\( K^\top w' \leq 0 \), i.e. \( w' \) is feasible,
+	it is clear that complementary slackness must also hold.
+	We conclude that \( (w', \rmin) \) are primal-dual optimal by the KKT
+	conditions and the proof is complete.
+\end{proof}
+
+
+\uniqueCGL*
+\begin{proof}
+	Suppose by way of contradiction that \( w, w' \in \solfn(\lambda) \)
+	such that \( w \neq w' \).
+	By \cref{prop:sol-fn-cgl}, we have
+	\begin{align*}
+		0 = X (w - w')
+		 & = \sum_{\bi \in \calS_\lambda} \Xbi (\wi - \wi')                    \\
+		 & = \sum_{\bi \in \calS_\lambda} (\alpha_\bi - \alpha_\bi') \Xbi \vi,
+	\end{align*}
+	which implies that the vectors \( \cbr{\Xbi \vi}_{\calS_\lambda} \) are
+	linearly dependent.
+
+	Necessity follows from \cref{alg:pruning-solutions},
+	which shows that, given a solution \( w \in \solfn(\lambda) \),
+	linear dependence of \( \cbr{\Xbi w(\lambda) : \bi \in \calA(w(\lambda)) } \)
+	implies the exist of at least one additional solution.
+\end{proof}
+
+\GGP*
+\begin{proof}
+	Suppose the group Lasso solution is not unique.
+	Then, \cref{cor:uniqueness-cond-cgl} implies
+	\[
+		\calN_\lambda = \Null(\Xe) \bigcap \cbr{z : \zi = \alpha_\bi \ci, \bi \in \equi },
+	\]
+	is non-empty.
+	That is, there exist \( \alpha_{\bi} \geq 0 \) such that
+	\begin{align*}
+		X_{b_j} c_{b_j}
+		 & = \sum_{\bi \in \equi \setminus j} \alpha_{\bi} \Xbi \ci.
+		\intertext{Taking inner-products on both sides with the residual
+			\( r \),}
+		r^\top X_{b_j} c_{b_j}
+		 & = \sum_{\bi \in \equi \setminus j} \alpha_{\bi} r^\top \Xbi \ci \\
+		\implies
+		c_{b_j}^\top c_{b_j}
+		 & = \sum_{\bi \in \equi \setminus j} \alpha_{\bi} \ci^\top \ci    \\
+		\implies \lambda^2
+		 & = \sum_{\bi \in \equi \setminus j} \alpha_{\bi} \lambda^2       \\
+		\implies 1
+		 & = \sum_{\bi \in \equi \setminus j} \alpha_{\bi}.
+	\end{align*}
+	Thus, we deduce that
+	\begin{equation}\label{eq:dependence-relation}
+		X_{b_j} c_{b_j}
+		= \sum_{\bi \in \equi \setminus j} \beta_{\bi} \Xbi \ci,
+	\end{equation}
+	where \( \sum_{\bi \in \equi \setminus j} \beta_{\bi} = 1 \),
+	meaning \( X_{b_j} c_{b_j} \in \text{affine}(\Xbi \zi : \bi \in \equi \setminus b_j) \)
+	Now, suppose that \( |\equi| > n + 1 \).
+	Then, \( \cbr{\Xbi \ci : \bi \in \equi \setminus j} \) are linearly dependent
+	and, by eliminating dependent vectors \( \Xbi \ci \),
+	we can repeat the above proof with a subset \( \calE' \) of at most \( n + 1 \)
+	blocks.
+	Noting \( \norm{\ci}_2 = \lambda \) for each \( \bi \in \equi \) and
+	rescaling both sides of \cref{eq:dependence-relation} by \( \lambda \)
+	implies the existence of unit vectors \( z_{\bi} \) which contradict
+	GGP.
+	This completes the proof.
+\end{proof}
+
+\begin{proposition}\label{prop:general-position-relation}
+	Group general position does not imply
+	the columns of \( X \) are in general position.
+	Similarly, general position of the columns of \( X \) does not imply
+	group general position.
+\end{proposition}
+\begin{proof}
+	Let \( x_1, \ldots, x_{d} \in \R^{d-1} \).
+	Consider the simple case where we have two groups: \( b_1 = \cbr{1} \)
+	and \( b_2 = \cbr{2, \ldots, d} \).
+	Group general position is violated if there exists a unit vector \( z_{b_2} \)
+	such that
+	\begin{align*}
+		x_{1}
+		 & = X_{b_2} z_{b_2}.   \\
+		\iff x_1
+		 & \in X_{b_2} B_{d-1},
+	\end{align*}
+	where \( B_{d-1} = \cbr{z \in \R^{d-1} : \norm{z}_2 \leq 1} \).
+	In contrast, general position is violated if
+	\begin{align*}
+		x_1
+		 & \in \text{affine}(x_2, \ldots, x_{d}) \\
+		\iff x_1
+		 & \in X_{b_2} \cbr{z : \abr{z, 1} = 1}.
+	\end{align*}
+	Taking \( X_{b_2} = I \), it is trivial to see that group general position can
+	hold when general position is violated and vice-versa.
+\end{proof}
