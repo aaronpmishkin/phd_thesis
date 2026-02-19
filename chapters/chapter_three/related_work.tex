@@ -2,14 +2,22 @@
 
 \textbf{Convex Reformulations}:
 \citet{wang2022hidden} show that every solution to the non-convex training
-problem for two-layer ReLU networks corresponds to a solution to the 
+problem for two-layer ReLU networks corresponds to a solution to the
 convex reformulation.
 They also extend this result to characterize all Clarke stationary points by
 showing a correspondence with sub-sampled convex reformulations.
 However, they do not attempt to characterize the solution set of the
-(sub-sampled) convex reformulations, leaving a large gap. 
-Our work can be viewed as building on theirs to provide a complete 
-description of the global optima/critical points.
+(sub-sampled) convex reformulations, leaving a large gap.
+Our work builds on theirs to provide a complete description of the global
+optima/critical points.
+
+In follow-up work, \citet{zeger2024mirrors} extend our characterization
+of the optimal set to include ReLU networks with one-dimensional inputs.
+In this restricted setting, the convex reformulation has a simplified form
+as a lasso problem with a specific feature matrix specified by the structure of
+the network.
+Since our analysis of the CGL trivially covers the lasso, they are able to
+leverage our theory to characterize the solution set of these problems.
 
 \textbf{The Lasso and Group Lasso}:
 Our work is most similar to \citet{hastie2007forward},
@@ -56,7 +64,7 @@ Follow-up work by \citet{nguyen2019connected, kuditipudi2019connectivity} give
 conditions on the network architecture under which mode connectivity is
 guaranteed to hold.
 After publication of the work presented in this chapter, \citet{kim2024convex}
-leveraged our description of the optimal set for a thorough description of the 
+leveraged our description of the optimal set for a thorough description of the
 evolution of mode connectivity with network width.
 
 \textbf{Sensitivity, Stability, and Pruning}:
