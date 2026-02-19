@@ -23,18 +23,18 @@ for the full ReLU problem:
     Suppose \( m \geq m^* \) and \( \tilde D = \calD_Z \) (no sub-sampling),
     with \( p = |\tilde \calD_Z| \).
     Then the optimal set for the ReLU problem up to permutation/splitting
-    symmetries is
+    symmetries is given as follows:
     \vspace{-1ex}
     \begin{equation}\label{eq:relu-sol-fn}
         \begin{aligned}
             \hspace{-0.5em} \calO_\lambda
-            \!= & \,
+            = & \,
             \big\{
-            (W^{(1)}, \! W^{(2)}) \!:\!
-            \, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y,
-            W^{(1)}_{\cdot, i} \!=\! (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i, \\
-                & W^{(2)}_{i} \!=\! \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
-            \alpha_i \!\geq\! 0, \, i \!\in\! [2p] \!\setminus\! \calS_\lambda \!\Rightarrow\! \alpha_i \!=\! 0
+            (W^{(1)},  W^{(2)}) :
+            \, f_{W^{(1)}, W^{(2)}}(Z)  =  \hat y,
+            W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i, \\
+              & W^{(2)}_{i} = \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
+            \alpha_i \geq 0, \, i \in [2p] \setminus \calS_\lambda \Rightarrow \alpha_i = 0
             \big\}.
         \end{aligned}
     \end{equation}
@@ -48,8 +48,10 @@ and \( \cbr{p+1, \ldots, 2p} \) index the negative neurons (corresponding to \(
 - D_i Z \)), for which \( \xi_i = -1 \).
 \cref{fig:solution-set} plots the first feature of three neurons
 as they vary over this solution set.
-The mapping from convex to non-convex parameterization
-transforms the polytope of solutions into a curved manifold.
+We see that the mapping from convex to non-convex parameterization transforms
+the convex polytope of solutions into a non-convex, curved manifold.
+The optimal sets for the convex and non-convex problems both live in a
+low-dimensional space.
 
 Choosing a sub-sampled set of patterns
 \( \tilde \calD \subset \calD_Z \) corresponds to finding a stationary
@@ -64,8 +66,8 @@ problem given in the introduction.
     \begin{equation*}
         \begin{aligned}
             \calC_\lambda = \big\{
-             & (W^{(1)}, \! W^{(2)}) : \tilde \calD \! \subseteq \! \calD_Z,
-            \, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y_{\tilde \calD},                                     \\
+             & (W^{(1)},  W^{(2)}) : \tilde \calD  \subseteq  \calD_Z,
+            \, f_{W^{(1)}, W^{(2)}}(Z)  =  \hat y_{\tilde \calD},                                         \\
              & W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i(\tilde \calD), \,
             W^{(2)}_{i} = \xi_i(\alpha_i \lambda)^{\sfrac{1}{2}},                                         \\
              & \alpha_i \geq 0, \, i \in [2 |\tilde \calD|] \setminus \calS_\lambda \implies \alpha_i = 0
@@ -109,7 +111,7 @@ convex ReLU programs to be p-unique.
 \begin{restatable}{proposition}{reluUnique}\label{prop:relu-unique}
     Let \( \lambda > 0 \) and \( p = |\tilde \calD| \).
     Suppose \( Z \) follows a continuous probability distribution
-    and \( \nnz(D_i) \geq p \cdot d \) for every \( D_i \in \tilde \calD \).
+    and \( \nnz\,(D_i) \geq p \cdot d \) for every \( D_i \in \tilde \calD \).
     If \( \equi \) does not contain two blocks with the same
     activation pattern, then
     the sub-sampled convex ReLU program has a p-unique solution
@@ -117,34 +119,10 @@ convex ReLU programs to be p-unique.
 \end{restatable}
 
 \cref{prop:relu-unique} requires \( n \) to be much greater than
-\( d \) to be useful due to the trivial bound \( \nnz(D_i) \leq n \).
+\( d \) to be useful due to the trivial bound \( \nnz\,(D_i) \leq n \).
 In practice, the condition on activation patterns can be enforced by
 constraining \( v_i = 0 \) or \( w_i = 0 \) for each
 activation pattern before solving the convex reformulation.
-
-\input{results/chapter_three/uci_tuning_paper}
-
-\begin{figure*}[t]
-    \centering
-    \includegraphics[width=0.98\textwidth]{figures/chapter_three/uci_pruning_acc.pdf}
-    \vspace{-2.5ex}
-    \caption{Pruning neurons from two-layer ReLU networks on binary
-        classification tasks from the UCI repository.
-        We compare our theory-inspired approach (\textbf{Optimal/LS}),
-        against removing the neuron with smallest \( \ell_2 \) norm
-        (\textbf{Neuron Magnitude}),
-        removing the neuron with the smallest weighted gradient norm
-        (\textbf{Gradient Magnitude}), and random pruning (\textbf{Random}).
-        For Optimal/LS, we use \cref{alg:pruning-solutions-nn}, which begins
-        with optimal pruning and then switches to a least-squares heuristic.
-        We plot test accuracy against number of active neurons.
-        Optimal/LS dominates the baseline methods on every dataset
-        and even improves test accuracy on \texttt{breast-cancer}
-        and \texttt{fertility}.
-    }
-    \label{fig:uci-pruning-acc}
-    \vspace{-2ex}
-\end{figure*}
 
 \textbf{Pruning}:
 If \( (v, u) \) is a minimal solution to the convex reformulation, then the
@@ -255,3 +233,6 @@ Minimal models \( w(\lambda, y) \) are weakly differentiable, which
 It is straightforward to extend this calculation to the gated ReLU weights
 using the chain rule, which can then be used to calculate
 Stein's unbiased risk estimator.
+
+
+

@@ -5,6 +5,28 @@ networks, computed minimal networks, and provided sensitivity results.
 Our goal in this section is to illustrate the power of our framework for
 analyzing ReLU networks and developing new algorithms.
 
+\input{results/chapter_three/uci_tuning_paper}
+
+\begin{figure*}[t]
+    \centering
+    \includegraphics[width=0.98\textwidth]{figures/chapter_three/uci_pruning_acc.pdf}
+    \caption{Pruning neurons from two-layer ReLU networks on binary
+        classification tasks from the UCI repository.
+        We compare our theory-inspired approach (\textbf{Optimal/LS}),
+        against removing the neuron with smallest \( \ell_2 \) norm
+        (\textbf{Neuron Magnitude}),
+        removing the neuron with the smallest weighted gradient norm
+        (\textbf{Gradient Magnitude}), and random pruning (\textbf{Random}).
+        For Optimal/LS, we use \cref{alg:pruning-solutions-nn}, which begins
+        with optimal pruning and then switches to a least-squares heuristic.
+        We plot test accuracy against number of active neurons.
+        Optimal/LS dominates the baseline methods on every dataset
+        and even improves test accuracy on \texttt{breast-cancer}
+        and \texttt{fertility}.
+    }
+    \label{fig:uci-pruning-acc}
+\end{figure*}
+
 \textbf{Tuning}:
 We first consider a tuning task on 10 binary classification
 datasets from the UCI repository~\citep{dua2019uci}.
@@ -31,18 +53,16 @@ in practice.
 See \cref{app:additional-experiments} for results on additional datasets.
 
 \begin{figure}[t]
-	\centering
-	\includegraphics[width=0.48\textwidth]{figures/chapter_three/cifar_pruning_acc.pdf}
-	\vspace{-2.5ex}
-	\caption{Pruning neurons from two-layer ReLU networks on two binary
-		classification tasks drawn from the CIFAR-10 dataset.
-		We compare our method (\textbf{Optimal/LS}) against baselines;
-		see \cref{fig:uci-pruning-acc} for details.
-		Our approach, which makes use of a weight correction after pruning,
-		outperforms every baseline.
-	}
-	\label{fig:cifar-pruning-acc}
-	\vspace{-2ex}
+    \centering
+    \includegraphics[width=0.98\textwidth]{figures/chapter_three/cifar_pruning_acc.pdf}
+    \caption{Pruning neurons from two-layer ReLU networks on two binary
+        classification tasks drawn from the CIFAR-10 dataset.
+        We compare our method (\textbf{Optimal/LS}) against baselines;
+        see \cref{fig:uci-pruning-acc} for details.
+        Our approach, which makes use of a weight correction after pruning,
+        outperforms every baseline.
+    }
+    \label{fig:cifar-pruning-acc}
 \end{figure}
 
 \textbf{Pruning}:
@@ -70,5 +90,4 @@ We provide experiments on additional datasets, including MNIST
 \citep{lecun1998gradient},
 and experimental details in
 \cref{app:additional-experiments}.
-
 
