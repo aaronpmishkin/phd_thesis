@@ -154,8 +154,8 @@ Pruning by neuron magnitude is straightforward: we sort the neurons
 by \( \norm{W^{(1)}_{\cdot, i} W^{(2)}_{i}}_2 \), which measures the total magnitude of the
 neuron, and then drop the smallest one.
 For pruning by gradient norm, we compute
-\( G_{1i} = \nabla_{W^{(1)}_{\cdot, i}} L(f_{W^{(1)}, W^{(2)}}(Z), y) \),
-\( g_{2i} = \nabla_{W_{2i}} L(f_{W^{(1)}, W^{(2)}}(Z), y) \) and then score each
+\( G_{1i} = \nabla_{W^{(1)}_{\cdot, i}} \calL(f_{W^{(1)}, W^{(2)}}(Z), y) \),
+\( g_{2i} = \nabla_{W_{2i}} \calL(f_{W^{(1)}, W^{(2)}}(Z), y) \) and then score each
 neuron as
 \[
     s_i = \norm{W^{(1)}_{\cdot, i} \cdot G_{1i} W^{(2)}_{i} g_{2i}}_2,

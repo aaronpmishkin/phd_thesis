@@ -1,468 +1,473 @@
 %!TEX root=../main.tex
 
 \begin{lemma}\label{lemma:scaling-unique}
-	Let \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{W^{(1)'}, W^{(2)'}} \)
-	be two solutions to the non-convex ReLU training problem.
-	If for every \( i \in [m]  \),
-	it holds that
-	\[
-		W^{(1)}_{\cdot, i} W^{(2)}_{i} = W^{(1)'}_{\cdot, i} W^{(2)'}_{i},
-	\]
-	and \( \text{sign}(W^{(2)}_{i}) = \text{sign}(W^{(2)'}_{i}) \),
-	then \( W^{(1)} = W^{(1)'} \) and \( W^{(2)} = W^{(2)'} \).
-	That is, the solutions are the same.
+    Let \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{W^{(1)'}, W^{(2)'}} \)
+    be two solutions to the non-convex ReLU training problem.
+    If for every \( i \in [m]  \),
+    it holds that
+    \[
+        W^{(1)}_{\cdot, i} W^{(2)}_{i} = W^{(1)'}_{\cdot, i} W^{(2)'}_{i},
+    \]
+    and \( \text{sign}(W^{(2)}_{i}) = \text{sign}(W^{(2)'}_{i}) \),
+    then \( W^{(1)} = W^{(1)'} \) and \( W^{(2)} = W^{(2)'} \).
+    That is, the solutions are the same.
 \end{lemma}
 \begin{proof}
-	The ReLU prediction function \( f_{W^{(1)}, W^{(2)}} \) is invariant to
-	scalings of the form
-	\[
-		\bar W^{(1)}_{\cdot, i} = \alpha W^{(1)}_{\cdot, i} \quad \bar W^{(2)}_{i} = W^{(2)}_{i} / \alpha,
-	\]
-	where \( \alpha > 0 \).
-	Using this, we deduce that both solutions must satisfy the following
-	equations:
-	\begin{align*}
-		1 & = \argmin_{\alpha} \alpha^2 \norm{W^{(1)}_{\cdot, i}}_2^2 + \norm{W^{(2)}_{i}}_2^2 / \alpha^2    \\
-		1 & = \argmin_{\alpha} \alpha^2 \norm{W^{(1)'}_{\cdot, i}}_2^2 + \norm{W^{(2)'}_{i}}_2^2 / \alpha^2,
-	\end{align*}
-	which in turn implies that
-	\[
-		\norm{W^{(1)}_{\cdot, i}}_2 = \norm{W^{(2)}_{i}}_2, \quad \quad \norm{W^{(1)'}_{\cdot, i}}_2 = \norm{W^{(2)'}_{i}}_2
-	\]
-	We deduce
-	\begin{align*}
-		\norm{W^{(1)}_{\cdot, i}}^2_2
-		 & = \norm{W^{(1)}_{\cdot, i}}_2 \norm{W^{(2)}_{i}}_2    \\
-		 & = \norm{W^{(1)}_{\cdot, i} W^{(2)}_{i}}_2             \\
-		 & = \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2           \\
-		 & = \norm{W^{(1)'}_{\cdot, i} }_2 \norm{W^{(2)'}_{i}}_2 \\
-		 & = \norm{W^{(1)'}_{\cdot, i}}^2_2,
-	\end{align*}
-	where we have used the fact that \( \norm{W^{(2)}_{i}}_2 = |W^{(2)}_{i}| \).
-	This implies \( W^{(1)}_{\cdot, i} = W^{(1)'}_{\cdot, i} \) since \( W^{(1)}_{\cdot, i} \) and \( W^{(1)'}_{\cdot, i} \)
-	are collinear, meaning \( W^{(2)}_{i} = W^{(2)'}_{i} \) must also hold.
+    The ReLU prediction function \( f_{W^{(1)}, W^{(2)}} \) is invariant to
+    scalings of the form
+    \[
+        \bar W^{(1)}_{\cdot, i} = \alpha W^{(1)}_{\cdot, i} \quad \bar W^{(2)}_{i} = W^{(2)}_{i} / \alpha,
+    \]
+    where \( \alpha > 0 \).
+    Using this, we deduce that both solutions must satisfy the following
+    equations:
+    \begin{align*}
+        1 & = \argmin_{\alpha} \alpha^2 \norm{W^{(1)}_{\cdot, i}}_2^2 + \norm{W^{(2)}_{i}}_2^2 / \alpha^2    \\
+        1 & = \argmin_{\alpha} \alpha^2 \norm{W^{(1)'}_{\cdot, i}}_2^2 + \norm{W^{(2)'}_{i}}_2^2 / \alpha^2,
+    \end{align*}
+    which in turn implies that
+    \[
+        \norm{W^{(1)}_{\cdot, i}}_2 = \norm{W^{(2)}_{i}}_2, \quad \quad \norm{W^{(1)'}_{\cdot, i}}_2 = \norm{W^{(2)'}_{i}}_2
+    \]
+    We deduce
+    \begin{align*}
+        \norm{W^{(1)}_{\cdot, i}}^2_2
+         & = \norm{W^{(1)}_{\cdot, i}}_2 \norm{W^{(2)}_{i}}_2    \\
+         & = \norm{W^{(1)}_{\cdot, i} W^{(2)}_{i}}_2             \\
+         & = \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2           \\
+         & = \norm{W^{(1)'}_{\cdot, i} }_2 \norm{W^{(2)'}_{i}}_2 \\
+         & = \norm{W^{(1)'}_{\cdot, i}}^2_2,
+    \end{align*}
+    where we have used the fact that \( \norm{W^{(2)}_{i}}_2 = |W^{(2)}_{i}| \).
+    This implies \( W^{(1)}_{\cdot, i} = W^{(1)'}_{\cdot, i} \) since \( W^{(1)}_{\cdot, i} \) and \( W^{(1)'}_{\cdot, i} \)
+    are collinear, meaning \( W^{(2)}_{i} = W^{(2)'}_{i} \) must also hold.
 \end{proof}
 
 \begin{lemma}\label{lemma:mapping-equality}
-	Let \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)}} \)
-	be two solutions to the non-convex ReLU training problem.
-	If \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)'}} \) map
-	to the same solution in the convex reformulation, then they are equal up to
-	permutations or splits/merges of of neurons with collinear weights.
+    Let \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)}} \)
+    be two solutions to the non-convex ReLU training problem.
+    If \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)}} \) map
+    to the same solution in the convex reformulation, then they are equal up to
+    permutations or splits/merges of of neurons with collinear weights.
 \end{lemma}
 \begin{proof}
-	Let \( (W^{(1)}, W^{(2)}) \) be a solution to the non-convex ReLU training
-	problem.
-	For each neuron, associate \( W^{(1)}_{\cdot, i} \) with the sparsest
-	activation pattern \( D_i \) to which \( W^{(1)}_{\cdot, i} \) conforms.
-	That is, given \( W^{(1)}_{\cdot, i} \), we associate it with the following pattern:
-	\[
-		D_i = \argmin \cbr{ \text{nnz}(D_j) : D_j \in \calD_Z, 2 (D_j - I) Z W^{(1)}_{\cdot, i} \geq 0 }.
-	\]
-	If \( W^{(1)}_{\cdot, i} \) and \( W_{1j} \) are associated with the same pattern
-	\( D_i \) and \( \text{sign}(W^{(2)}_{i}) = \text{sign}(w_{2j}) \),
-	then \citet{mishkin2022convex} prove \( W^{(1)}_{\cdot, i} \) and \( W_{1j} \)
-	are collinear, i.e. \( W^{(1)}_{\cdot, i} = \alpha W_{1j} \) for some \( \alpha > 0 \).
-	They also prove that the model obtained by merging these collinear neurons
-	as
-	\[
-		W'_{1i} = \frac{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W_{1j}|w_{2j}|}{\norm{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W_{1j}|w_{2j}|}_2^{1/2}},
-		\quad \quad
-		w'_{2i} = \text{sign}(W^{(2)}_{i})
-		\norm{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W_{1j}|w_{2j}|}_2^{1/2},
-	\]
-	where \( W'_{1j} = 0 \), and \( w'_{2j} = 0 \),
-	is also an optimal solution to the non-convex ReLU problem.
-	We term this the merge/split symmetry.
+    Let \( (W^{(1)}, W^{(2)}) \) be a solution to the non-convex ReLU training
+    problem.
+    For each neuron, associate \( W^{(1)}_{\cdot, i} \) with the sparsest
+    activation pattern \( D_i \) to which \( W^{(1)}_{\cdot, i} \) conforms.
+    That is, given \( W^{(1)}_{\cdot, i} \), we associate it with the following pattern:
+    \[
+        D_i = \argmin \cbr{ \text{nnz}(D_j) : D_j \in \calD_Z, 2 (D_j - I) Z W^{(1)}_{\cdot, i} \geq 0 }.
+    \]
+    If \( W^{(1)}_{\cdot, i} \) and \( W^{(1)}_{\cdot, j} \) are associated with the same pattern
+    \( D_i \) and \( \text{sign}(W^{(2)}_{i}) = \text{sign}(W^{(2)}_{j}) \),
+    then \cref{chapter:fast-optimization} proves that \( W^{(1)}_{\cdot, i} \) and \( W^{(1)}_{\cdot, j} \)
+    are collinear, i.e. \( W^{(1)}_{\cdot, i} = \alpha W^{(1)}_{\cdot, j} \) for some \( \alpha > 0 \).
+    It also proves that the model obtained by merging these collinear neurons
+    as
+    \[
+        \begin{aligned}
+            W^{(1)'}_{\cdot, i}
+             & = \frac{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W^{(1)}_{\cdot, j}|W^{(2)}_{j}|}{\norm{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W^{(1)}_{\cdot, j}|W^{(2)}_{j}|}_2^{1/2}}, \\
+            W^{(2)'}_{i}
+             & = \text{sign}(W^{(2)}_{i})
+            \norm{W^{(1)}_{\cdot, i}|W^{(2)}_{i}| + W^{(1)}_{\cdot, j}|W^{(2)}_{j}|}_2^{1/2},
+        \end{aligned}
+    \]
+    where \( W'_{1j} = 0 \), and \( W^{(2)}_{j} = 0 \),
+    is also an optimal solution to the non-convex ReLU problem.
+    We term this the merge/split symmetry.
 
-	By recursively merging all collinear neurons assigned to the same
-	activation pattern for which \( \text{sign}(W^{(2)}_{i}) =
-	\text{sign}(w_{2j}) \) holds, we eventually obtain an optimal
-	\emph{reduced} model \( (W^{(1)'}, W^{(2)'}) \) such that
-	no two non-zero neurons share an activation pattern \( D_i \) and have
-	second-layer weights with the same sign.
-	We may then place an ordering on the neurons by ordering the \( D_i \)
-	matrices from \( 1 \) to \( p \).
-	This removes all permutation symmetries.
+    By recursively merging all collinear neurons assigned to the same
+    activation pattern for which \( \text{sign}(W^{(2)}_{i}) =
+    \text{sign}(W^{(2)}_{j}) \) holds, we eventually obtain an optimal
+    \emph{reduced} model \( (W^{(1)'}, W^{(2)'}) \) such that
+    no two non-zero neurons share an activation pattern \( D_i \) and have
+    second-layer weights with the same sign.
+    We may then place an ordering on the neurons by ordering the \( D_i \)
+    matrices from \( 1 \) to \( p \).
+    This removes all permutation symmetries.
 
-	Since every signed neuron in the non-convex model now
-	corresponds to a unique pattern \( D_i \), the mapping to the convex
-	program is given by
-	\[
-		\begin{aligned}
-			v_{i} & =
-			\begin{cases}
-				W'_{1i} w'_{2i} & \mbox{if \( w'_{2i} \geq 0 \)} \\
-				0               & \mbox{otherwise}
-			\end{cases} \\
-			u_{i} & =
-			\begin{cases}
-				-W'_{1i} w'_{2i} & \mbox{if \( w'_{2i} < 0 \)} \\
-				0                & \mbox{otherwise},
-			\end{cases}
-		\end{aligned}
-	\]
-	Applying this procedure to \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)},
-		\tilde W^{(2)}} \) and recalling that they map to the same solution implies
-	\[
-		W'_{1i} w'_{2i} = \tilde W'_{1i} \tilde w'_{2i},
-	\]
-	and \( \text{sign}(w'_{2i}) = \text{sign}(\tilde w'_{2i}) \)
-	for every \( i \).
-	Invoking \cref{lemma:scaling-unique} is sufficient to prove \( \rbr{W'_{1},
-	w'_{2}} \) and \( \rbr{\tilde W^{(1)'}, \tilde W^{(2)'}} \) are identical.
+    Since every signed neuron in the non-convex model now
+    corresponds to a unique pattern \( D_i \), the mapping to the convex
+    program is given by
+    \[
+        \begin{aligned}
+            v_{i} & =
+            \begin{cases}
+                W^{(1)'}_{\cdot, i} W^{(2)'}_{i} & \mbox{if \( W^{(2)'}_{i} \geq 0 \)} \\
+                0                                & \mbox{otherwise}
+            \end{cases} \\
+            u_{i} & =
+            \begin{cases}
+                -W^{(1)'}_{\cdot, i} W^{(2)'}_{i} & \mbox{if \( W^{(2)'}_{i} < 0 \)} \\
+                0                                 & \mbox{otherwise},
+            \end{cases}
+        \end{aligned}
+    \]
+    Applying this procedure to \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)},
+        \tilde W^{(2)}} \) and recalling that they map to the same solution implies
+    \[
+        W^{(1)'}_{\cdot, i} W^{(2)'}_{i} = \tilde W^{(1)'}_{\cdot, i} \tilde W^{(2)'}_{i},
+    \]
+    and \( \text{sign}(W^{(2)'}_{i}) = \text{sign}(\tilde W^{(2)'}_{i}) \)
+    for every \( i \).
+    Invoking \cref{lemma:scaling-unique} is sufficient to prove \( \rbr{W'_{1},
+    w'_{2}} \) and \( \rbr{\tilde W^{(1)'}, \tilde W^{(2)'}} \) are identical.
 
-	To obtain this result, we (i) merged all collinear neurons with the same
-	sign in the second layer and then (ii) sorted the neurons according to
-	their activation patterns.
-	Thus, it must be that \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)}} \)
-	differ only by (i) splitting of neurons into collinear neurons and (ii)
-	the ordering (i.e. permutation) of the neurons.
-	This completes the proof.
+    To obtain this result, we (i) merged all collinear neurons with the same
+    sign in the second layer and then (ii) sorted the neurons according to
+    their activation patterns.
+    Thus, it must be that \( \rbr{W^{(1)}, W^{(2)}} \) and \( \rbr{\tilde W^{(1)}, \tilde W^{(2)}} \)
+    differ only by (i) splitting of neurons into collinear neurons and (ii)
+    the ordering (i.e. permutation) of the neurons.
+    This completes the proof.
 \end{proof}
-
 
 \reluSolFn*
 \begin{proof}
-	Let the proposed optimal set be the completion of
-	\[
-		\begin{aligned}
-			\calU_\lambda =
-			 & \big\{
-			(W^{(1)}, W^{(2)}) :
-			\, f_{W^{(1)}, W^{(2)}}(Z) =  \hat y,
-			W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i,        \\
-			 & \hspace{1em} W^{(2)}_{i} = \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
-			\alpha_i \geq 0, \, i \in [2p] \setminus \calS_\lambda \Rightarrow \alpha_i = 0
-			\big\},
-		\end{aligned}
-	\]
-	over all permutations of the neurons and splits/merges of collinear
-	neurons.
-	Let \( (W^{(1)}, W^{(2)}) \in \calU_\lambda \).
-	Inverting \cref{eq:convex-to-relu}, we compute a candidate solution \( u \)
-	to the convex reformulation as
-	\[
-		u_i = W^{(1)}_{\cdot, i} W^{(2)}_{i} = \alpha_{i} v_i,
-	\]
-	for some \( \alpha_i \geq 0 \), where we assumed without loss of generality
-	that \( W^{(2)}_{i} \geq 0 \) (if \( \xi_i = -1 \), then we simply map to a
-	``negative'' neuron in the convex reformulation).
-	Moreover, \( \alpha_i = 0 \) if \( i \in [2p] \setminus \calS_\lambda \).
-	Since the solution mapping preserves the prediction of the neural network,
-	we also have \( X u = \hat y \), which is enough to guarantee \( u \)
-	is a solution to the convex reformulation using \cref{prop:sol-fn-cgl}.
-	Since \( u \) is a solution, we conclude that \( (W^{(1)}, W^{(2)}) \) must
-	be optimal for the non-convex ReLU problem.
+    Let the proposed optimal set be the completion of
+    \[
+        \begin{aligned}
+            \calU_\lambda =
+             & \big\{
+            (W^{(1)}, W^{(2)}) :
+            \, f_{W^{(1)}, W^{(2)}}(Z) =  \hat y,
+            W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i, \\
+             & \hspace{1em} W^{(2)}_{i} = \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
+            \alpha_i \geq 0, \, i \in [2p] \setminus \calS_\lambda \Rightarrow \alpha_i = 0
+            \big\},
+        \end{aligned}
+    \]
+    over all permutations of the neurons and splits/merges of collinear
+    neurons.
+    Let \( (W^{(1)}, W^{(2)}) \in \calU_\lambda \).
+    Inverting \cref{eq:convex-to-relu}, we compute a candidate solution \( u \)
+    to the convex reformulation as
+    \[
+        u_i = W^{(1)}_{\cdot, i} W^{(2)}_{i} = \alpha_{i} v_i,
+    \]
+    for some \( \alpha_i \geq 0 \), where we assumed without loss of generality
+    that \( W^{(2)}_{i} \geq 0 \) (if \( \xi_i = -1 \), then we simply map to a
+    ``negative'' neuron in the convex reformulation).
+    Moreover, \( \alpha_i = 0 \) if \( i \in [2p] \setminus \calS_\lambda \).
+    Since the solution mapping preserves the prediction of the neural network,
+    we also have \( X u = \hat y \), which is enough to guarantee \( u \)
+    is a solution to the convex reformulation using \cref{prop:sol-fn-cgl}.
+    Since \( u \) is a solution, we conclude that \( (W^{(1)}, W^{(2)}) \) must
+    be optimal for the non-convex ReLU problem.
 
-	For the reverse inclusion, let \( (W^{(1)}, W^{(2)}) \in \calO_\lambda \) and
-	suppose no permutation or merge/split symmetry of \( (W^{(1)}, W^{(2)}) \)
-	is in \( \calU_\lambda \).
-	While \( (W^{(1)}, W^{(2)}) \not \in \calU_\lambda \), it still maps to
-	some solution to the convex reformulation, call it \( u \).
-	As \( \calU_\lambda \) is obtained by mapping every solution to the convex
-	reformulation (i.e. every \( u \in \solfn_\lambda \) ) to the non-convex
-	parameterization, it must be that \( u \) also maps to some
-	\( (\tilde W^{(1)}, \tilde W^{(2)}) \) in \( \calU_\lambda \).
-	\cref{lemma:mapping-equality} now shows that \( (W^{(1)}, W^{(2)}) \) and
-	\( (\tilde W^{(1)}, \tilde W^{(2)}) \) are identical up to permutations and
-	splits/merges of collinear neurons
-	But, this implies \( (W^{(1)}, W^{(2)}) \in \calU_\lambda \) up to permutation
-	and merge/split symmetries, which is a contradiction.
-	We conclude that the optimal set is the completion of \( \calU_\lambda \) as
-	claimed.
+    For the reverse inclusion, let \( (W^{(1)}, W^{(2)}) \in \calO_\lambda \) and
+    suppose no permutation or merge/split symmetry of \( (W^{(1)}, W^{(2)}) \)
+    is in \( \calU_\lambda \).
+    While \( (W^{(1)}, W^{(2)}) \not \in \calU_\lambda \), it still maps to
+    some solution to the convex reformulation, call it \( u \).
+    As \( \calU_\lambda \) is obtained by mapping every solution to the convex
+    reformulation (i.e. every \( u \in \solfn_\lambda \) ) to the non-convex
+    parameterization, it must be that \( u \) also maps to some
+    \( (\tilde W^{(1)}, \tilde W^{(2)}) \) in \( \calU_\lambda \).
+    \cref{lemma:mapping-equality} now shows that \( (W^{(1)}, W^{(2)}) \) and
+    \( (\tilde W^{(1)}, \tilde W^{(2)}) \) are identical up to permutations and
+    splits/merges of collinear neurons
+    But, this implies \( (W^{(1)}, W^{(2)}) \in \calU_\lambda \) up to permutation
+    and merge/split symmetries, which is a contradiction.
+    We conclude that the optimal set is the completion of \( \calU_\lambda \) as
+    claimed.
 \end{proof}
-
 
 \stationaryPoints*
 \begin{proof}
-	The proof is almost immediate.
+    The proof is almost immediate.
 
-	Given any sub-sampled set of activation patterns \( \tilde \calD \subset \calD_Z \),
-	\citet[Theorem 3]{wang2022hidden} prove that the solutions to the sub-sampled
-	convex program are Clarke stationary points \citep{clarke1990optimization} of
-	the non-convex ReLU optimization problem in \cref{eq:non-convex-relu-mlp},
-	and vice-versa.
-	Using the expression for the CGL solution set in \cref{prop:sol-fn-cgl},
-	which applies to sub-sampled convex reformulations as well as the full
-	program, we obtain a version of \cref{cor:relu-sol-fn} for stationary
-	points.
-	That is, every model \( (W^{(1)}, W^{(2)}) \) in
-	\begin{equation*}
-		\begin{aligned}
-			\calC_\lambda(\tilde \calD) = \big\{
-			 & (W^{(1)}, \! W^{(2)}) :
-			\, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y_{\tilde \calD},
-			W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i(\tilde \calD), \,
-			W^{(2)}_{i} = \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},                                           \\
-			 & \hspace{4em} \alpha_i \geq 0, \, i \in [m] \setminus \calS_\lambda \implies \alpha_i = 0
-			\big\},
-		\end{aligned}
-	\end{equation*}
-	is a stationary point of the non-convex ReLU program.
-	Taking the union over all sub-sampled sets of activation patterns
-	gives \( \calC_\lambda \), which is guaranteed to contain every stationary
-	point of the non-convex objective.
-	This completes the proof.
+    Given any sub-sampled set of activation patterns \( \tilde \calD \subset \calD_Z \),
+    \citet[Theorem 3]{wang2022hidden} prove that the solutions to the sub-sampled
+    convex program are Clarke stationary points \citep{clarke1990optimization} of
+    the non-convex ReLU optimization problem in \cref{eq:non-convex-relu-mlp},
+    and vice-versa.
+    Using the expression for the CGL solution set in \cref{prop:sol-fn-cgl},
+    which applies to sub-sampled convex reformulations as well as the full
+    program, we obtain a version of \cref{cor:relu-sol-fn} for stationary
+    points.
+    That is, every model \( (W^{(1)}, W^{(2)}) \) in
+    \begin{equation*}
+        \begin{aligned}
+            \calC_\lambda(\tilde \calD) = \big\{
+             & (W^{(1)}, \! W^{(2)}) :
+            \, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y_{\tilde \calD},
+            W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i(\tilde \calD), \,
+            W^{(2)}_{i} = \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},                                      \\
+             & \hspace{4em} \alpha_i \geq 0, \, i \in [m] \setminus \calS_\lambda \implies \alpha_i = 0
+            \big\},
+        \end{aligned}
+    \end{equation*}
+    is a stationary point of the non-convex ReLU program.
+    Taking the union over all sub-sampled sets of activation patterns
+    gives \( \calC_\lambda \), which is guaranteed to contain every stationary
+    point of the non-convex objective.
+    This completes the proof.
 \end{proof}
-
 
 \pUnique*
 \begin{proof}
-	Since there is only one solution to the convex reformulation, all solutions to the
-	non-convex training problem must map to that solution.
-	\cref{lemma:mapping-equality} now implies that the solution map for the
-	non-convex problem is p-unique, i.e. unique up to permutations and
-	splits/merges of collinear neurons.
+    Since there is only one solution to the convex reformulation, all solutions to the
+    non-convex training problem must map to that solution.
+    \cref{lemma:mapping-equality} now implies that the solution map for the
+    non-convex problem is p-unique, i.e. unique up to permutations and
+    splits/merges of collinear neurons.
 \end{proof}
 
 \reluUnique*
 \begin{proof}
-	We assume without loss of generality that only indices from \( 1 \)
-	to \( p \) are in \( \equi \).
-	By \cref{lemma:unique-cgl}, the constrained group lasso
-	admits a unique solution
-	if and only if
-	\[
-		\bigcup_{i \in \equi} \cbr{D_i Z \vi},
-	\]
-	are linearly independent.
-	We now show that this fact holds under the proposed sufficient condition
-	by proving the stronger fact that
-	\( \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]} \)
-	are linearly independent with probability one, where
-	\( [D_i Z]_j \) is the \( j^{\text{th}} \)
-	column of \( D_i Z \).
-	Since \( \nnz(D_i) \geq d * p \) and \( Z \) has a continuous
-	probability distribution, it holds that
-	\( [D_i Z]_j \) has at least
-	\( d * p \) non-zero entries with probability 1.
-	Let
-	\[
-		\calS_{ij}
-		= \text{Span}\rbr{\bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]}
-			\setminus [D_i Z]_j},
-	\]
-	and observe that \( \text{dim}(\calS_{ij}) \leq d * p - 1 \).
-	As a result, the conditional probability \( [D_i Z]_j \) falls
-	in this subspace satisfies
-	\[
-		\Pr([D_i Z]_j \in \calS_{ij} | \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]}
-		\setminus [D_i Z]_j) = 0.
-	\]
-	Taking expectations over the remaining vectors in \( Z \) implies
-	\[
-		\Pr([D_i Z]_j \in \calS_{ij}) = 0.
-	\]
-	Finally, using a union bound over \( i, j \) implies that
-	\( \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]} \) are linearly independent
-	almost surely.
+    We assume without loss of generality that only indices from \( 1 \)
+    to \( p \) are in \( \equi \).
+    By \cref{lemma:unique-cgl}, the constrained group lasso
+    admits a unique solution
+    if and only if
+    \[
+        \bigcup_{i \in \equi} \cbr{D_i Z \vi},
+    \]
+    are linearly independent.
+    We now show that this fact holds under the proposed sufficient condition
+    by proving the stronger fact that
+    \( \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]} \)
+    are linearly independent with probability one, where
+    \( [D_i Z]_j \) is the \( j^{\text{th}} \)
+    column of \( D_i Z \).
+    Since \( \nnz(D_i) \geq d * p \) and \( Z \) has a continuous
+    probability distribution, it holds that
+    \( [D_i Z]_j \) has at least
+    \( d * p \) non-zero entries with probability 1.
+    Let
+    \[
+        \calS_{ij}
+        = \text{Span}\rbr{\bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]}
+            \setminus [D_i Z]_j},
+    \]
+    and observe that \( \text{dim}(\calS_{ij}) \leq d * p - 1 \).
+    As a result, the conditional probability \( [D_i Z]_j \) falls
+    in this subspace satisfies
+    \[
+        \Pr([D_i Z]_j \in \calS_{ij} | \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]}
+        \setminus [D_i Z]_j) = 0.
+    \]
+    Taking expectations over the remaining vectors in \( Z \) implies
+    \[
+        \Pr([D_i Z]_j \in \calS_{ij}) = 0.
+    \]
+    Finally, using a union bound over \( i, j \) implies that
+    \( \bigcup_{i \in \equi} \cbr{[D_i Z]_j : j \in [d]} \) are linearly independent
+    almost surely.
 \end{proof}
-
 
 \minimalComplexity*
 \begin{proof}
-	The proof follows directly from existing results.
+    The proof follows directly from existing results.
 
-	Recall from \citet{pilanci2020convexnn} that there are at most
-	\[
-		p \in O\rbr{r \frac{n}{r}^{3r}},
-	\]
-	activation patterns in the convex reformulation and that the complexity
-	of computing an optimal ReLU model using a standard interior-point solver
-	is \( O(d^3 r^3 (n / r)^{3r}) \).
+    Recall from \citet{pilanci2020convexnn} that there are at most
+    \[
+        p \in O\rbr{r \frac{n}{r}^{3r}},
+    \]
+    activation patterns in the convex reformulation and that the complexity
+    of computing an optimal ReLU model using a standard interior-point solver
+    is \( O(d^3 r^3 (n / r)^{3r}) \).
 
-	We know from \cref{prop:pruning-correctness} that the complexity of
-	pruning an optimal neural network with at most \( 2p \) neuron
-	is \( O(n^3 p + nd) \).
-	Combining these complexities, we find that the cost of optimization dominates
-	and overall complexity of computing an optimal and minimal neural network
-	grows as \( O(d^3 r^3 (n / r)^{3r}) \).
+    We know from \cref{prop:pruning-correctness} that the complexity of
+    pruning an optimal neural network with at most \( 2p \) neuron
+    is \( O(n^3 p + nd) \).
+    Combining these complexities, we find that the cost of optimization dominates
+    and overall complexity of computing an optimal and minimal neural network
+    grows as \( O(d^3 r^3 (n / r)^{3r}) \).
 
-	Finally, the bound on the number of active neurons follows from the
-	fact that \( \dim \Span(\cbr{(X W^{*(1)}_{\cdot, i})_+}_i) \leq n \).
-	This completes the proof.
+    Finally, the bound on the number of active neurons follows from the
+    fact that
+    \[
+        \dim \Span(\cbr{(X W^{*(1)}_{\cdot, i})_+}_i) \leq n.
+    \]
+    This completes the proof.
 \end{proof}
-
 
 \minNormNN*
 \begin{proof}
-	Let \( (u, v) \) be an optimal solution to the convex reformulation.
-	\citet{pilanci2020convexnn} show that an optimal solution to the original
-	two-layer ReLU optimization problem is given by setting
-	\[
-		W^{(1)}_{\cdot, i} = \frac{u_i}{\sqrt{\norm{u_i}_2}}, W^{(2)}_{i} = \sqrt{\norm{u_i}_2},
-	\]
-	and
-	\[
-		W_{1j} = \frac{v_i}{\sqrt{\norm{v_i}_2}}, w_{2j} = -\sqrt{\norm{v_i}_2},
-	\]
-	where we define \( \frac{0}{0} = 0 \).
-	Then, the \( r \)-value of any such solution can be calculated as
-	\begin{align*}
-		r(W^{(1)}, W^{(2)})
-		 & = \sum_{i = 1}^m \norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4                                                  \\
-		 & = \sum_{u_i \neq 0} \norm{\frac{u_i}{\sqrt{\norm{u_i}_2}}}_2^4 + \norm{\sqrt{\norm{u_i}_2}}_2^4
-		+ \sum_{v_i \neq 0} \norm{\frac{v_i}{\sqrt{\norm{v_i}_2}}}_2^4 + \norm{\sqrt{\norm{v_i}_2}}_2^4            \\
-		 & = \sum_{u_i \neq 0} \norm{u_i}_2^2 + \norm{u_i}_2^2 + \sum_{v_i \neq 0} \norm{v_i}_2^2 + \norm{v_i}^2_2 \\
-		 & = 2 \norm{u}_2^2 + 2 \norm{v}_2^2.
-	\end{align*}
-	That is, \( r(W^{(1)}, W^{(2)}) \) is a monotone transformation of the Euclidean
-	norm of \( \rbr{u, v} \).
-	Moreover, all optimal ReLU networks up to permutation and neuron-split
-	symmetries can be obtained by applying this mapping to the solution to a convex reformulation.
-	We conclude that the minimum \( r \)-valued optimal ReLU network before any
-	such symmetries  are applied is given by the minimum \( \ell_2 \)-norm
-	solution to the convex reformulation.
+    Let \( (u, v) \) be an optimal solution to the convex reformulation.
+    \citet{pilanci2020convexnn} show that an optimal solution to the original
+    two-layer ReLU optimization problem is given by setting
+    \[
+        W^{(1)}_{\cdot, i} = \frac{u_i}{\sqrt{\norm{u_i}_2}}, W^{(2)}_{i} = \sqrt{\norm{u_i}_2},
+    \]
+    and
+    \[
+        W^{(1)}_{\cdot, j} = \frac{v_i}{\sqrt{\norm{v_i}_2}}, W^{(2)}_{j} = -\sqrt{\norm{v_i}_2},
+    \]
+    where we define \( \frac{0}{0} = 0 \).
+    Then, the \( r \)-value of any such solution can be calculated as
+    \begin{align*}
+        r(W^{(1)}, W^{(2)})
+         & = \sum_{i = 1}^m \norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4                                 \\
+         & = \sum_{u_i \neq 0} \norm{\frac{u_i}{\sqrt{\norm{u_i}_2}}}_2^4 + \norm{\sqrt{\norm{u_i}_2}}_2^4
+        + \sum_{v_i \neq 0} \norm{\frac{v_i}{\sqrt{\norm{v_i}_2}}}_2^4 + \norm{\sqrt{\norm{v_i}_2}}_2^4            \\
+         & = \sum_{u_i \neq 0} \norm{u_i}_2^2 + \norm{u_i}_2^2 + \sum_{v_i \neq 0} \norm{v_i}_2^2 + \norm{v_i}^2_2 \\
+         & = 2 \norm{u}_2^2 + 2 \norm{v}_2^2.
+    \end{align*}
+    That is, \( r(W^{(1)}, W^{(2)}) \) is a monotone transformation of the Euclidean
+    norm of \( \rbr{u, v} \).
+    Moreover, all optimal ReLU networks up to permutation and neuron-split
+    symmetries can be obtained by applying this mapping to the solution to a convex reformulation.
+    We conclude that the minimum \( r \)-valued optimal ReLU network before any
+    such symmetries  are applied is given by the minimum \( \ell_2 \)-norm
+    solution to the convex reformulation.
 
-	Now, clearly permutation symmetries have no affect on the \( r \) value.
-	However, splitting neurons into multiple collinear neurons can, in fact,
-	reduce \( r \).
-	For example, consider splitting a neuron \( (W^{(1)}_{\cdot, i}, W^{(2)}_{i}) \) into
-	\( (W^{(1)'}_{\cdot, i}, W^{(2)'}_{i}) \) and \( (W_{1j}', w_{2j}') \) such that
-	\( W^{(1)'}_{\cdot, i} \) and \( W_{1j}' \) are collinear, \( \text{sign}(W^{(2)'}_{i}) =
-	\text{sign}(w_{2j}') \), and
-	\[
-		W^{(1)}_{\cdot, i} = \frac{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W_{1j}' w_{2j}'}{\norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W_{1j}' w_{2j}'}_2^{1/2}},
-		\quad \quad
-		W^{(2)}_{i} = \text{sign}(W^{(2)}_{i})\norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W_{1j}' w_{2j}'}_2^{1/2},
-	\]
-	and \( \norm{W^{(1)'}_{\cdot, i}}_2 = \norm{W^{(2)'}_{i}}_2 \),
-	\( \norm{W_{1j}'}_2 = \norm{w_{2j}'}_2 \).
-	This operation is known to preserve optimality \citep{mishkin2022convex}.
-	However, the conditions on the split neurons also imply
-	\begin{align*}
-		\norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4
-		 & = 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W_{1j}' w_{2j}'}_2^{2}                                   \\
-		 & = 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2^2 + 2 \norm{W_{1j}' w_{2j}'}_2^2
-		+ 4 \abr{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}, W_{1j}' w_{2j}'}                                              \\
-		 & > 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2^2 + 2 \norm{W_{1j}' w_{2j}'}_2^2                        \\
-		 & = \norm{W^{(1)'}_{\cdot, i}}_2^4 + \norm{W^{(2)'}_{i}}_2^4 + \norm{W_{1j}'}_2^4 + \norm{w_{2j}'}_2^4,
-	\end{align*}
-	where have used positive collinearity of \( W^{(1)'}_{\cdot, i} \) and \( W_{2i}' \).
-	As a result, the \( r \)-value of a solution can be decreased by splitting
-	neurons.
-	Thus, the minimum-norm solution to the convex reformulation is only the
-	minimum \( r \)-value optimal ReLU network out of all
-	networks which admit no neuron-merge symmetries.
+    Now, clearly permutation symmetries have no affect on the \( r \) value.
+    However, splitting neurons into multiple collinear neurons can, in fact,
+    reduce \( r \).
+    For example, consider splitting a neuron \( (W^{(1)}_{\cdot, i}, W^{(2)}_{i}) \) into
+    \( (W^{(1)'}_{\cdot, i}, W^{(2)'}_{i}) \) and \( (W^{(1)'}_{\cdot, j}, W^{(2)'}_{j}) \) such that
+    \( W^{(1)'}_{\cdot, i} \) and \( W^{(1)'}_{\cdot, j} \) are collinear, \( \text{sign}(W^{(2)'}_{i}) =
+    \text{sign}(W^{(2)'}_{j}) \), and
+    \[
+        \begin{aligned}
+            W^{(1)}_{\cdot, i}
+             & = \frac{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}{\norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}_2^{1/2}}, \\
+            W^{(2)}_{i}
+             & = \text{sign}(W^{(2)}_{i})\norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}_2^{1/2},
+        \end{aligned}
+    \]
+    and \( \norm{W^{(1)'}_{\cdot, i}}_2 = \norm{W^{(2)'}_{i}}_2 \),
+    \( \norm{W^{(1)'}_{\cdot, j}}_2 = \norm{W^{(2)'}_{j}}_2 \).
+    As we showed in \cref{chapter:fast-optimization}, this
+    operation preserves optimality \citep{mishkin2022convex}.
+    However, the conditions on the split neurons also imply
+    \begin{align*}
+        \norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4
+         & = 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i} + W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}_2^{2}                                   \\
+         & = 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2^2 + 2 \norm{W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}_2^2
+        + 4 \abr{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}, W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}                                              \\
+         & > 2 \norm{W^{(1)'}_{\cdot, i} W^{(2)'}_{i}}_2^2 + 2 \norm{W^{(1)'}_{\cdot, j} W^{(2)'}_{j}}_2^2                        \\
+         & = \norm{W^{(1)'}_{\cdot, i}}_2^4 + \norm{W^{(2)'}_{i}}_2^4 + \norm{W^{(1)'}_{\cdot, j}}_2^4 + \norm{W^{(2)'}_{j}}_2^4,
+    \end{align*}
+    where have used positive collinearity of \( W^{(1)'}_{\cdot, i} \) and \( W_{2i}' \).
+    As a result, the \( r \)-value of a solution can be decreased by splitting
+    neurons.
+    Thus, the minimum-norm solution to the convex reformulation is only the
+    minimum \( r \)-value optimal ReLU network out of all
+    networks which admit no neuron-merge symmetries.
 \end{proof}
 
 \oneNeuron*
 \begin{proof}
-	\citet{mishkin2022convex} show that \autoref{eq:non-convex-relu-mlp} has the same global optimal values as
-	\begin{equation}\label{eq:mip}
-		\min_{v, \gamma \in \cbr{-1, 1}} \half \norm{\sum_{i=1}^p (X v_i)_+ \gamma - y} + \lambda \sum_{i = 1}^p \norm{w_i}_2.
-	\end{equation}
-	Moreover, the objective-preserving mapping
-	\( W^{(1)}_{\cdot, i} = v_i / \sqrt{\norm{v_i}_2} \),
-	\( W^{(2)}_{i} = \gamma_i \sqrt{\norm{v_i}_2} \)
-	can be used to obtain an optimal ReLU network from a solution to \cref{eq:mip}.
-	We proceed by analyzing this equivalent problem and then use the
-	mapping to return to the original non-convex formulation.
+    \citet{mishkin2022convex} show that \autoref{eq:non-convex-relu-mlp} has the same global optimal values as
+    \begin{equation}\label{eq:mip}
+        \min_{v, \gamma \in \cbr{-1, 1}} \half \norm{\sum_{i=1}^p (X v_i)_+ \gamma - y} + \lambda \sum_{i = 1}^p \norm{w_i}_2.
+    \end{equation}
+    Moreover, the objective-preserving mapping
+    \( W^{(1)}_{\cdot, i} = v_i / \sqrt{\norm{v_i}_2} \),
+    \( W^{(2)}_{i} = \gamma_i \sqrt{\norm{v_i}_2} \)
+    can be used to obtain an optimal ReLU network from a solution to \cref{eq:mip}.
+    We proceed by analyzing this equivalent problem and then use the
+    mapping to return to the original non-convex formulation.
 
-	Consider the case \( p = 1 \).
-	Let \( X, y \) consist of two training points, \( (x_1, y_1) = (-100, 1) \) and \( (x_2, y_2) = (1, 10) \).
-	In what follows, we drop the subscript for \( v \) and \( \gamma \) since \( p = 1 \) and we consider a one-dimensional.
-	The optimization problem of interest is
-	\begin{equation*}
-		\min_{v, \gamma} \half \rbr{(x_1 v)_+ \gamma - y_1}^2 + \rbr{(x_2 v)_+ \gamma - y_2}^2 + \lambda \abs{v}.
-	\end{equation*}
-	Since \( x_1 < 0 \) and \( x_2 > 0 \), we can re-write this optimization problem as
-	\[
-		\min_{v, \gamma} \half \mathds{1}_{v \leq 0} \rbr{\rbr{x_1 v \gamma - y_1}^2 + y_2^2} + \mathds{1}_{v > 0}\rbr{\rbr{x_2 v \gamma - y_2}^2 + y_1^2} + \lambda \abs{v}.
-	\]
-	By inspection, we see that \( \gamma = +1 \) is optimal in both cases, leading to the following simplified expression:
-	\[
-		\min_{v} \half \mathds{1}_{v \leq 0} \rbr{\rbr{x_1 v - y_1}^2 + y_2^2} + \mathds{1}_{v > 0}\rbr{\rbr{x_2 v - y_2}^2 + y_1^2} + \lambda \abs{v}.
-	\]
-	This is a piece-wise continuous (but non-smooth) quadratic with a breakpoint at \( v^* = 0 \).
-	We determine the solution to this minimization problem via a case analysis.
+    Consider the case \( p = 1 \).
+    Let \( X, y \) consist of two training points, \( (x_1, y_1) = (-100, 1) \) and \( (x_2, y_2) = (1, 10) \).
+    In what follows, we drop the subscript for \( v \) and \( \gamma \) since \( p = 1 \) and we consider a one-dimensional.
+    The optimization problem of interest is
+    \begin{equation*}
+        \min_{v, \gamma} \half \rbr{(x_1 v)_+ \gamma - y_1}^2 + \rbr{(x_2 v)_+ \gamma - y_2}^2 + \lambda \abs{v}.
+    \end{equation*}
+    Since \( x_1 < 0 \) and \( x_2 > 0 \), we can re-write this optimization problem as
+    \[
+        \min_{v, \gamma} \half \mathds{1}_{v \leq 0} \rbr{\rbr{x_1 v \gamma - y_1}^2 + y_2^2} + \mathds{1}_{v > 0}\rbr{\rbr{x_2 v \gamma - y_2}^2 + y_1^2} + \lambda \abs{v}.
+    \]
+    By inspection, we see that \( \gamma = +1 \) is optimal in both cases, leading to the following simplified expression:
+    \[
+        \min_{v} \half \mathds{1}_{v \leq 0} \rbr{\rbr{x_1 v - y_1}^2 + y_2^2} + \mathds{1}_{v > 0}\rbr{\rbr{x_2 v - y_2}^2 + y_1^2} + \lambda \abs{v}.
+    \]
+    This is a piece-wise continuous (but non-smooth) quadratic with a breakpoint at \( v^* = 0 \).
+    We determine the solution to this minimization problem via a case analysis.
 
-	\textbf{Case 1}: \( v^* = 0 \).
-	Then, the optimal objective is trivially \( f(v^*) = y_1^2 + y_2^2 = 101 \).
+    \textbf{Case 1}: \( v^* = 0 \).
+    Then, the optimal objective is trivially \( f(v^*) = y_1^2 + y_2^2 = 101 \).
 
-	\textbf{Case 2}: \( v^* < 0 \).
-	First order optimality conditions are
-	\[
-		x_1 \rbr{x_1 v_{-}^* - y_1} - \lambda = 0 \implies v_{-}^* = \frac{y_1 \cdot x_1 + \lambda}{x_1^2},
-	\]
-	which is valid only if \( \lambda < |y_1 \cdot x_1| = 100 \).
-	The minimum objective value is then
-	\begin{align*}
-		\half \rbr{\rbr{x_1 v_{-}^* - y_1}^2 + y_2^2} - \lambda v_{-}^*
-		 & = \rbr{\rbr{x_1 \frac{y_1 \cdot x_1 + \lambda}{x_1^2} - y_1}^2 + y_2^2} - \lambda \rbr{\frac{y_1 \cdot x_1 + \lambda}{x_1^2}} \\
-		 & = \frac{\lambda^2}{x_1^2} + y_2^2 - \lambda \rbr{\frac{y_1 \cdot x_1 + \lambda}{x_1^2}}                                       \\
-		 & = -\frac{\lambda y_1}{x_1} + y_2^2                                                                                            \\
-		 & = \frac{\lambda}{100} + 100.
-	\end{align*}
+    \textbf{Case 2}: \( v^* < 0 \).
+    First order optimality conditions are
+    \[
+        x_1 \rbr{x_1 v_{-}^* - y_1} - \lambda = 0 \implies v_{-}^* = \frac{y_1 \cdot x_1 + \lambda}{x_1^2},
+    \]
+    which is valid only if \( \lambda < |y_1 \cdot x_1| = 100 \).
+    The minimum objective value is then
+    \begin{align*}
+        \half \rbr{\rbr{x_1 v_{-}^* - y_1}^2 + y_2^2} - \lambda v_{-}^*
+         & = \rbr{\rbr{x_1 \frac{y_1 \cdot x_1 + \lambda}{x_1^2} - y_1}^2 + y_2^2} - \lambda \rbr{\frac{y_1 \cdot x_1 + \lambda}{x_1^2}} \\
+         & = \frac{\lambda^2}{x_1^2} + y_2^2 - \lambda \rbr{\frac{y_1 \cdot x_1 + \lambda}{x_1^2}}                                       \\
+         & = -\frac{\lambda y_1}{x_1} + y_2^2                                                                                            \\
+         & = \frac{\lambda}{100} + 100.
+    \end{align*}
 
-	\textbf{Case 3}: \( v_{+}^* > 0 \).
-	Similarly to the previous case, we obtain
-	\[
-		x_2 \rbr{x_2 v_{+}^* - y_2} + \lambda = 0 \implies v_{+}^* = \frac{y_2 \cdot x_2 - \lambda}{x_2^2},
-	\]
-	which is valid only if \( \lambda < |y_2 \cdot x_2| = 10 \).
-	In this case, the minimum objective is
-	\begin{align*}
-		\half \rbr{\rbr{x_2 v_{+}^* - y_2}^2 + y_1^2} + \lambda v_{+}^*
-		 & = \rbr{\rbr{x_2 \frac{y_2 \cdot x_2 + \lambda}{x_2^2} - y_2}^2 + y_1^2} - \lambda \rbr{\frac{y_2 \cdot x_2 + \lambda}{x_2^2}} \\
-		 & = \frac{\lambda^2}{x_2^2} + y_2^2 + \lambda \rbr{\frac{y_2 \cdot x_2 - \lambda}{x_2^2}}                                       \\
-		 & = \frac{\lambda y_2}{x_2} + y_1^2                                                                                             \\
-		 & = 10 \lambda + 1.
-	\end{align*}
+    \textbf{Case 3}: \( v_{+}^* > 0 \).
+    Similarly to the previous case, we obtain
+    \[
+        x_2 \rbr{x_2 v_{+}^* - y_2} + \lambda = 0 \implies v_{+}^* = \frac{y_2 \cdot x_2 - \lambda}{x_2^2},
+    \]
+    which is valid only if \( \lambda < |y_2 \cdot x_2| = 10 \).
+    In this case, the minimum objective is
+    \begin{align*}
+        \half \rbr{\rbr{x_2 v_{+}^* - y_2}^2 + y_1^2} + \lambda v_{+}^*
+         & = \rbr{\rbr{x_2 \frac{y_2 \cdot x_2 + \lambda}{x_2^2} - y_2}^2 + y_1^2} - \lambda \rbr{\frac{y_2 \cdot x_2 + \lambda}{x_2^2}} \\
+         & = \frac{\lambda^2}{x_2^2} + y_2^2 + \lambda \rbr{\frac{y_2 \cdot x_2 - \lambda}{x_2^2}}                                       \\
+         & = \frac{\lambda y_2}{x_2} + y_1^2                                                                                             \\
+         & = 10 \lambda + 1.
+    \end{align*}
 
-	To combine the cases, observe that
-	\begin{align*}
-		f(v_+^*) - f(v_-^*)
-		 & = \frac{\lambda y_2}{x_2} + y_1^2 - \sbr{-\frac{\lambda y_1}{x_1} + y_2^2} \\
-		 & = \lambda \rbr{\frac{x_1 y_2 + x_2 y_1}{x_1 x_2}} + y_1^2 - y_2^2          \\
-		 & = \lambda \rbr{\frac{-100 (10) + 1 (1)}{-100 (1)}} + 1 - 100               \\
-		 & = 9.99 \lambda - 99.
-	\end{align*}
-	We deduce that \( f(v_+^*) - f(v_-^*) > 0 \) (and thus \( v^* \leq 0 \))
-	whenever \( \lambda > \frac{99}{9.99} \approx 10 \) and
-	\( f(v_+^*) - f(v_-^*) > 0 < 0 \) otherwise.
-	In this latter case, \( v^* \geq 0 \).
+    To combine the cases, observe that
+    \begin{align*}
+        f(v_+^*) - f(v_-^*)
+         & = \frac{\lambda y_2}{x_2} + y_1^2 - \sbr{-\frac{\lambda y_1}{x_1} + y_2^2} \\
+         & = \lambda \rbr{\frac{x_1 y_2 + x_2 y_1}{x_1 x_2}} + y_1^2 - y_2^2          \\
+         & = \lambda \rbr{\frac{-100 (10) + 1 (1)}{-100 (1)}} + 1 - 100               \\
+         & = 9.99 \lambda - 99.
+    \end{align*}
+    We deduce that \( f(v_+^*) - f(v_-^*) > 0 \) (and thus \( v^* \leq 0 \))
+    whenever \( \lambda > \frac{99}{9.99} \approx 10 \) and
+    \( f(v_+^*) - f(v_-^*) > 0 < 0 \) otherwise.
+    In this latter case, \( v^* \geq 0 \).
 
-	Taking \( \lambda = 10 \), we find
-	\[
-		f(v_-^*) = 100 - 0.1 = 99.99 < 101 = y_1^2 + y_2^2 = f(0),
-	\]
-	so that \( v_-^* \) is optimal and \( v_-^* < 0 \).
-	Moreover, \( v_-^* \) is strictly increasing as a function of \( \lambda \),
-	for all \( \lambda > \frac{99}{9.99} \)
-	so that \( v_-^* \) is optimal and strictly negative on the interval
-	\( [\frac{99}{9.99}, 10] \).
+    Taking \( \lambda = 10 \), we find
+    \[
+        f(v_-^*) = 100 - 0.1 = 99.99 < 101 = y_1^2 + y_2^2 = f(0),
+    \]
+    so that \( v_-^* \) is optimal and \( v_-^* < 0 \).
+    Moreover, \( v_-^* \) is strictly increasing as a function of \( \lambda \),
+    for all \( \lambda > \frac{99}{9.99} \)
+    so that \( v_-^* \) is optimal and strictly negative on the interval
+    \( [\frac{99}{9.99}, 10] \).
 
-	Now, consider \( \lambda = \frac{99}{9.99} - \epsilon \) to see that
-	\[
-		f(v_+^*) = \frac{990}{9.99} + 1 - 10 \epsilon < 101 = y_1^2 + y_2^2 = f(0),
-	\]
-	for all \( \epsilon > 0 \).
-	We deduce that \( v_+^* \) is optimal for all \( \epsilon > 0 \) and
-	thus \( v_+^* \) is optimal and strictly positive on the interval
-	\( [0, \frac{99}{9.99}] \).
+    Now, consider \( \lambda = \frac{99}{9.99} - \epsilon \) to see that
+    \[
+        f(v_+^*) = \frac{990}{9.99} + 1 - 10 \epsilon < 101 = y_1^2 + y_2^2 = f(0),
+    \]
+    for all \( \epsilon > 0 \).
+    We deduce that \( v_+^* \) is optimal for all \( \epsilon > 0 \) and
+    thus \( v_+^* \) is optimal and strictly positive on the interval
+    \( [0, \frac{99}{9.99}] \).
 
-	To summarize, the solution function for this problem is as follows:
-	\[
-		\solfn(\lambda) =
-		\begin{cases}
-			\frac{\lambda}{100^2} - 0.01
-			 & \mbox{if \( \lambda > \frac{99}{9.99} \)}  \\
-			\cbr{\frac{\lambda}{100^2} - 0.01, 0.1 - \frac{\lambda}{100}}
-			 & \mbox{if \( \lambda = \frac{99}{9.99} \)}  \\
-			0.1 - \frac{\lambda}{100}
-			 & \mbox{if \( \lambda < \frac{99}{9.99} \).}
-		\end{cases}
-	\]
-	This point-to-set map is clearly not open:
-	for every sequence \( \lambda_k \uparrow \frac{99}{9.99} \),
-	\( v_k \in \solfn(\lambda_k) \) implies
-	\( \lim_k v_k \neq \frac{\lambda}{100^2} - 0.01 \).
-	Moreover, a similar result holds for limits from above.
-	Finally, it is clear by inspection that the optimal model fit is not
-	unique at \( \lambda = \frac{99}{9.99} \), cannot be continuous
-	in the functional sense, and, since it is not open, also fails to be
-	continuous in the sense of point-to-set maps.
+    To summarize, the solution function for this problem is as follows:
+    \[
+        \solfn(\lambda) =
+        \begin{cases}
+            \frac{\lambda}{100^2} - 0.01
+             & \mbox{if \( \lambda > \frac{99}{9.99} \)}  \\
+            \cbr{\frac{\lambda}{100^2} - 0.01, 0.1 - \frac{\lambda}{100}}
+             & \mbox{if \( \lambda = \frac{99}{9.99} \)}  \\
+            0.1 - \frac{\lambda}{100}
+             & \mbox{if \( \lambda < \frac{99}{9.99} \).}
+        \end{cases}
+    \]
+    This point-to-set map is clearly not open:
+    for every sequence \( \lambda_k \uparrow \frac{99}{9.99} \),
+    \( v_k \in \solfn(\lambda_k) \) implies
+    \( \lim_k v_k \neq \frac{\lambda}{100^2} - 0.01 \).
+    Moreover, a similar result holds for limits from above.
+    Finally, it is clear by inspection that the optimal model fit is not
+    unique at \( \lambda = \frac{99}{9.99} \), cannot be continuous
+    in the functional sense, and, since it is not open, also fails to be
+    continuous in the sense of point-to-set maps.
 \end{proof}
 

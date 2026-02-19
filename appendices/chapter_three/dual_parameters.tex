@@ -1,108 +1,110 @@
 %!TEX root=../main.tex
 
 \begin{lemma}\label{lemma:lagrange-dual}
-	One Lagrange dual of CGL is the following:
-	\begin{equation}\label{eq:dual-program}
-		\begin{aligned}
-			\max_{\eta, \rho} \;
-			 & - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y) + \half \norm{y}_2^2                         \\
-			 & \quad \quad \text{s.t.} \quad \eta + K \rho \in \Row(X), \; \norm{\eta_\bi}_2 \leq \lambda \; \forall \; \bi \in \calB,
-		\end{aligned}
-	\end{equation}
-	where \( \eta_\bi = \ci - \Ki \ri \) shows that the vectors \( \vi \)
-	are, in fact, dual variables.
-	Moreover, if \( K = 0 \), then \( \rmin = 0 \) and \( \eta \)
-	has the unique solution \( \eta_\bi = \Xbi^\top (y -  Xw) = \ci \).
-	That is, the dual parameters are the (unique) block correlation vectors.
+    One Lagrange dual of CGL is the following:
+    \begin{equation}\label{eq:dual-program}
+        \begin{aligned}
+            \max_{\eta, \rho} \;
+             & - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y) + \half \norm{y}_2^2                         \\
+             & \quad \quad \text{s.t.} \quad \eta + K \rho \in \Row(X), \; \norm{\eta_\bi}_2 \leq \lambda \; \forall \; \bi \in \calB,
+        \end{aligned}
+    \end{equation}
+    where \( \eta_\bi = \ci - \Ki \ri \) shows that the vectors \( \vi \)
+    are, in fact, dual variables.
+    Moreover, if \( K = 0 \), then \( \rmin = 0 \) and \( \eta \)
+    has the unique solution \( \eta_\bi = \Xbi^\top (y -  Xw) = \ci \).
+    That is, the dual parameters are the (unique) block correlation vectors.
 \end{lemma}
 \begin{proof}
-	We re-write the group Lasso problem as follows:
-	\begin{align*}
-		\min_{w} \half \norm{X z - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2
-		\quad \text{s.t.} \, \, z = w, \, \Ki^\top z_\bi \leq 0.
-	\end{align*}
-	The Lagrangian for this problem is
-	\begin{align*}
-		\calL(w, z, \eta, \rho)
-		 & = \half \norm{X z - y}_2^2 + \abr{\eta, z - w} + \abr{\rho, K^\top z} + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
-		 & = \half \norm{X z - y}_2^2 + \abr{\eta + K \rho, z} - \abr{\eta, w} + \lambda \sum_{\bi \in \calB} \norm{\wi}_2.
-	\end{align*}
-	Minimizing over \( z \), we find that stationarity implies
-	\[
-		X^\top (y - X z) = \eta + K \rho,
-	\]
-	so that \( \eta + K \rho \in \Row(X) \).
-	Solving this system, we find
-	\[
-		X^\top X z = X^\top y - \eta - K \rho \implies z = (X^\top X)^+ \sbr{X^\top y - \eta - K \rho} + c,
-	\]
-	where \( c \in \Null(X) \).
-	Let us minimize over \( w \) similarly.
-	The Lagrangian decouples block-wise in \( w \), so that
-	we must solve
-	\[
-		\min_{\wi} \lambda \norm{\wi}_2 - \abr{\eta_\bi, \wi},
-	\]
-	for each \( \bi \in \calB \).
-	The minimum value is achieved by the (negative) Fenchel conjugate of
-	\( \lambda \norm{\wi}_2 \)
-	evaluated at \( \eta_\bi \);
-	that is,
-	\[
-		\min_{\wi} \lambda \norm{\wi}_2 - \abr{\eta_\bi, \wi} = - \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda).
-	\]
-	Combining this with the expression for \( z \), we obtain
-	\begin{align*}
-		\calL(c, \eta, \rho)
-		 & = - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y) + \abr{\eta + K \rho, c}
-		- \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda)                                       \\
-		 & = - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y)
-		- \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda),
-	\end{align*}
-	where the second equality follows since \( \eta + K \rho \in \Row(X) \) and \( c \in \Null(X) \)
-	are orthogonal.
-	(Alternatively, one can observe that the dual problem is unbounded below
-	whenever \( \abr{c, \eta + K \rho} \neq 0 \).)
-	Thus, the dual problem is equal to
-	\begin{align*}
-		\max_{\eta, \rho} - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta _ K \rho - X^\top y)
-		- \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda)
-		- \mathds{1}(\eta + K \rho \in \Row(X)),
-	\end{align*}
-	which completes the derivation.
+    We re-write the group Lasso problem as follows:
+    \begin{align*}
+        \min_{w} \half \norm{X z - y}_2^2 + \lambda \sum_{\bi \in \calB} \norm{\wi}_2
+        \quad \text{s.t.} \, \, z = w, \, \Ki^\top z_\bi \leq 0.
+    \end{align*}
+    The Lagrangian for this problem is
+    \begin{align*}
+        \calL(w, z, \eta, \rho)
+         & = \half \norm{X z - y}_2^2 + \abr{\eta, z - w} + \abr{\rho, K^\top z} + \lambda \sum_{\bi \in \calB} \norm{\wi}_2 \\
+         & = \half \norm{X z - y}_2^2 + \abr{\eta + K \rho, z} - \abr{\eta, w} + \lambda \sum_{\bi \in \calB} \norm{\wi}_2.
+    \end{align*}
+    Minimizing over \( z \), we find that stationarity implies
+    \[
+        X^\top (y - X z) = \eta + K \rho,
+    \]
+    so that \( \eta + K \rho \in \Row(X) \).
+    Solving this system, we find
+    \[
+        X^\top X z = X^\top y - \eta - K \rho \implies z = (X^\top X)^+ \sbr{X^\top y - \eta - K \rho} + c,
+    \]
+    where \( c \in \Null(X) \).
+    Let us minimize over \( w \) similarly.
+    The Lagrangian decouples block-wise in \( w \), so that
+    we must solve
+    \[
+        \min_{\wi} \lambda \norm{\wi}_2 - \abr{\eta_\bi, \wi},
+    \]
+    for each \( \bi \in \calB \).
+    The minimum value is achieved by the (negative) Fenchel conjugate of
+    \( \lambda \norm{\wi}_2 \)
+    evaluated at \( \eta_\bi \);
+    that is,
+    \[
+        \min_{\wi} \lambda \norm{\wi}_2 - \abr{\eta_\bi, \wi} = - \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda).
+    \]
+    Combining this with the expression for \( z \), we obtain
+    \begin{align*}
+        \calL(c, \eta, \rho)
+         & = - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y)
+        + \abr{\eta + K \rho, c}
+        \\
+         & \hspace{4em} - \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda) \\
+         & = - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta + K \rho - X^\top y)
+        - \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda),
+    \end{align*}
+    where the second equality follows since \( \eta + K \rho \in \Row(X) \) and \( c \in \Null(X) \)
+    are orthogonal.
+    (Alternatively, one can observe that the dual problem is unbounded below
+    whenever \( \abr{c, \eta + K \rho} \neq 0 \).)
+    Thus, the dual problem is equal to
+    \begin{align*}
+         & \max_{\eta, \rho} - \half (\eta + K \rho - X^\top y) (X^\top X)^+ (\eta _ K \rho - X^\top y)
+        - \sum_{\bi \in \calB} \mathds{1}(\norm{\eta_\bi}_2 \leq \lambda)                               \\
+         & \hspace{4em} - \mathds{1}(\eta + K \rho \in \Row(X)),
+    \end{align*}
+    which completes the derivation.
 
-	Recalling \( z = w \) for any primal-dual optimal pair and
-	\[
-		X^\top (y - X z) = \eta + K \rho,
-	\]
-	shows that \( \eta_\bi = \ci - K \rho \) as claimed.
-	Moreover, if \( K = 0 \), then we may assume without loss of generality
-	that he corresponding dual vectors \( \ri \) are zero.
-	In this case, \( \eta_\bi = \ci \) and,
-	since \( \ci \) is unique, the dual solution must also be unique.
+    Recalling \( z = w \) for any primal-dual optimal pair and
+    \[
+        X^\top (y - X z) = \eta + K \rho,
+    \]
+    shows that \( \eta_\bi = \ci - K \rho \) as claimed.
+    Moreover, if \( K = 0 \), then we may assume without loss of generality
+    that he corresponding dual vectors \( \ri \) are zero.
+    In this case, \( \eta_\bi = \ci \) and,
+    since \( \ci \) is unique, the dual solution must also be unique.
 \end{proof}
 
 \begin{proposition}\label{prop:non-negative-regression}
-	Let \( \lambda > 0 \) and \( w \in \solfn(\lambda) \).
-	If \( \wi = 0 \), then any solution to \cref{eq:non-negative-regression}
-	is dual optimal for block \( \bi \).
+    Let \( \lambda > 0 \) and \( w \in \solfn(\lambda) \).
+    If \( \wi = 0 \), then any solution to \cref{eq:non-negative-regression}
+    is dual optimal for block \( \bi \).
 \end{proposition}
 \begin{proof}
-	Let \( \ri \) be a solution to \cref{eq:non-negative-regression}.
-	Since \( w \) is optimal and strong duality holds, there exists
-	some min-norm dual optimal vector \( \rmin \).
-	Moreover \( \rmin \) satisfies \( \rmin_\bi \geq 0 \) and
-	\[
-		\norm{\Ki \ri - \ci}^2_2 \leq \norm{\Ki \rmin_\bi - \ci}^2_2 \leq \lambda^2,
-	\]
-	so \( w \) is both feasible satisfies stationarity of the Lagrangian,
-	Finally, because \( \wi = 0 \), complementary slackness,
-	\[
-		[\ri]_j \cdot [\Ki]_j^\top \wi = 0,
-	\]
-	is verified for every \( j \in [a_\bi] \).
-	Since the KKT conditions are sufficient for primal-dual optimality, we
-	conclude that \( \ri \) is dual optimal.
-	This completes the proof.
+    Let \( \ri \) be a solution to \cref{eq:non-negative-regression}.
+    Since \( w \) is optimal and strong duality holds, there exists
+    some min-norm dual optimal vector \( \rmin \).
+    Moreover \( \rmin \) satisfies \( \rmin_\bi \geq 0 \) and
+    \[
+        \norm{\Ki \ri - \ci}^2_2 \leq \norm{\Ki \rmin_\bi - \ci}^2_2 \leq \lambda^2,
+    \]
+    so \( w \) is both feasible satisfies stationarity of the Lagrangian,
+    Finally, because \( \wi = 0 \), complementary slackness,
+    \[
+        [\ri]_j \cdot [\Ki]_j^\top \wi = 0,
+    \]
+    is verified for every \( j \in [a_\bi] \).
+    Since the KKT conditions are sufficient for primal-dual optimality, we
+    conclude that \( \ri \) is dual optimal.
+    This completes the proof.
 \end{proof}
 
