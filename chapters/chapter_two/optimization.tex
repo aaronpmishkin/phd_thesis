@@ -199,7 +199,6 @@ However, choosing \( \delta_k \) is challenging in practice.
 \begin{figure*}[t]
     \centering
     \includegraphics[width=0.9\linewidth]{figures/chapter_two/pp_main.pdf}
-    \vspace{-0.4cm}
     \caption{Performance profiles comparing (left) R-FISTA and MOSEK for the C-GReLU problem to Adam and SGD for NC-GReLU,
         and (right) the AL method and baselines for C-ReLU/NC-ReLU.
         A problem is solved when \( \rbr{F(x_k) - F(x^*)}/F(x^*) \leq 1 \), where \( F(x^*) \) is the smallest objective value found by any method.
@@ -209,7 +208,6 @@ However, choosing \( \delta_k \) is challenging in practice.
         R-FISTA and the AL method solve a higher proportion of problems faster than the baselines.
     }%
     \label{fig:performance-profiles}
-    \vspace{-0.4cm}
 \end{figure*}
 
 Instead, the AL method performs proximal-point iterations on the dual \citep{rockafellar1976monotone, rockafellar1976augmented} via the iterations,

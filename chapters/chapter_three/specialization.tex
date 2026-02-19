@@ -24,7 +24,6 @@ for the full ReLU problem:
     with \( p = |\tilde \calD_Z| \).
     Then the optimal set for the ReLU problem up to permutation/splitting
     symmetries is given as follows:
-    \vspace{-1ex}
     \begin{equation}\label{eq:relu-sol-fn}
         \begin{aligned}
             \hspace{-0.5em} \calO_\lambda
@@ -39,7 +38,6 @@ for the full ReLU problem:
         \end{aligned}
     \end{equation}
 \end{restatable}
-\vspace{-1ex}%
 Eq.~\eqref{eq:relu-sol-fn} abuses notation by using $\calS_\lambda$ as
 a subset of the neuron indices \( \cbr{1, \ldots 2p} \), where
 \( \cbr{1, \ldots p} \) index positive neurons for which \( \xi_i = +1 \)
@@ -62,7 +60,6 @@ problem given in the introduction.
 \begin{restatable}{proposition}{stationaryPoints}\label{prop:stationary-points}
     The set of stationary points of two-layer ReLU networks up to
     permutation/splitting symmetries is
-    \vspace{-0.5ex}%
     \begin{equation*}
         \begin{aligned}
             \calC_\lambda = \big\{
@@ -163,7 +160,6 @@ First we give a negative result for singular networks, that is, models
 where \( m < m^* \) and no convex reformulation exists.
 In this setting, the solution map can be made to behave
 arbitrarily poorly.
-\vspace{-0.5ex}
 \begin{restatable}{proposition}{oneNeuron}\label{prop:one-neuron}
     There exists \( (Z, y) \) for which \( \calO^* \)
     is not open nor is the model fit \( f_{W^{(1)}, W^{(2)}}(Z) \) continuous in
@@ -202,11 +198,9 @@ minimizes the sum of norms to the fourth power.
     optimal neural network which minimizes,
     \[
         r(W^{(1)}, W^{(2)}) = \sum_{i = 1}^m \norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4,
-        \vspace{-1ex}%
     \]
     and admits no neuron-merge symmetries.
 \end{restatable}
-\vspace{-1ex}%
 
 As a result, we can compute the \( r \)-minimal optimal ReLU network
 by solving Problem~\eqref{eq:min-norm-program}.

@@ -70,11 +70,9 @@ decomposition.
 \begin{restatable}{proposition}{closedFormDecomp}\label{prop:closed-form-decomp}
     Suppose \( X \) is full row-rank.
     If \( \calI = \cbr{i \in [n] : \abr{\tilde x_i, u} < 0 } \), then for every \( u \in \R^d \),
-    \vspace{-1ex}
     \[
         u = \rbr{u + w} - w, \text{where} \,  w = - \tilde X_{\calI}^\dagger \tilde X_{\calI} u,
     \]
-    \vspace{-1ex}
     is a valid decomposition onto \( \calK - \calK \) satisfying,
     \[
         \norm{u + w}_2 + \norm{w}_2 \leq 2 \norm{u}_2.
@@ -102,7 +100,6 @@ the cones \( \calK \) are very ``narrow''.
         \STATE \textbf{Return}: \((\bar v, \bar u)\)
     \end{algorithmic}
 \end{algorithm}
-\vspace{-1ex}
 When \( X \) is not full row-rank, we can solve
 \begin{equation}\label{eq:decomposition-program}
     \begin{aligned}
@@ -158,5 +155,4 @@ adjusting the regularization.
         each other via the cone decomposition procedure.
     }%
     \label{fig:relations}
-    \vspace{-0.3cm}
 \end{figure}
