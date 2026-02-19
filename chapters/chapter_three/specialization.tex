@@ -20,24 +20,24 @@ and \cref{prop:sol-fn-cgl}
 immediately allows us to characterize the solution set
 for the full ReLU problem:
 \begin{restatable}{theorem}{reluSolFn}\label{cor:relu-sol-fn}
-	Suppose \( m \geq m^* \) and \( \tilde D = \calD_Z \) (no sub-sampling),
-	with \( p = |\tilde \calD_Z| \).
-	Then the optimal set for the ReLU problem up to permutation/splitting
-	symmetries is
-	\vspace{-1ex}
-	\begin{equation}\label{eq:relu-sol-fn}
-		\begin{aligned}
-			\hspace{-0.5em} \calO_\lambda
-			\!= & \,
-			\big\{
-			(W_1, \! w_2) \!:\!
-			\, f_{W_1, w_2}(Z) \! = \! \hat y,
-			W_{1i} \!=\! (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i, \\
-			    & w_{2i} \!=\! \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
-			\alpha_i \!\geq\! 0, \, i \!\in\! [2p] \!\setminus\! \calS_\lambda \!\Rightarrow\! \alpha_i \!=\! 0
-			\big\}.
-		\end{aligned}
-	\end{equation}
+    Suppose \( m \geq m^* \) and \( \tilde D = \calD_Z \) (no sub-sampling),
+    with \( p = |\tilde \calD_Z| \).
+    Then the optimal set for the ReLU problem up to permutation/splitting
+    symmetries is
+    \vspace{-1ex}
+    \begin{equation}\label{eq:relu-sol-fn}
+        \begin{aligned}
+            \hspace{-0.5em} \calO_\lambda
+            \!= & \,
+            \big\{
+            (W^{(1)}, \! W^{(2)}) \!:\!
+            \, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y,
+            W^{(1)}_{\cdot, i} \!=\! (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i, \\
+                & W^{(2)}_{i} \!=\! \xi_i (\alpha_i \lambda)^{\sfrac{1}{2}},
+            \alpha_i \!\geq\! 0, \, i \!\in\! [2p] \!\setminus\! \calS_\lambda \!\Rightarrow\! \alpha_i \!=\! 0
+            \big\}.
+        \end{aligned}
+    \end{equation}
 \end{restatable}
 \vspace{-1ex}%
 Eq.~\eqref{eq:relu-sol-fn} abuses notation by using $\calS_\lambda$ as
@@ -53,30 +53,30 @@ transforms the polytope of solutions into a curved manifold.
 
 Choosing a sub-sampled set of patterns
 \( \tilde \calD \subset \calD_Z \) corresponds to finding a stationary
-point of the non-convex training problem \citep{wang2021hidden}.
+point of the non-convex training problem \citep{wang2022hidden}.
 Using this fact with \cref{cor:relu-sol-fn} finally justifies
 description of all stationary points of the ReLU
 problem given in the introduction.
 \begin{restatable}{proposition}{stationaryPoints}\label{prop:stationary-points}
-	The set of stationary points of two-layer ReLU networks up to
-	permutation/splitting symmetries is
-	\vspace{-0.5ex}%
-	\begin{equation*}
-		\begin{aligned}
-			\calC_\lambda = \big\{
-			 & (W_1, \! w_2) : \tilde \calD \! \subseteq \! \calD_Z,
-			\, f_{W_1, w_2}(Z) \! = \! \hat y_{\tilde \calD},                                             \\
-			 & W_{1i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i(\tilde \calD), \,
-			w_{2i} = \xi_i(\alpha_i \lambda)^{\sfrac{1}{2}},                                              \\
-			 & \alpha_i \geq 0, \, i \in [2 |\tilde \calD|] \setminus \calS_\lambda \implies \alpha_i = 0
-			\big\},
-		\end{aligned}
-	\end{equation*}
-	where \( \tilde \calD \) are sub-sampled activation patterns,
-	\( \hat y_{\tilde \calD} \) is the optimal model fit using
-	those patterns, and
-	\( v_i(\tilde \calD) = \ci(\tilde \calD) - \Ki \ri(\tilde \calD) \)
-	is determined by the fit and the dual parameters.
+    The set of stationary points of two-layer ReLU networks up to
+    permutation/splitting symmetries is
+    \vspace{-0.5ex}%
+    \begin{equation*}
+        \begin{aligned}
+            \calC_\lambda = \big\{
+             & (W^{(1)}, \! W^{(2)}) : \tilde \calD \! \subseteq \! \calD_Z,
+            \, f_{W^{(1)}, W^{(2)}}(Z) \! = \! \hat y_{\tilde \calD},                                     \\
+             & W^{(1)}_{\cdot, i} = (\sfrac{\alpha_{i}}{\lambda})^{\sfrac{1}{2}} v_i(\tilde \calD), \,
+            W^{(2)}_{i} = \xi_i(\alpha_i \lambda)^{\sfrac{1}{2}},                                         \\
+             & \alpha_i \geq 0, \, i \in [2 |\tilde \calD|] \setminus \calS_\lambda \implies \alpha_i = 0
+            \big\},
+        \end{aligned}
+    \end{equation*}
+    where \( \tilde \calD \) are sub-sampled activation patterns,
+    \( \hat y_{\tilde \calD} \) is the optimal model fit using
+    those patterns, and
+    \( v_i(\tilde \calD) = \ci(\tilde \calD) - \Ki \ri(\tilde \calD) \)
+    is determined by the fit and the dual parameters.
 \end{restatable}
 
 We note that since deeper networks are also related
@@ -91,13 +91,13 @@ Combining this with our results for CGL
 gives the following sufficient conditions.
 
 \begin{restatable}{proposition}{pUnique}\label{prop:p-unique}
-	Let \( \lambda > 0 \)
-	and suppose that the convex ReLU problem
-	has a unique solution.
-	Then the ReLU model solution is p-unique.
-	In particular,
-	if \( \cbr{D_i Z \vi}_\equi \) are linearly independent,
-	then the non-convex solution is p-unique.
+    Let \( \lambda > 0 \)
+    and suppose that the convex ReLU problem
+    has a unique solution.
+    Then the ReLU model solution is p-unique.
+    In particular,
+    if \( \cbr{D_i Z \vi}_\equi \) are linearly independent,
+    then the non-convex solution is p-unique.
 \end{restatable}
 
 For gated ReLU networks, it is also sufficient to check the blocks
@@ -107,13 +107,13 @@ we give simple sufficient conditions for sub-sampled
 convex ReLU programs to be p-unique.
 
 \begin{restatable}{proposition}{reluUnique}\label{prop:relu-unique}
-	Let \( \lambda > 0 \) and \( p = |\tilde \calD| \).
-	Suppose \( Z \) follows a continuous probability distribution
-	and \( \nnz(D_i) \geq p \cdot d \) for every \( D_i \in \tilde \calD \).
-	If \( \equi \) does not contain two blocks with the same
-	activation pattern, then
-	the sub-sampled convex ReLU program has a p-unique solution
-	almost surely.
+    Let \( \lambda > 0 \) and \( p = |\tilde \calD| \).
+    Suppose \( Z \) follows a continuous probability distribution
+    and \( \nnz(D_i) \geq p \cdot d \) for every \( D_i \in \tilde \calD \).
+    If \( \equi \) does not contain two blocks with the same
+    activation pattern, then
+    the sub-sampled convex ReLU program has a p-unique solution
+    almost surely.
 \end{restatable}
 
 \cref{prop:relu-unique} requires \( n \) to be much greater than
@@ -125,25 +125,25 @@ activation pattern before solving the convex reformulation.
 \input{results/chapter_three/uci_tuning_paper}
 
 \begin{figure*}[t]
-	\centering
-	\includegraphics[width=0.98\textwidth]{figures/chapter_three/uci_pruning_acc.pdf}
-	\vspace{-2.5ex}
-	\caption{Pruning neurons from two-layer ReLU networks on binary
-		classification tasks from the UCI repository.
-		We compare our theory-inspired approach (\textbf{Optimal/LS}),
-		against removing the neuron with smallest \( \ell_2 \) norm
-		(\textbf{Neuron Magnitude}),
-		removing the neuron with the smallest weighted gradient norm
-		(\textbf{Gradient Magnitude}), and random pruning (\textbf{Random}).
-		For Optimal/LS, we use \cref{alg:pruning-solutions-nn}, which begins
-		with optimal pruning and then switches to a least-squares heuristic.
-		We plot test accuracy against number of active neurons.
-		Optimal/LS dominates the baseline methods on every dataset
-		and even improves test accuracy on \texttt{breast-cancer}
-		and \texttt{fertility}.
-	}
-	\label{fig:uci-pruning-acc}
-	\vspace{-2ex}
+    \centering
+    \includegraphics[width=0.98\textwidth]{figures/chapter_three/uci_pruning_acc.pdf}
+    \vspace{-2.5ex}
+    \caption{Pruning neurons from two-layer ReLU networks on binary
+        classification tasks from the UCI repository.
+        We compare our theory-inspired approach (\textbf{Optimal/LS}),
+        against removing the neuron with smallest \( \ell_2 \) norm
+        (\textbf{Neuron Magnitude}),
+        removing the neuron with the smallest weighted gradient norm
+        (\textbf{Gradient Magnitude}), and random pruning (\textbf{Random}).
+        For Optimal/LS, we use \cref{alg:pruning-solutions-nn}, which begins
+        with optimal pruning and then switches to a least-squares heuristic.
+        We plot test accuracy against number of active neurons.
+        Optimal/LS dominates the baseline methods on every dataset
+        and even improves test accuracy on \texttt{breast-cancer}
+        and \texttt{fertility}.
+    }
+    \label{fig:uci-pruning-acc}
+    \vspace{-2ex}
 \end{figure*}
 
 \textbf{Pruning}:
@@ -160,20 +160,20 @@ reformulation.
 The complexity of this method is as follows.
 
 \begin{restatable}{proposition}{minimalComplexity}\label{prop:minimal-complexity}
-	Suppose \( r = \text{rank}(X) \).
-	Then an optimal and minimal ReLU network with at most
-	\( m^* \leq n \) non-zero neurons can be computed in
-	\( O\rbr{d^3 r^3 (n/r)^{3r}} \)
-	time.
+    Suppose \( r = \text{rank}(X) \).
+    Then an optimal and minimal ReLU network with at most
+    \( m^* \leq n \) non-zero neurons can be computed in
+    \( O\rbr{d^3 r^3 (n/r)^{3r}} \)
+    time.
 \end{restatable}
 
 As a consequence, the complexity of computing
 an optimal and minimal ReLU network is fully polynomial when \( r \)
 is bounded.
 We also have a more sensitive statement for the minimal width: if
-\( (W_1^*, w_2^*) \) are optimal weights for the ReLU model, then
+\( (W^{*(1)}, W^{*(2)}) \) are optimal weights for the ReLU model, then
 \( m^* \) is at most the dimension of
-\( \Span \cbr{(X W^*_{1i})_+}_i \)
+\( \Span \cbr{(X W^{*(1)}_{\cdot, i})_+}_i \)
 and exactly this dimension under group dependence
 (\cref{prop:minimal-sol-characterization}).
 We experiment with pruning ReLU networks using this approach in
@@ -187,9 +187,9 @@ In this setting, the solution map can be made to behave
 arbitrarily poorly.
 \vspace{-0.5ex}
 \begin{restatable}{proposition}{oneNeuron}\label{prop:one-neuron}
-	There exists \( (Z, y) \) for which \( \calO^* \)
-	is not open nor is the model fit \( f_{W_1, w_2}(Z) \) continuous in
-	\( \lambda \).
+    There exists \( (Z, y) \) for which \( \calO^* \)
+    is not open nor is the model fit \( f_{W^{(1)}, W^{(2)}}(Z) \) continuous in
+    \( \lambda \).
 \end{restatable}
 %The proof for \cref{prop:one-neuron} uses an alternative reformulation of
 %two-layer ReLU network which holds regardless of network width.
@@ -197,12 +197,12 @@ Combined with the next result, \cref{prop:one-neuron} indicates
 that the threshold \( m^* \) may be crucial for continuity to extend
 to the non-convex parameterization.
 \begin{corollary}\label{cor:relu-continuity}
-	Suppose \( m \geq m^* \).
-	Then the optimal model fit for two-layer gated ReLU networks
-	is continuous at all \( \lambda > 0 \).
-	Similarly, if the (gated) ReLU solution is p-unique on an open
-	interval \( \Lambda \), then the regularization path is also continuous
-	on \( \Lambda \) up to permutations of the weights.
+    Suppose \( m \geq m^* \).
+    Then the optimal model fit for two-layer gated ReLU networks
+    is continuous at all \( \lambda > 0 \).
+    Similarly, if the (gated) ReLU solution is p-unique on an open
+    interval \( \Lambda \), then the regularization path is also continuous
+    on \( \Lambda \) up to permutations of the weights.
 \end{corollary}
 Together, \cref{cor:relu-continuity} and \cref{prop:relu-unique}
 are concrete conditions for the model fit and regularization path
@@ -219,14 +219,14 @@ However, all optimal ReLU models have the same
 Minimizing the Euclidean norm of solutions to the convex reformulation instead
 minimizes the sum of norms to the fourth power.
 \begin{restatable}{lemma}{minNormNN}\label{lemma:min-norm-nn}
-	The minimum \( \ell_2 \)-norm solution to the convex reformulation
-	of a (gated) ReLU model corresponds to the
-	optimal neural network which minimizes,
-	\[
-		r(W_1, w_2) = \sum_{i = 1}^m \norm{W_{1i}}_2^4 + \norm{w_{2i}}_2^4,
-		\vspace{-1ex}%
-	\]
-	and admits no neuron-merge symmetries.
+    The minimum \( \ell_2 \)-norm solution to the convex reformulation
+    of a (gated) ReLU model corresponds to the
+    optimal neural network which minimizes,
+    \[
+        r(W^{(1)}, W^{(2)}) = \sum_{i = 1}^m \norm{W^{(1)}_{\cdot, i}}_2^4 + \norm{W^{(2)}_{i}}_2^4,
+        \vspace{-1ex}%
+    \]
+    and admits no neuron-merge symmetries.
 \end{restatable}
 \vspace{-1ex}%
 

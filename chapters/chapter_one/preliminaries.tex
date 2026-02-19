@@ -88,7 +88,50 @@ from an optimization perspective, it is desirable because it gives curvature to
 objective function, ensuring that \( F_\lambda \) is coercive and that the
 level sets are compact.
 
+We conclude by introducing background on convex reformulations.
+In the following, we assume that \( \theta \) parameterizers a two-layer,
+scalar output ReLU network as described in \cref{eq:two-layer-scalar-output}.
+For such networks, convex reformulations re-write \cref{eq:regularized-erm} as
+a convex program by enumerating the activations a single neuron in the
+hidden layer can take on for fixed \( X \) as follows:
+\[ \calD_Z = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}. \]
+This set grows as \(|\calD_Z| \le O(r(n/r)^r)\), where \(r := \text{rank}(X)\)
+\citep{pilanci2020convexnn}.
+Each ``activation pattern'' \( D_i \in \calD_{X} \) is associated with
+a convex cone,
+\[
+    \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
+\]
+If \( u \in \calK_i \), then \( u \) matches \( D_i \), meaning \( D_i X u = \rbr{X u}_+ \).
+For any subset \( \tilde \calD \subseteq \calD_Z \),
+the convex reformulation is,
+\begin{equation}\label{eq:convex-relu-mlp}
+    \begin{aligned}
+        \min_{v, w} \, & L\Big(\sum_{D_i \in \tilde \calD} D_i X (v_i - u_i), y\Big)+\lambda\sum_{D_i \in \tilde \calD}\norm{v_i}_2+\norm{u_i}_2 \\
+                       & \text{s.t.} \quad v_i, u_i \in \calK_i.
+    \end{aligned}
+\end{equation}
+\citet{pilanci2020convexnn} prove that this program and \cref{eq:non-convex-relu-mlp}
+are equivalent in the following sense:
+if \( \tilde \calD = \calD_Z \) and \( m \geq m^* \) for some \( m^* \leq n + 1 \),
+then the two programs have the same optimal value and every solution to the convex program
+can be mapped to a solution of the non-convex training problem and vice-versa.
+Given a solution \( \rbr{v^*, u^*} \), optimal weights
+for the ReLU problem are given by
+\begin{equation}\label{eq:convex-to-relu}
+    \begin{aligned}
+        W^{(1)}_{\cdot, i} & = v_i^*/ \sqrt{\norm{v_i^*}}, \quad W^{(2)}_{i} = \sqrt{\norm{v_i^*}}
+        \\
+        W_{1j}             & = u_i^*/ \sqrt{\norm{u_i^*}}, \quad w_{2j} = -\sqrt{\norm{u_i^*}},
+    \end{aligned}
+\end{equation}
+where we use the convention that \( 0/0 = 0 \).
 
+In practice, learning with \( \calD_{X} \) is intractable except when the data
+are low rank.
+In the following chapter, we provide refined conditions on \( \tilde \calD \)
+which are sufficient for \cref{eq:convex-relu-mlp} to be equivalent to the
+non-convex problem.
 
 %Our analysis will work by considering the space of activation patterns that
 %can be attained by a single ReLU neuron.

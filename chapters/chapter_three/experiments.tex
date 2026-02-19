@@ -51,10 +51,10 @@ We use two-layer ReLU networks and start pruning from the model given
 by optimizing the convex reformulation.
 We compare four strategies:
 (i) pruning neurons optimally using
-\cref{alg:pruning-solutions-nn} until \( \cbr{(XW_{1i})_+}_\act \) are linearly
+\cref{alg:pruning-solutions-nn} until \( \cbr{(XW^{(1)}_{\cdot, i})_+}_\act \) are linearly
 independent and then approximately using least-squares fits;
 and (ii) by removing the neuron with the smallest magnitude,
-\( \norm{W_{1i} \cdot w_{2i}} \);
+\( \norm{W^{(1)}_{\cdot, i} \cdot W^{(2)}_{i}} \);
 (iii) by removing the neuron with the smallest weighted gradient;
 and (iv) by random pruning.
 

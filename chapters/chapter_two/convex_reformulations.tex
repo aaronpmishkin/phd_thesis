@@ -13,29 +13,29 @@ following optimization problem:
     + \frac{\lambda}{2}\sum_{i=1}^m \norm{W^{(1)}_{\cdot, i}}_2^2 + |W^{(2)}_{i}|^2,
 \end{equation}
 where we recall that \( \lambda \geq 0 \) is the regularization strength.
-While Problem~\ref{convex-forms:eq:non-convex-relu-mlp} is non-convex,
-\citet{pilanci2020convexnn} show that there is an equivalent convex
-optimization problem with the same optimal value if \( m \geq m^* \) for some
-\( m^* \leq n + 1 \).
-Furthermore, \citet{wang2021hidden} showed that all optimal solutions to
+Problem~\ref{convex-forms:eq:non-convex-relu-mlp} is non-convex, but, as we
+have already mentioned, \citet{pilanci2020convexnn} show that there is an
+equivalent convex optimization problem with the same optimal value if \( m \geq
+m^* \) for some \( m^* \leq n + 1 \).
+Furthermore, \citet{wang2022hidden} showed that all optimal solutions to
 \eqref{convex-forms:eq:non-convex-relu-mlp} can be found via the convex
 problem.
 
 \subsection{Sub-Sampled ReLU Convex Programs}\label{sec:relu-models}
 
-The convex reformulation for the NC-ReLU objective is based on ``enumerating'' the possible activations of a single neuron in the hidden layer.
-The activation patterns a ReLU neuron \( \rbr{X w}_{+} \) can take for fixed \( X \) are described by
-\[ \calD_X = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}, \]
-which grows as \(|\calD_X| \in O(r(n/r)^r)\) for \(r := \text{rank}(X)\) \citep{pilanci2020convexnn}.
-For \( D_i \in \calD_{X} \), the set of vectors \( u \) which achieve the corresponding activation pattern, meaning \( D_i X u = \rbr{X u}_+ \), is the convex cone,
-\[
-    \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
-\]
-For any subset \( \tilde \calD \subseteq \calD_X \), we define the sub-sampled convex optimization problem (C-ReLU):
+The convex reformulation for the NC-ReLU objective is based on
+the possible activations of a single neuron in the hidden layer.
+Recall that the activation patterns a ReLU neuron \( \rbr{X w}_{+} \) can take
+for fixed \( X \) are described by
+\[ \calD_X = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}. \]
+In the worst case, the number of activation patterns grows exponentially in the
+rank of the data matrix \citep{pilanci2020convexnn}.
+For any subset \( \tilde \calD \subseteq \calD_X \), we define the sub-sampled
+convex optimization problem (C-ReLU):
 \begin{equation}\label{convex-forms:eq:convex-relu-mlp}
     \begin{aligned}
-            \min_{v, u} \, & \calL\Big(  \sum_{D_i \in \tilde \calD}   D_i X (v_i  -  u_i), y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2 + \norm{u_i}_2. \\
-                              & \text{s.t.} \quad v_i, u_i \in \calK_i
+        \min_{v, u} \, & \calL\Big(  \sum_{D_i \in \tilde \calD}   D_i X (v_i  -  u_i), y\Big) + \lambda \sum_{D_i \in \tilde \calD} \norm{v_i}_2 + \norm{u_i}_2. \\
+                       & \text{s.t.} \quad v_i, u_i \in \calK_i
     \end{aligned}
 \end{equation}
 
@@ -117,9 +117,9 @@ C-GReLU is equivalent to training this gated ReLU network.
     \tilde \calG = \cbr{g_i : D_i \in \tilde \calD} \).
     Then, C-GReLU is equivalent to the following gated ReLU problem:
     \begin{equation}\label{convex-forms:eq:gated-relu-mlp}
-        \textbf{NC-GReLU}: \, \min_{W^{(1)}, W^{(2)}} \calL\Big(\sum_{g_i \in \tilde \calG} 
-         \phi_{g_i}(X, W^{(1)}_{\cdot, i})W^{(2)}_{i}, y\Big) + \frac{\lambda}{2}
-         \sum_{g_i \in \tilde \calG} \norm{W^{(1)}_{\cdot, i}}_2^2 + \abs{W^{(2)}_{i}}^2. 
+        \textbf{NC-GReLU}: \, \min_{W^{(1)}, W^{(2)}} \calL\Big(\sum_{g_i \in \tilde \calG}
+        \phi_{g_i}(X, W^{(1)}_{\cdot, i})W^{(2)}_{i}, y\Big) + \frac{\lambda}{2}
+        \sum_{g_i \in \tilde \calG} \norm{W^{(1)}_{\cdot, i}}_2^2 + \abs{W^{(2)}_{i}}^2.
     \end{equation}
 \end{restatable}
 See \cref{app:convex-forms} for proof.

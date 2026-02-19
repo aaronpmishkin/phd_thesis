@@ -7,8 +7,8 @@
 	The two-layer ReLU training problem with unregularized bias,
 	\begin{equation}\label{eq:1d-relu}
 		\begin{aligned}
-			\min_{w_1, w_2, b} \half \norm{\sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2 - y}_2^2
-			+ \frac{\lambda}{2} \norm{w_1}^2_2 + \norm{w_2}_2^2,
+			\min_{w_1, W^{(2)}, b} \half \norm{\sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2 - y}_2^2
+			+ \frac{\lambda}{2} \norm{w_1}^2_2 + \norm{W^{(2)}}_2^2,
 		\end{aligned}
 	\end{equation}
 	is equivalent to the following Lasso problem:
@@ -30,7 +30,7 @@
 	Finally, solutions to the Lasso problem can be mapped to solutions of the
 	non-convex program as follows:
 	\begin{equation}
-		w_{1i}, w_{2i}, b_{1i} =
+		w_{1i}, W^{(2)}_{i}, b_{1i} =
 		\begin{cases}
 			\frac{|v_i|}{\sqrt{|v_i|}}, \text{sign}(v_i) \sqrt{|v_i|}, - Z_i \frac{|v_i|}{\sqrt{|v_i|}} & \mbox{if \( v_i \neq 0, i \leq n-1 \)} \\
 			-\frac{|v_i|}{\sqrt{|v_i|}}, \text{sign}(v_i) \sqrt{|v_i|}, Z_i \frac{|v_i|}{\sqrt{|v_i|}}  & \mbox{if \( v_i \neq 0, i \leq n-1 \)} \\
@@ -46,28 +46,28 @@
 	problem:
 	\begin{equation}
 		\begin{aligned}
-			\min_{w_1, w_2, b_1, b_2} & \half \norm{\sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2 - y}_2^2 + \lambda \norm{w_2}_1 \\
+			\min_{w_1, W^{(2)}, b_1, b_2} & \half \norm{\sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2 - y}_2^2 + \lambda \norm{W^{(2)}}_1 \\
 			                          & \hspace{5em} \text{ s.t. } w_{1i} \in \cbr{+1 , -1}.
 		\end{aligned}
 	\end{equation}
-	Now we introducing the constraint \( a = \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2 \)
+	Now we introducing the constraint \( a = \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2 \)
 	so that we may compute the dual problem,
 	\begin{align*}
-		p^* & = \min_{w_1, w_2, b_1, b_2, a}
-		\half \norm{a - y}_2^2 + \lambda \norm{w_1}^2_2 + \norm{w_2}_2^2                                                                                                    \\
-		    & \hspace{5em} \text{ s.t. } a = \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2, \, w_{1i} \in \cbr{+1, -1}
+		p^* & = \min_{w_1, W^{(2)}, b_1, b_2, a}
+		\half \norm{a - y}_2^2 + \lambda \norm{w_1}^2_2 + \norm{W^{(2)}}_2^2                                                                                                    \\
+		    & \hspace{5em} \text{ s.t. } a = \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2, \, w_{1i} \in \cbr{+1, -1}
 		\intertext{
 			Forming the Lagrangian and infimizing over the primal parameters,
 		}
 		d(\eta)
-		    & = \min_{w_1, w_2, b_1, b_2, a} \half \norm{a - y}_2^2 + \abr{\eta, a}
-		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2} + \lambda \norm{w_2}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1})                                          \\
-		    & = \min_{w_1, w_2, b_1, b_2} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
-		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i} + b_2} + \lambda \norm{w_2}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1})                                          \\
-		    & = \min_{w_1, w_2, b_1} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
-		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ w_{2i}} + \lambda \norm{w_2}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1}) - \mathds{1}_{\{0\}}(\eta^\top \mathds{1})   \\
-		    & = \min_{w_1, w_2, b_1} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
-		+ \abr{w_{2}, (Z w_{1}^\top + b_{1i} \mathds{1})_+ \eta} + \lambda \norm{w_2}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1}) - \mathds{1}_{\{0\}}(\eta^\top \mathds{1}) \\
+		    & = \min_{w_1, W^{(2)}, b_1, b_2, a} \half \norm{a - y}_2^2 + \abr{\eta, a}
+		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2} + \lambda \norm{W^{(2)}}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1})                                          \\
+		    & = \min_{w_1, W^{(2)}, b_1, b_2} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
+		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i} + b_2} + \lambda \norm{W^{(2)}}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1})                                          \\
+		    & = \min_{w_1, W^{(2)}, b_1} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
+		+ \abr{\eta, \sum_{i=1}^m (Z w_{1i} + b_{1i})_+ W^{(2)}_{i}} + \lambda \norm{W^{(2)}}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1}) - \mathds{1}_{\{0\}}(\eta^\top \mathds{1})   \\
+		    & = \min_{w_1, W^{(2)}, b_1} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
+		+ \abr{W^{(2)}, (Z w_{1}^\top + b_{1i} \mathds{1})_+ \eta} + \lambda \norm{W^{(2)}}_1 + \mathds{1}_{\cbr{+1, -1}^m}(w_{1}) - \mathds{1}_{\{0\}}(\eta^\top \mathds{1}) \\
 		    & = \min_{w_1, b_1} \half \norm{\eta - y}_2^2 + \half \norm{y}^2_2
 		- \mathds{1}(\norm{(Z w_{1}^\top + b_{1i} \mathds{1})_+ \eta}_\infty \leq \lambda) + \mathds{1}_{\cbr{+1, -1}^m}(w_{1}) - \mathds{1}_{\{0\}}(\eta^\top \mathds{1}).
 	\end{align*}

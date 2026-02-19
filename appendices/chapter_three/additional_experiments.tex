@@ -151,14 +151,14 @@ We modify the tolerances of this method to use \( \tau = 10^{-8} \) for measurin
 both primal convergence and violation of the constraints.
 
 Pruning by neuron magnitude is straightforward: we sort the neurons
-by \( \norm{W_{1i} w_{2i}}_2 \), which measures the total magnitude of the
+by \( \norm{W^{(1)}_{\cdot, i} W^{(2)}_{i}}_2 \), which measures the total magnitude of the
 neuron, and then drop the smallest one.
 For pruning by gradient norm, we compute
-\( G_{1i} = \nabla_{W_{1i}} L(f_{W_1, w_2}(Z), y) \),
-\( g_{2i} = \nabla_{W_{2i}} L(f_{W_1, w_2}(Z), y) \) and then score each
+\( G_{1i} = \nabla_{W^{(1)}_{\cdot, i}} L(f_{W^{(1)}, W^{(2)}}(Z), y) \),
+\( g_{2i} = \nabla_{W_{2i}} L(f_{W^{(1)}, W^{(2)}}(Z), y) \) and then score each
 neuron as
 \[
-    s_i = \norm{W_{1i} \cdot G_{1i} w_{2i} g_{2i}}_2,
+    s_i = \norm{W^{(1)}_{\cdot, i} \cdot G_{1i} W^{(2)}_{i} g_{2i}}_2,
 \]
 where \( \cdot \) indicates the element-wise product.
 The neuron with smallest score is zeroed.
@@ -168,7 +168,7 @@ variation of a linearization of the loss in neuron \( i \).
 For Random, we simply select a neuron from a uniform random distribution.
 
 For Optimal/LS, we start by using \cref{alg:pruning-solutions} to prune
-until no linear dependence exists amongst the neuron fits \( D_i Z W_{1i} \).
+until no linear dependence exists amongst the neuron fits \( D_i Z W^{(1)}_{\cdot, i} \).
 At this point, we choose \( \beta \) to minimize the squared-error
 in the training fit.
 We choose the neuron to prune by selecting the index that minimizing the residual

@@ -9,25 +9,51 @@ Limited results exist beyond the lasso.
 while \citet{yuan2006model} show the group lasso is piece-wise linear
 when \( X \) is orthogonal.
 \citet{roth2008group} partially characterize the group lasso solution set,
-while \citet{vaiter2012dof} derive stability results and the degrees-of-freedom.
-
-\textbf{Convex Reformulations}:
-Convex reformulations for neural networks have rapidly advanced
-since \citet{pilanci2020convexnn};
-convolutions \citep{ergen2021implicit, gupta2021exact},
-vector-outputs \citep{sahiner2021vector}, batch-norm
-\citep{ergen2021demystifying}, and deeper networks \citep{ergen2021beyond}
-have all been explored.
-
+while \citet{vaiter2012dof} derive stability results and degrees-of-freedom
+for the group lasso.
 
 \textbf{Neural Network Solution Sets}:
-Characterizations of solution sets are largely empirical.
-Mode connectivity has been studied extensively,
-\citet{garipov2018mode, draxler2018barriers}.
-\citet{nguyen2019connected, kuditipudi2019connectivity}
-attempt to theoretically explain mode connectivity.
-Sensitivity is connected to differentiable optimization
-layers \citep{agrawal2019differentiable} and hypergradient descent
-\citep{baydin2017online}.
-We refer to \citet{bialock2020pruning} for an overview on pruning.
+The most similar work is by \citet{cooper2021global}, who show that the
+solution sets of over-parameterized ReLU networks with smooth activations are
+low-dimensional manifolds.
+This is consistent with our work, which establishes that two-layer networks
+with non-smooth ReLU activations also have optimal sets living on
+low-dimensional manifolds.
+However, our proof is quite different;
+we construct and analyze the optimal set, while \citet{cooper2021global}
+provide only an existence result and do not characterize the structure of the
+optimal manifold.
 
+Another related area of research focuses on embedding principles.
+The first work in this area is by \citet{fukumizu2000plateau}, who show
+that stationary points of two-layer neural networks are preserved as the
+hidden layer increases in width.
+Follow-up work establishes similar embedding principles for adding single neurons
+to deep neural networks \citep{zhang2021embedding} and for adding entire
+layers \citep{bai2022depth}.
+The results are largely unrelated to optimization, although
+\citet{bai2022depth} argue that adding additional layers can convert local
+minima to saddle-points, allowing for SGMs to escape and find global optima
+\citep{lee2016escape}.
+
+Other partial characterizations of solution sets are inspired by empirical
+observations.
+For example, mode connectivity --- the idea that global optimal are connected
+by linear or non-linear paths in weight-space --- has been observed
+experimentally by \citet{garipov2018mode, draxler2018barriers}.
+Follow-up work \citet{nguyen2019connected, kuditipudi2019connectivity} give
+conditions on the network architecture under which mode connectivity is
+guaranteed to hold.
+After publication of the work presented in this chapter, \citet{kim2024convex}
+leveraged our description of the optimal set for a thorough description of how
+mode connectivity evolves with network width.
+
+\textbf{Sensitivity, Stability, and Pruning}:
+See \citet{fiacco1990sensitivity} for a review of classical sensitivity results
+from optimization theory;
+similar to our work, these theorems are largely focused on computing gradients
+of the optimal value function and optimal solution.
+In the machine learning literature, gradients of this type have been explored
+as part of differentiable optimization layers \citep{agrawal2019differentiable}
+and hypergradient descent \citep{baydin2017online}.
+We refer to \citet{bialock2020pruning} for an overview on pruning.
