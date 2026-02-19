@@ -16,16 +16,16 @@ sensitivity, and sparsity.
 As noted in \cref{chapter:introduction}, characterizing globally optimal neural
 networks is challenging because stationarity of the training objective does not
 imply optimality of the network weights.
-In contrast, solutions to the convex reformulations are completely
+In contrast, solutions to the convex reformulation are completely
 characterized by the KKT conditions;
 because every solution to the non-convex training problem corresponds to some
 optimal convex reformulation \citep{wang2022hidden}, these KKT conditions
-can be extended to the non-convex program.
-We focus on the convex reformulation for two-layer networks with ReLU activation
-functions and weight decay regularization.
-As we saw in the preceding chapter, the resulting problem is related to the
-group lasso \citep{yuan2006model} and induces \emph{neuron sparsity} in the
-network.
+can be mapped onto the non-convex program to obtain a complete description
+of the optimal set.
+We obtain a similar characterization for all stationary points of the
+non-convex program by leveraging their relationship with sub-sampled convex
+reformulations \citep{wang2022hidden}.
+
 
 \begin{figure}[t]
     \centering
@@ -40,10 +40,15 @@ network.
     \label{fig:solution-set}
 \end{figure}
 
+We focus on the convex reformulation for two-layer networks with ReLU activation
+functions and weight decay regularization.
+As we saw in the preceding chapter, the resulting problem is related to the
+group lasso \citep{yuan2006model} and induces \emph{neuron sparsity} in the
+network.
 Unlike before, we use \( Z \in \R^{n \times d} \) to denote the data matrix and
 reserve \( X \) for a different object.
 The reason for this and will become clear shortly and context will make
-usage clear.
+our usage clear.
 Recall that the prediction function for two-layer ReLU networks is
 \begin{equation*}
     f_{W^{(1)}, W^{(2)}}(Z) = \sum_{i=1}^m \rbr{Z W^{(1)}_{\cdot, i}}_+ W^{(2)}_{i},
@@ -128,8 +133,8 @@ In particular, we give new sufficient conditions for (i) the group lasso
 to be unique, (ii) global continuity of the group lasso model fit, and (iii)
 weak differentiability of the solution function for gated ReLU networks.
 
-The chapter is structured as follows: we cover related work in
-\cref{sec:sol-fn-related-work} and introduce notation in \cref{sec:notation}.
+The chapter is structured as follows: 
+we cover additional related work in \cref{sec:sol-fn-related-work}.
 \cref{sec:cgl} analyzes CGL and \cref{sec:specialization} interprets these
 results in the specific context of two-layer ReLU networks.
 \cref{sec:sol-fn-experiments} concludes with experiments.
