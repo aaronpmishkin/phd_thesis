@@ -3,15 +3,18 @@
 \section{Introduction}\label{sec:intro}
 
 The goal of this chapter is to take a step towards making optimization for
-two-layer neural networks a reliable technology.
-A technology is robust and consistent, comes with guarantees, and can be
-employed without specialist knowledge.
-Despite their popularity, current methods for training neural networks fail at
-these criteria.
-For researchers, the result has been a fantastic proliferation of new ideas as
-the machine learning community explores non-convex optimization.
-For practitioners, however, the outcome is a crowded field of competing
+two-layer neural networks as easy as fitting generalized linear models.
+Good optimizers for neural networks should be robust and consistent, come with
+optimality and convergence rate guarantees, and be easy to use without
+specialist knowledge.
+While recent research in optimization has created a fantastic proliferation of
+SGMs for training neural networks, new methods generally fail to satisfy even
+these basic criteria.
+The large number of new methods also creates additional problems for
+practitioners, who now must select from a crowded field of competing
 algorithms.
+This is usually achieved using expensive and time-consuming cross-validation
+experiments.
 
 \begin{figure}[t]
     \centering
@@ -31,9 +34,9 @@ algorithms.
     \label{fig:synthetic-classification}
 \end{figure}
 
-In what follows, we show how to efficiently and reliably perform global
-optimization for shallow ReLU networks by minimizing convex reformulations of
-the training objective.
+In what follows, we take a markedly different approach and show how to
+efficiently and reliably perform global optimization for shallow ReLU networks
+by minimizing convex reformulations of the training objective.
 Specifically, we develop fast optimization algorithms for two-layer ReLU models
 by carefully studying the space of equivalent models.
 We prove that unregularized ReLU networks can be trained by decomposing the
