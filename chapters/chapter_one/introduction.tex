@@ -73,10 +73,24 @@ applied to non-smooth, non-convex neural networks.
 Instead, practitioners are forced to rely on domain knowledge and costly,
 input-intensive algorithms like grid-search.
 
+\begin{figure}[t]
+    \centering
+    \input{figures/chapter_one/non_convex.tex}
+    \caption{Illustration of critical points for a non-convex function.
+        Although \( \tilde{x}_1, \tilde{x}_2 \), and \( x^* \) are all
+        stationary points of \( f \), only \( x^* \) is a global minimum.
+        In comparison, \( \tilde{x}_1 \) is a local minimum and 
+        \( \tilde{x}_2 \) is a local maximum.
+        Characterizing global minima is challenging without stronger
+        optimality conditions.
+    }
+    \label{fig:non-convex}
+\end{figure}
+
 Non-convexity is also the main barrier to understanding basic properties of the
 neural network training problem.
 For non-convex problems, stationarity of the training objective does not imply
-global optimality of the network weights.
+global optimality of the network weights (see \cref{fig:non-convex}).
 Without strong optimality conditions, characterizations of global optima have
 been limited to embedding principles
 \citep{fukumizu2000plateau, zhang2021embedding}, mode connectivity

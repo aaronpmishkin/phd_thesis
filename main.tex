@@ -79,6 +79,18 @@
 %% (optional) load tikz and PGFplots
 \input{macros/plots}
 
+\usetikzlibrary{shapes, arrows}
+\usetikzlibrary{decorations.pathreplacing, calligraphy}
+
+\tikzstyle{Input}=[minimum size=0.5cm, fill=none, line width = 0.5mm, draw=black, shape=circle, text=black]
+\tikzstyle{Hidden}=[minimum size=0.4cm, fill=blue, line width = 0.5mm, draw=blue, shape=circle, text=black]
+\tikzstyle{Splits}=[inner sep=0.03cm, minimum size=0.3cm, line width = 0.3mm, draw=blue, shape=circle, text=black]
+\tikzstyle{Output}=[minimum size=0.3cm, fill=white, line width = 0.5mm, draw=black, shape=circle, text=black]
+
+% Edge styles
+\tikzstyle{arrow}=[line width = 0.5mm]
+
+
 %% certain types of theses require special title page format.  See the
 %% style file for the full list.  An example would be that for some of
 %% the language departments. 
@@ -118,12 +130,9 @@
 
 \include{chapters/chapter_one/chapter_one.tex}
 
-
 \include{chapters/chapter_two/chapter_two.tex}
 
-
 \include{chapters/chapter_three/chapter_three.tex}
-
 
 \include{chapters/chapter_four/deep_reformulations.tex}
 

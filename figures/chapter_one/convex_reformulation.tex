@@ -1,0 +1,94 @@
+\begin{tikzpicture}[scale=1,
+    ]
+    \begin{axis}[width=0.6\linewidth, height=5.0cm,
+            axis lines=none,  % don't print axis lines
+            yticklabels={,,}, xticklabels={,,},
+            ymin=0, ymax=8, y axis line style={-},
+            xmin=0, xmax=15, x axis line style={-},
+        ]
+        \node [] (input) at (axis cs:1,4) {$X$};
+        \node [Input] (input1) at (axis cs:3,2) {};
+        \node [Input] (input2) at (axis cs:3,4) {};
+        \node [Input] (input3) at (axis cs:3,6) {};
+
+        \draw [decorate, line width = 0.6mm,
+            decoration = {calligraphic brace}] (axis cs:2,1.5) --  (axis cs:2,6.5);
+
+        \node [Hidden] (hidden1) at (axis cs:8,1) {};
+        \node [Hidden] (hidden2) at (axis cs:8,3) {};
+        \node [Hidden] (hidden3) at (axis cs:8,5) {};
+        \node [Hidden] (hidden4) at (axis cs:8,7) {};
+
+        \draw [->, style=arrow, draw=black] (input1) -- (hidden1);
+        \draw [->, style=arrow, draw=black] (input2) -- (hidden1);
+        \draw [->, style=arrow, draw=black] (input3) -- (hidden1);
+
+        \draw [->, style=arrow, draw=black] (input1) -- (hidden2);
+        \draw [->, style=arrow, draw=black] (input2) -- (hidden2);
+        \draw [->, style=arrow, draw=black] (input3) -- (hidden2);
+
+        \draw [->, style=arrow, draw=black] (input1) -- (hidden3);
+        \draw [->, style=arrow, draw=black] (input2) -- (hidden3);
+        \draw [->, style=arrow, draw=black] (input3) -- (hidden3);
+
+        \draw [->, style=arrow, draw=red] (input1) -- (hidden4);
+        \draw [->, style=arrow, draw=red] (input2) -- (hidden4);
+        \draw [->, style=arrow, draw=red] (input3) -- (hidden4) node[pos=0.5,above] {$W_{1j}$};
+
+        \node [Output] (output) at (axis cs:13,4) {$\hat y$};
+
+        \draw [->, style=arrow, draw=black] (hidden1) -- (output);
+        \draw [->, style=arrow, draw=black] (hidden2) -- (output);
+        \draw [->, style=arrow, draw=black] (hidden3) -- (output);
+        \draw [->, style=arrow, draw=red] (hidden4) -- (output) node[pos=0.5,above] {$w_{2j}$};
+    \end{axis}
+
+\end{tikzpicture}%
+\begin{tikzpicture}[scale=1,
+    ]
+    \begin{axis}[width=0.6\linewidth, height=6.5cm,
+            axis lines=none,  % don't print axis lines
+            yticklabels={,,}, xticklabels={,,},
+            ymin=0, ymax=8, y axis line style={-},
+            xmin=2, xmax=14, x axis line style={-},
+        ]
+        \node [] (input1) at (axis cs:3,1) {$X$};
+        \node [] (input2) at (axis cs:3,2.75) {$X$};
+        \node [] (input3) at (axis cs:3,4.5) {$X$};
+
+        \node [Splits] (hidden1) at (axis cs:9,1) {\scriptsize $D_3 X$};
+        \node [Splits] (hidden2) at (axis cs:9,2.75) {\scriptsize $D_2 X$};
+        \node [Splits] (hidden3) at (axis cs:9,4.5) {\scriptsize $D_1 X$};
+
+        \draw [draw=blue, dashed, line width=0.4mm] (axis cs:6.55,6.05) -- (axis cs:8.1,6.85);
+
+        \draw [->, style=arrow, draw=black] (input1) -- (hidden1);
+
+        \draw [->, style=arrow, draw=black] (input2) -- (hidden2);
+
+        \draw [->, style=arrow, draw=red] (input3) -- (hidden3);
+
+        \node [Output] (output) at (axis cs:13,2.75) {$\hat y$};
+
+        \draw [->, style=arrow, draw=black] (hidden1) -- (output);
+        \draw [->, style=arrow, draw=black] (hidden2) -- (output);
+        \draw [->, style=arrow, draw=red] (hidden3) -- (output) node[pos=0.5,above] {$u_j$};
+
+        \draw [draw=black, line width=0.3mm, dashed] (axis cs:5.7, 4.235) -- (axis cs:7.75,5.755);
+        \draw [draw=black, line width=0.3mm, dashed] (axis cs:5.28, 4.75) -- (axis cs:6.55,6.95);
+
+        \node [draw=black, minimum size=0.3cm, shape=circle, solid, line width=0.5mm] (examine) at (axis cs:5.5,4.5) {};
+        \node [draw=black, minimum size=1.1cm, shape=circle, solid, line width=0.5mm] (closeup) at (axis cs:7.3,6.5) {};
+
+        \node [fill=white, draw=gray, line width=0.3mm, inner sep=0.05cm, shape=circle] at (axis cs:7.7,7.0) {};
+        \node [fill=white, draw=gray, line width=0.3mm, inner sep=0.05cm, shape=circle] at (axis cs:7.15,6.9) {};
+        \node [fill=white, draw=gray, line width=0.3mm, inner sep=0.05cm, shape=circle] at (axis cs:7.3,7.2) {};
+        \node [fill=white, draw=gray, line width=0.3mm, inner sep=0.05cm, shape=circle] at (axis cs:6.9,6.5) {};
+
+        \node [fill=red, inner sep=0.06cm, shape=circle] at (axis cs:6.9,5.95) {};
+        \node [fill=red, inner sep=0.06cm, shape=circle] at (axis cs:7.4,6.0) {};
+        \node [fill=red, inner sep=0.06cm, shape=circle] at (axis cs:7.8,6.4) {};
+
+    \end{axis}
+
+\end{tikzpicture}%

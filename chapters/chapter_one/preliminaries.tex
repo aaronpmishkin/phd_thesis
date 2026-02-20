@@ -88,16 +88,37 @@ from an optimization perspective, it is desirable because it gives curvature to
 objective function, ensuring that \( F_\lambda \) is coercive and that the
 level sets are compact.
 
+\begin{figure}[t]
+    \centering
+    \input{figures/chapter_one/activation_pattern.tex}
+    \caption{Illustration of the activation pattern \( D_j \) associated with a
+        ReLU neuron parameterized by \( W^{(1)}_{\cdot, j} \).
+        The neuron is associated with a half-space where it
+        is active (light green) and a half-space where it is inactive.
+        The activation pattern \( D_j \) is a diagonal matrix encoding the
+        active (solid circles) and inactive (hollow circles) data points:
+        \( \sbr{D_{j}}_{ii} = 1 \) if \( x_i \) is active and
+        \( \sbr{D_{j}}_{ii} = 0 \) otherwise.
+        %This linearizes the ReLU activation on \( \calK_j \): for every
+        %\( W^{(1)}_{\cdot, l} \in \calK_j \),
+        %\( D_{j} X W^{(1)}_{\cdot, l} = \rbr{X W^{(1)}_{\cdot, l}}_+ \).
+    }%
+    \label{fig:activation-pattern}
+\end{figure}
+
 We conclude by introducing background on convex reformulations.
 In the following, we assume that \( \theta \) parameterizers a two-layer,
 scalar output ReLU network as described in \cref{eq:two-layer-scalar-output}.
 For such networks, convex reformulations re-write \cref{eq:regularized-erm} as
 a convex program by enumerating the activations a single neuron in the
 hidden layer can take on for fixed \( X \) as follows:
-\[ \calD_Z = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}. \]
+\[
+    \calD_Z = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}.
+\]
 This set grows as \(|\calD_Z| \le O(r(n/r)^r)\), where \(r := \text{rank}(X)\)
 \citep{pilanci2020convexnn}.
-Each ``activation pattern'' \( D_i \in \calD_{X} \) is associated with
+Each ``activation pattern'' \( D_i \in \calD_{X} \)
+(see \cref{fig:activation-pattern} for a visualization) is associated with
 a convex cone,
 \[
     \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
@@ -111,6 +132,7 @@ the convex reformulation is,
                        & \text{s.t.} \quad v_i, u_i \in \calK_i.
     \end{aligned}
 \end{equation}
+See \cref{fig:convex-reformulation} for an illustration.
 \citet{pilanci2020convexnn} prove that this program and \cref{eq:non-convex-relu-mlp}
 are equivalent in the following sense:
 if \( \tilde \calD = \calD_Z \) and \( m \geq m^* \) for some \( m^* \leq n + 1 \),
@@ -126,6 +148,21 @@ for the ReLU problem are given by
     \end{aligned}
 \end{equation}
 where we use the convention that \( 0/0 = 0 \).
+
+\begin{figure}[t]
+    \centering
+    \input{figures/chapter_one/convex_reformulation.tex}
+    \caption{Comparison between a two-layer ReLU network and its convex
+        reformulation.
+        The non-convex ReLU network maps the input \( X \) to a hidden
+        representation and then predicts using a linear combination of these
+        neurons.
+        In comparison, the convex reformulation computes \( \hat{y} \) as a sum
+        of linear models fit to copies of \( X \) which are split into active
+        and inactive data-points by half-spaces passing
+        through the origin.}%
+    \label{fig:convex-reformulation}
+\end{figure}
 
 In practice, learning with \( \calD_{X} \) is intractable except when the data
 are low rank.
