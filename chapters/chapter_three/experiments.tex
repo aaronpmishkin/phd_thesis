@@ -45,9 +45,8 @@ See \cref{app:sol-fn-additional-experiments} for results on additional datasets.
         As expected, increasing the regularization reduces the generalization
         gap between models.
         For both problems, the best test accuracy is achieved by a small
-        proportion of models at \( \lambda = 10^{-4} \).
-    }%
-    \label{fig:generalization-distributions}
+        proportion of models at \( \lambda = 10^{-4} \).}%
+    \label{fig:uci-sampling-paper}
 \end{figure}
 
 \begin{figure}[t]
@@ -55,7 +54,7 @@ See \cref{app:sol-fn-additional-experiments} for results on additional datasets.
     \includegraphics[width=0.48\textwidth]{figures/chapter_three/nc_comparison_monks-1.pdf}%
     \includegraphics[width=0.48\textwidth]{figures/chapter_three/nc_comparison_planning.pdf}
     \caption{Implicit regularization of SGD and Adam on two datasets from the
-        UCI repository with regularization strength \( \lambda = 10^{-4} \).
+        UCI repository with regularization strength \( \lambda = 10^{-5} \).
         Each method is run with \( 1000 \) different random initializations
         in order to approximately sample models from the optimal set.
         To ensure stationarity, we reject any final model where the
@@ -66,7 +65,7 @@ See \cref{app:sol-fn-additional-experiments} for results on additional datasets.
         performance for SGD and Adam is quite similar to the ground-truth
         optimal set, particularly for \texttt{monks-1}.
     }%
-    \label{fig:stochastic-optimizer-distributions}
+    \label{fig:uci-optimizer-sampling}
 \end{figure}
 
 \textbf{Sampling}:
@@ -80,7 +79,7 @@ provide an alternative method of selecting optimal models by generating a
 Markov chain which (when sufficiently thinned) yields a
 uniform sample over \( \solfn(\lambda) \).
 
-\cref{fig:generalization-distributions} shows the distribution of test
+\cref{fig:uci-sampling-paper} shows the distribution of test
 accuracy over \( 10,000 \) samples taken from the optimal set using
 hit-and-run.
 Similar to \cref{table:tuning-small}, we observe a large gap in generalization
@@ -91,7 +90,7 @@ the number of active neurons.
 
 We also compare the implicit regularization of SGD and Adam against the
 generalization performance of all global optima.
-\cref{fig:stochastic-optimizer-distributions} shows the distribution of
+\cref{fig:uci-optimizer-sampling} shows the distribution of
 test accuracy for \( 1000 \) random restarts of SGD and Adam as compared
 to the ground-truth distribution obtained using hit-and-run on
 the \texttt{monks-1} and \texttt{planning} datasets.
