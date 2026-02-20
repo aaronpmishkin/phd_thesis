@@ -170,39 +170,3 @@ In the following chapter, we provide refined conditions on \( \tilde \calD \)
 which are sufficient for \cref{eq:convex-relu-mlp} to be equivalent to the
 non-convex problem.
 
-%Our analysis will work by considering the space of activation patterns that
-%can be attained by a single ReLU neuron.
-%Given a matrix \( A \in \R^{a \times b} \), set of activation patterns for \( A \) is
-%\begin{equation}
-%    \calD(X) = \cbr{ \text{diag}\rbr{\mathds{1}\rbr{ X w \geq 0}}: w \in \R^d }.
-%\end{equation}
-%Note that each pattern \( D_i \in \calD(X) \) is a diagonal matrix with \(
-%[D_i]_{jj} = 1 \) if \( x_i^\top w \geq 0 \) and \( 0 \) otherwise.
-%Each activation pattern is associated with a convex cone of vectors which
-%are consistent with that pattern,
-%\begin{equation}
-%    \calK_i(X) = \cbr{w : (2D_i - I) X w \geq 0 }.
-%\end{equation}
-%It is straightforward to show that \( w \in \calK_i(X) \) if and only if \(
-%(Xw)_+ = D_i X w \), i.e. \( D_i \) linearizes the ReLU activation.
-
-%To reduce the burden of notation, let \( X^{(1)} = X \) and \( \calD^{(1)} =
-%\calD(X) \).
-%Let \( D^{(1)}_i \in \calD^{(1)} \) denote the activation patterns associated
-%with \( X^{(1)} \) and \( \calK^{(1)}_i \) the associated cone.
-%The total number of activation patterns is \( p_1 = \abs{\calD^{(1)}} \).
-%Let \( a_1 = d_1 \) so that \( X^{(1)} \in \R^{n \times a_1} \).
-%Then, we can recursively define,
-%\begin{equation}
-%    X^{(l+1)} =
-%    \begin{bmatrix}
-%        \Dl_1 \Xl & \ldots & \Dl_{p_{l}} \Xl
-%    \end{bmatrix}
-%    ,
-%\end{equation}
-%\( \calDl = \calD(\Xl) \), \( \Dl_i \in \calDl \) where \(
-%\calKl_i \) is the associated cone, and \( p_l = \abs{\calD^l} \).
-%Note that \( X^{(l+1)} \in \R^{n \times p_{l} \cdot a_{l}} \), which implies \(
-%a_{l+1} = p_{l} \cdot a_{l} \).
-%These objects will allow us to reason about the activation patterns of neural
-%networks with more than two layers.
