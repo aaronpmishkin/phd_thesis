@@ -1,0 +1,30 @@
+%!TEX root=../../main.tex
+
+So far we have seen that convex reformulations enable both faster optimization
+and deep insights into shallow ReLU networks.
+While these results are powerful, they are also restricted: they only apply to
+neural networks with one hidden layer.
+Although models with one hidden layer are widespread --- both as standalone
+prediction models and as sub-modules of other networks --- they have
+significant weaknesses compared to ``deep learning'' approaches.
+For example, both deep and shallow neural networks are universal approximators,
+but deep networks are more parsimonious and require exponentially fewer neurons
+to approximate some functions compared to shallow models
+\citep{telgarsky2016deep, edlan2016deep}.
+This is because the complexity of the function computed increases exponentially
+with network depth \citep{raghu2017depth}, leading to easier learning in
+both theory and practice \citep{safran2017tradeoff, larochelle2009exploring}.
+
+In this chapter, we develop convex reformulations for arbitrarily deep,
+fully-connected ReLU networks.
+Our analysis derives a new connection between \( L \)-layer ReLU networks and
+optimization problems over tensors of order \( L+1 \).
+In particular, we show that every deep ReLU training problem can be represented
+as a convex tensor program with non-convex decomposition constraints.
+As the width of the network increases, these constraints transform into a
+convex cones describing the recursive decomposition of the model.
+A natural extension of our cone decompositions from
+\cref{chapter:fast-optimization} allows us to prove this that problem is
+equivalent to a fully unconstrained deep gated ReLU model.
+
+\aside{Summarize results after deciding exactly what to include in this chapter.}

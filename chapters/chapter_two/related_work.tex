@@ -1,0 +1,47 @@
+%!TEX root=../../main.tex
+
+This chapter combines ideas from the literature on convex neural networks,
+accelerated methods, and optimization algorithms for constrained problems.
+We now briefly survey these concepts.
+
+\textbf{Convex Reformulations}:
+The most similar work in the literature is by \citet{bai2022efficient}, who
+consider training two-layer ReLU networks via convex reformulations using ADMM.
+Their approach requires solving a linear system at each iteration,
+or uses coordinate descent to solve the ADMM sub-problems.
+In practice, our solvers scale to larger datasets
+and allow for more activation patterns.
+
+In subsequent work, \citet{feng2024chronos} propose Cronos, an ADMM solver for
+convex reformulations based on Nystr\"{o}m preconditioning.
+Their work emphasizes GPU acceleration and scales convex optimization for
+neural networks to ImageNet, but also relies on aggressively sub-sampling the
+convex program for efficiency.
+Compared to our approach, Cronos trades global optimality guarantees for
+enhanced speed and scalability.
+
+Another subsequent work by \citet{sahiner2024burer} explores training ReLU
+networks with vector-outputs.
+While we use a one-vs-all prediction strategy to avoid the challenging
+co-positive program arising in the convex reformulation
+\citep{sahiner2021vector}, they rely on Burer-Monteiro factorization to obtain
+a benign non-convex program \citep{burer2005low}.
+They minimize the resulting non-convex problem with SGD, which is
+(theoretically) much slower than our accelerated convex solvers.
+
+\textbf{Accelerated Proximal Gradient}:
+\citet{beck2009fista, nesterov2007proximalgradient} were the first to extend
+optimal gradient methods~\citep{nesterov1983method} to composite problems.
+Work since then includes extensions to
+stochastic~\citep{schmidt2011convergence} and
+non-convex~\citep{li2015accelerated} optimization.
+See~\citet{parikh2014proximalsurvery} for a survey of proximal algorithms,
+including proximal gradient.
+
+\textbf{Augmented Lagrangian Methods}:
+The convergence theory was initially developed by
+Rockafellar~\citep{rockafellar1976augmented, rockafellar1976monotone}.
+More recent work includes practical guidelines~\citep{birgin2014pratical} and
+acceleration techniques~\citep{kang2015inexact}.
+See \citet{bertsekas2014constrained} for exhaustive theoretical developments.
+
