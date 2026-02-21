@@ -12,7 +12,8 @@ or uses coordinate descent to solve the ADMM sub-problems.
 In practice, our solvers scale to larger datasets
 and allow for more activation patterns.
 
-In subsequent work, \citet{feng2024chronos} propose Cronos, an ADMM solver for
+In follow-up work to \citet{bai2022efficient},
+\citet{feng2024chronos} propose Cronos, an ADMM solver for
 convex reformulations based on Nystr\"{o}m preconditioning.
 Their work emphasizes GPU acceleration and scales convex optimization for
 neural networks to ImageNet, but also relies on aggressively sub-sampling the
@@ -28,6 +29,15 @@ co-positive program arising in the convex reformulation
 a benign non-convex program \citep{burer2005low}.
 They minimize the resulting non-convex problem with SGD, which is
 (theoretically) much slower than our accelerated convex solvers.
+
+Similar to \citet{sahiner2024burer}, \citet{prakhya2025convex} focus on
+approximating a hard co-positive program arising as the convex reformulation 
+of vector-output ReLU networks.
+However, they develop a completely different convex reformulation which does
+not rely on enumerating the space of activation patterns.
+Since co-positive programming is NP-hard \citep{bomze200copositive},
+\citet{prakhya2025convex} develop a semi-definite relaxation of
+their convex reformulation.
 
 \textbf{Accelerated Proximal Gradient}:
 \citet{beck2009fista, nesterov2007proximalgradient} were the first to extend
