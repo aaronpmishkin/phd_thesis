@@ -160,7 +160,6 @@ As a result, \( \Tll \in \calGll \) enforces a non-convex, low-rank structure
 on the slices of \( \Tll \).
 
 \begin{restatable}[Layer Elimination]{proposition}{layerElimination}\label{prop:layer-elimination}
-    Let \( T^{(1)} = W^{(1)} \) and \( l \in [L] \).
     There exists \( \Tl \in \calGl \) such that
     the activations at layer \( l+2 \) are given by
     \begin{equation}\label{eq:layer-to-tensorize}
@@ -210,9 +209,9 @@ linearizes the ReLU prediction function using the
 expanded data basis given by \( \Xk \).
 Moreover, it holds for any fully-connected architecture. 
 The drawbacks are that \( \calG \) is non-convex and \( \Tk \) has 
-exponentially many parameters --- recall that \( T^{(2)} \) alone
+exponentially many parameters (recall that \( T^{(2)} \) alone
 has \( d_1 p_1 c \) parameters, which is exponential when \( X \)
-is full-rank.
+is full-rank).
 In the next section, we derive an equivalent convex program at the cost
 of new requirements on the minimum width of the network layers.
 

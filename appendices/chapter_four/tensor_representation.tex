@@ -20,55 +20,47 @@
 
 \layerElimination*
 \begin{proof}
-    We start by defining a suitable \( T^{(l+1)} \) as follows:
+    We start by defining a suitable \( \Tll \) as follows:
     \begin{equation}\label{eq:t-plus-characterization}
-        T^{(l+1)}_{j_1, \ldots, j_l}
+        \Tll_{j_1, \ldots, j_l}
         = \sum_{i_l \in \calI^{(l)}_{j_l}}
-        T^{(l)}_{j_1, \ldots, j_{l-1}, i_l} \otimes W^{(l+1)}_{i_l}
+        \Tl_{j_1, \ldots, j_{l-1}, i_l} \otimes W^{(l+1)}_{i_l}
         \text{ where } \calI^{(l)}_{j_{l}}
-        = \cbr{ i_l : T^{(l)}_{i_l} \in \calK^{(l)}_{j_{l}}}
+        = \cbr{ i_l : \Tl_{i_l} \in \calK^{(l)}_{j_{l}}}
         ,
     \end{equation}
     where we recall that the index \( j_l \) ranges over the activation
-    patterns achievable by the \( l^{\text{th}} \) layer,
-    \[
-        \calD^{(l)} = \cbr{
-            D^{(l)}_{j_l}
-            = \text{diag}\rbr{\mathds{1}(X^{(l)} \odot T^{(l)}_{i_l} \geq 0) }
-            : T^{(l)} \in \calG^{(l)}, \, i_l \in [d_l]
-        }.
-    \]
-    Remember that \( p_l = \abs{\calD^{(l)}} \) denotes the cardinality of this set.
+    patterns in \( \calDl \).
     Using this notation, we can re-index the sum in
     \cref{eq:layer-to-tensorize} by activation patterns as follows:
     \begin{align*}
         Z^{(l+2)}
-         & = \rbr{\sum_{i_l=1}^{d_l} \rbr{X^{(l)} \odot T^{(l)}_{i_l}}_+
-        W^{(l+1)}_{i_l}}_+                                               \\
+         & = \rbr{\sum_{i_l=1}^{d_l} \rbr{\Xl \odot \Tl_{i_l}}_+
+        W^{(l+1)}_{i_l}}_+                                            \\
          & = \rbr{\sum_{j_l=1}^{p_l} \sum_{i_l \in \calI^{(l)}_{j_l}}
-            \rbr{X^{(l)} \odot T^{(l)}_{i_l}}_+
+            \rbr{\Xl \odot \Tl_{i_l}}_+
             W^{(l+1)}_{i_l}}_+.
         \intertext{Linearizing the activation pattern now gives,}
         Z^{(l+2)}
          & = \rbr{\sum_{j_l=1}^{p_l}
             \sum_{i_l \in \calI^{(l)}_{j_l}}
-            D^{(l)}_{j_l} \sbr{X^{(l)} \odot T^{(l)}_{i_l}}
-        W^{(l+1)}_{m, \cdot}}_+                                          \\
+            D^{(l)}_{j_l} \sbr{\Xl \odot \Tl_{i_l}}
+        W^{(l+1)}_{m, \cdot}}_+                                       \\
          & = \rbr{\sum_{j_l=1}^{p_l}
-        \sum_{j_1, \ldots, j_{l-1}} D^{(l)}_{j_l} X^{(l)}_{j_1, \ldots j_{l-1}}
-        \rbr{
-        \sum_{i_l \in \calI^{(l)}_{j_l}}
-        T^{(l)}_{j_1, \ldots, j_{l-1}, i_l}
-        \otimes W^{(l+1)}_{i_l}}}_+                                      \\
-         & = \rbr{X^{(l+1)} \odot T^{(l+1)}}_+.
+            \sum_{j_1, \ldots, j_{l-1}} D^{(l)}_{j_l} \Xl_{j_1, \ldots j_{l-1}}
+            \rbr{
+                \sum_{i_l \in \calI^{(l)}_{j_l}}
+                \Tl_{j_1, \ldots, j_{l-1}, i_l}
+        \otimes W^{(l+1)}_{i_l}}}_+                                   \\
+         & = \rbr{\Xll \odot \Tll}_+.
     \end{align*}
-    It should be clear from the way that we constructed \( T^{(l+1)} \) that
+    It should be clear from the way that we constructed \( \Tll \) that
     it is contained \( \calG^{(l+1)} \).
     This establishes one direction of theorem.
     The other direction can be shown by instead assuming that
-    \( T^{(l+1)} \in \calG^{(l+1)} \) and then noting that the characterization
+    \( \Tll \in \calG^{(l+1)} \) and then noting that the characterization
     in \cref{eq:t-plus-characterization} immediately follows for some
-    \( T^{(l)} \in \calG^{(l)} \) and \( W^{(l+1)} \in \R^{d_l \times d_{l+1}} \).
+    \( \Tl \in \calG^{(l)} \) and \( W^{(l+1)} \in \R^{d_l \times d_{l+1}} \).
     The preceding calculation is then reversed to obtain
     \cref{eq:layer-to-tensorize}.
 \end{proof}
@@ -76,9 +68,9 @@
 \tensorEquivalence*
 \begin{proof}
     The argument is based on straightforward inductive application of
-    \cref{lemma:tensor-elimination}.
+    \cref{prop:layer-elimination}.
     Let \( T^{(1)} = W^{(1)} \), which is in
-    trivially in \( \calG^{(1)} = \R^{d_0 \times d_1} \).
+    trivially in \( \calG^{(1)} = \R^{d_1 \times d_2} \).
     Thus, we have
     \[
         Z^{(2)} = \rbr{X^{(1)} \odot T^{(1)}}_+,
@@ -86,29 +78,28 @@
     which forms our base case.
     Now assume for \( l \geq 1 \) that
     \[
-        Z^{(l+1)} = \rbr{X^{(l)} \odot T^{(l)}}_+,
+        Z^{(l+1)} = \rbr{\Xl \odot \Tl}_+,
     \]
-    for some \( T^{(l)} \in \calG^{(l)} \) (or that \( l = k \), in which case
+    for some \( \Tl \in \calG^{(l)} \) (or that \( l = L \), in which case
     there is no activation and we are done).
     By definition of the ReLU MLP,
     \[
-        Z^{(l+2)} = \rbr{\rbr{X^{(l)} \odot T^{(l)}}_+ W^{(l+1)}}_+.
+        Z^{(l+2)} = \rbr{\rbr{\Xl \odot \Tl}_+ W^{(l+1)}}_+.
     \]
-    \cref{lemma:tensor-elimination} now implies an equivalent tensorized
+    \cref{prop:layer-elimination} now implies an equivalent tensorized
     version as follows:
     \[
-        Z^{(l+2)} = \rbr{X^{(l+1)} \odot T^{(l+1)}}_+,
+        Z^{(l+2)} = \rbr{\Xll \odot \Tll}_+,
     \]
-    for some \( T^{(l+1)} \in \calG^{(l+1)} \).
+    for some \( \Tll \in \calG^{(l+1)} \).
     Induction (with a minor modification to drop the ReLU in the final step)
     now implies there exists an equivalent
-    tensor problem \( f_\theta(X) = X^{(k)} \odot T^{(k)} \) with
-    \( T^{(k)} \in \calG^{(k)} \).
-    Since \cref{lemma:tensor-elimination} establishes an if-and-only-if
+    tensor problem \( f_\theta(X) = \Xk \odot \Tk \) with
+    \( \Tk \in \calGk \).
+    Since \cref{prop:layer-elimination} establishes an if-and-only-if
     relationship, this argument is reversible to show that every
     tensor model corresponds to a non-convex ReLU network.
 \end{proof}
-
 
 \aside{Not ready for this result yet!}
 This allows us to write an explicit equation for \( \calDl \) as follows.
@@ -129,7 +120,7 @@ This allows us to write an explicit equation for \( \calDl \) as follows.
         \tilde{\calD}^{(l)} =
         \cbr{\Dl_{j_l} = \mathds{1}\rbr{\diag
                 \rbr{ \Xl \odot U^{(l)} \geq 0 }} :
-            U_l \in \R^{d_0 \times p_1 \times \cdots \times p_{l-1}}}
+            U_l \in \R^{d_1 \times p_1 \times \cdots \times p_{l}}}
     \]
     and let \( \Dl \in \calDl \) as defined in
     \cref{eq:limiting-activation-set}.
@@ -147,15 +138,15 @@ This allows us to write an explicit equation for \( \calDl \) as follows.
          & = \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}_{i_l}.
     \end{align*}
     \cref{lemma:layer-elimination} implies that there exists
-    \( T^{(l)} \in \calG^{(l)} \) such that
+    \( \Tl \in \calG^{(l)} \) such that
     \[
         \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}
-        = X^{(l)} \odot T^{(l)},
+        = \Xl \odot \Tl,
     \]
     and, in particular, that
     \[
         f_{\theta_{l-1}}(X) u
-        = X^{(l)} \odot T^{(l)}_{i_l}.
+        = \Xl \odot \Tl_{i_l}.
     \]
     We deduce that \( \Dl_{j_l} \in \tilde{\calD}^{(l)} \) as required.
 
