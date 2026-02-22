@@ -17,3 +17,59 @@
     then this limit is the same no matter the choice of sequence.
     We call it \( \calDl \).
 \end{proof}
+
+\layerElimination*
+\begin{proof}
+    We start by defining a suitable \( T^{(l+1)} \) as follows:
+    \begin{equation}\label{eq:t-plus-characterization}
+        T^{(l+1)}_{j_1, \ldots, j_l}
+        = \sum_{i_l \in \calI^{(l)}_{j_l}}
+        T^{(l)}_{j_1, \ldots, j_{l-1}, i_l} \otimes W^{(l+1)}_{i_l}
+        \text{ where } \calI^{(l)}_{j_{l}}
+        = \cbr{ i_l : T^{(l)}_{i_l} \in \calK^{(l)}_{j_{l}}}
+        ,
+    \end{equation}
+    where we recall that the index \( j_l \) ranges over the activation
+    patterns achievable by the \( l^{\text{th}} \) layer,
+    \[
+        \calD^{(l)} = \cbr{
+            D^{(l)}_{j_l}
+            = \text{diag}\rbr{\mathds{1}(X^{(l)} \odot T^{(l)}_{i_l} \geq 0) }
+            : T^{(l)} \in \calG^{(l)}, \, i_l \in [d_l]
+        }.
+    \]
+    Remember that \( p_l = \abs{\calD^{(l)}} \) denotes the cardinality of this set.
+    Using this notation, we can re-index the sum in
+    \cref{eq:layer-to-tensorize} by activation patterns as follows:
+    \begin{align*}
+        Z^{(l+2)}
+         & = \rbr{\sum_{i_l=1}^{d_l} \rbr{X^{(l)} \odot T^{(l)}_{i_l}}_+
+        W^{(l+1)}_{i_l}}_+                                               \\
+         & = \rbr{\sum_{j_l=1}^{p_l} \sum_{i_l \in \calI^{(l)}_{j_l}}
+            \rbr{X^{(l)} \odot T^{(l)}_{i_l}}_+
+            W^{(l+1)}_{i_l}}_+.
+        \intertext{Linearizing the activation pattern now gives,}
+        Z^{(l+2)}
+         & = \rbr{\sum_{j_l=1}^{p_l}
+            \sum_{i_l \in \calI^{(l)}_{j_l}}
+            D^{(l)}_{j_l} \sbr{X^{(l)} \odot T^{(l)}_{i_l}}
+        W^{(l+1)}_{m, \cdot}}_+                                          \\
+         & = \rbr{\sum_{j_l=1}^{p_l}
+        \sum_{j_1, \ldots, j_{l-1}} D^{(l)}_{j_l} X^{(l)}_{j_1, \ldots j_{l-1}}
+        \rbr{
+        \sum_{i_l \in \calI^{(l)}_{j_l}}
+        T^{(l)}_{j_1, \ldots, j_{l-1}, i_l}
+        \otimes W^{(l+1)}_{i_l}}}_+                                      \\
+         & = \rbr{X^{(l+1)} \odot T^{(l+1)}}_+.
+    \end{align*}
+    It should be clear from the way that we constructed \( T^{(l+1)} \) that
+    it is contained \( \calG^{(l+1)} \).
+    This establishes one direction of theorem.
+    The other direction can be shown by instead assuming that
+    \( T^{(l+1)} \in \calG^{(l+1)} \) and then noting that the characterization
+    in \cref{eq:t-plus-characterization} immediately follows for some
+    \( T^{(l)} \in \calG^{(l)} \) and \( W^{(l+1)} \in \R^{d_l \times d_{l+1}} \).
+    The preceding calculation is then reversed to obtain
+    \cref{eq:layer-to-tensorize}.
+\end{proof}
+
