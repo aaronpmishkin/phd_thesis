@@ -12,37 +12,40 @@ Let \( \Wl \in \R^{d_{l} \times d_{l+1}} \) be the matrix of weights for the \(
 We will use \( \Wl_{i} \) to refer to the \( i^{\text{th}} \) row of \( \Wl \)
 and \( \Wl_{\cdot, j} \) to refer to the \( j^{\text{th}} \) column.
 The activations at layer $l$ are defined to be,
-\begin{equation}
+\begin{equation}\label{eq:activations}
     Z^{(l+1)} = \rbr{\Z W^{(l)}}_+,
 \end{equation}
 where we take \( Z^{(1)} = X \) and \( \rbr{\cdot}_+ \) is ReLU activation
 function defined element-wise as \( \rbr{z}_+ = \max\cbr{z, 0} \).
-Using this notation, a fully-connected neural network with \( k \)-layers has
+Using this notation, a fully-connected neural network with \( L \)-layers has
 the prediction function given by,
-\begin{equation}
-    f_\theta(X) = Z^{(k)}
-    W^{(k)},
+\begin{equation}\label{eq:predictions}
+    f_\theta(X) = Z^{(L)} W^{(L)},
 \end{equation}
-where \( W^{(k)} \in \R^{d_{k} \times c} \) ensures
+where \( W^{(L)} \in \R^{d_{L} \times c} \) ensures
 that the prediction is of the right dimension.
 Here, \( \theta = \cbr{W^{(1)}, \ldots, \Wk} \) denotes the collection of
 weights for the network and \( \Theta \) the complete parameter space.
-The choice of \( k = 2 \) corresponds to a two-layer ReLU network,
+The choice of \( L = 2 \) corresponds to a two-layer ReLU network,
 which is sometimes referred to as a network with one hidden layer.
 In this case, the recursive definition can be unrolled to give a simple
 and explicit prediction function,
 \begin{equation}\label{eq:two-layer-vector-output}
     f_\theta(X) = \rbr{X W^{(1)}}_+ W^{(2)}.
 \end{equation}
+For simplicity, when \( L = 2 \) we will often use \( d \) for the input
+dimension (instead of \( d_1 \)) and \( m \) as the number of hidden units
+(instead of \( d_2 \)).
+
 Many of our results are focused on two-layer ReLU networks with scalar
 outputs, meaning \( c = 1 \).
 In this setting, it will often be useful to break-down \( f_\theta \) into
 an explicit sum over neurons in the hidden layer,
 \begin{equation}\label{eq:two-layer-scalar-output}
-    f_\theta(X) = \sum_{j = 1}^{d_2} \rbr{X W^{(1)}_{\cdot, j}}_+ W^{(2)}_{j}.
+    f_\theta(X) = \sum_{j = 1}^{m} \rbr{X W^{(1)}_{\cdot, j}}_+ W^{(2)}_{j}.
 \end{equation}
-Note that since \( c = 1 \), there is no weight sharing and \( W^{(2)} \in \R^{d_2 \times 1} \)
-is a column vector.
+Note that since \( c = 1 \), there is no weight sharing and
+\( W^{(2)} \in \R^{m \times 1} \) is a column vector.
 
 We consider choosing \( \theta \) by solving a regularized empirical risk
 minimization problem using the fixed training set \( (X, y) \).
@@ -72,7 +75,7 @@ This leads to the following concrete optimization problem:
 \begin{equation}\label{eq:squared-error}
     \theta^* \in \argmin_{\theta \in \Theta}
     \half \norm{f_\theta(X) - y}_2^2 +
-    \frac{\lambda}{2} \sum_{l=1}^k \norm{\Wl}_F^2,
+    \frac{\lambda}{2} \sum_{l=1}^L \norm{\Wl}_F^2,
 \end{equation}
 where \( \norm{\cdot}_F \) is the Frobenius norm given by the sum of squared entries,
 \[
@@ -112,19 +115,19 @@ scalar output ReLU network as described in \cref{eq:two-layer-scalar-output}.
 For such networks, convex reformulations re-write \cref{eq:regularized-erm} as
 a convex program by enumerating the activations a single neuron in the
 hidden layer can take on for fixed \( X \) as follows:
-\[
-    \calD_Z = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}.
-\]
-This set grows as \(|\calD_Z| \le O(r(n/r)^r)\), where \(r := \text{rank}(X)\)
+\begin{equation}\label{eq:activation-patterns}
+    \calD_X = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}.
+\end{equation}
+This set grows as \(|\calD_X| \le O(r(n/r)^r)\), where \(r := \text{rank}(X)\)
 \citep{pilanci2020convexnn}.
 Each ``activation pattern'' \( D_i \in \calD_{X} \)
 (see \cref{fig:activation-pattern} for a visualization) is associated with
 a convex cone,
-\[
+\begin{equation}\label{eq:activation-cone}
     \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
-\]
+\end{equation}
 If \( u \in \calK_i \), then \( u \) matches \( D_i \), meaning \( D_i X u = \rbr{X u}_+ \).
-For any subset \( \tilde \calD \subseteq \calD_Z \),
+For any subset \( \tilde \calD \subseteq \calD_X \),
 the convex reformulation is,
 \begin{equation}\label{eq:convex-relu-mlp}
     \begin{aligned}
@@ -135,7 +138,7 @@ the convex reformulation is,
 See \cref{fig:convex-reformulation} for an illustration.
 \citet{pilanci2020convexnn} prove that this program and \cref{eq:non-convex-relu-mlp}
 are equivalent in the following sense:
-if \( \tilde \calD = \calD_Z \) and \( m \geq m^* \) for some \( m^* \leq n + 1 \),
+if \( \tilde \calD = \calD_X \) and \( m \geq m^* \) for some \( m^* \leq n + 1 \),
 then the two programs have the same optimal value and every solution to the convex program
 can be mapped to a solution of the non-convex training problem and vice-versa.
 Given a solution \( \rbr{v^*, u^*} \), optimal weights

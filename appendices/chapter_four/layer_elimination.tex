@@ -1,0 +1,19 @@
+%!TEX root=../../main.tex
+
+\limitingActivationSet*
+\begin{proof}
+    We say \( \Delta \preceq \Delta' \) if every entry of
+    \( \Delta' \) is at least as large as \( \Delta \).
+    If \( \Delta \prec \Delta' \), then it is straightforward to embed
+    any network weights \( \theta \) conformal to \( \Delta \) into a network
+    conformal \( \Delta' \) by setting the additional neurons to zero.
+    Thus, \( \calDl_{\Delta} \subseteq \calDl_{\Delta'} \).
+    Since
+    \( \calDl_{\Delta} \subseteq \cbr{ \emph{\diag}(z) : z \in \cbr{0, 1}^n} \),
+    any monotone increasing sequence \( \Delta_{k} \) defines a bounded
+    monotone increasing sequence \( \calDl_{\Delta_k} \) which must have
+    a limit.
+    If every entry of \( \Delta_k \) diverges as \( k \rightarrow \infty \),
+    then this limit is the same no matter the choice of sequence.
+    We call it \( \calDl \).
+\end{proof}
