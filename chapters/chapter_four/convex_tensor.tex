@@ -1,1 +1,51 @@
 %!TEX root=../../main.tex
+
+Now we analyze the structure of \( \calGl \) with the goal of establishing a
+fully convex reformulation for deep ReLU networks.
+This recursive constraint set encodes several key features of ReLU networks:
+(i) weight sharing, through \( \Wll \), (ii) low-rank neurons, through the
+outer-products \( \Tl_{j_1, \ldots, j_{l-1}, i_l} \otimes \Wll_{j_l} \),
+(iii) the layer width, through
+\( \sum_{j_l=1}^{p_l} \abs{\calI_{j_l}^{(l)}} \leq d_l \),
+and (iv) activation cone membership.
+Out of these constraints, (i) to (iii) are affected by the width of the
+network.
+We will show that these constraints vanish for sufficiently wide models.
+
+Given two tensors
+\( \Tl, \Vl \in \R^{d_1 \times p_1 \times \cdots \times p_l \times d_{l+1}} \)
+we use \( \Vl \oplus \Vl \in \R^{d_1 \times p_1 \times \cdots \times 2 p_l \times d_{l+1}} \)
+to denote the concatenation of the tensors across the second-to-last dimension.
+Using this notation, consider the tensor constraint defined recursively by
+\( \calC^{(1)} = \R^{d_1 \times d_2} \) and
+\begin{equation}\label{eq:recursive-cone-constraint}
+    \begin{aligned}
+        \calC^{(l+1)}
+         & = \bigg\{
+        T^{(l+1)} \in \R^{d_1 \times p_1 \cdots \times p_{l} \times d_{l+1}}
+        :
+        T^{(l+1)}_{j_{l}, i_{l+1}}
+        = T^{(l)}_{j_l\cdot i_{l+1}}
+        - V^{(l)}_{j_l \cdot i_{l+1}}, \\
+         & \hspace{5em} \text{ where }
+        T^{(l)}_{j_l \cdot i_{l+1}}, V^{(l)}_{j_l \cdot i_{l+1}}
+        \in \calK^{(l)}_{j_{l}}, \text{ and }
+        T^{(l)} \oplus V^{(l)} \oplus \mathbf{0} \in \calC^{(l)},
+        \bigg\}
+    \end{aligned}
+\end{equation}
+where \( \mathbf{0} \) is the zero-tensor of shape
+\( \rbr{d_1 \times p_1 \cdots \times p_{l-1} \times (d_{l} - p_{l} \cdot d_{l+1})} \).
+As a result, the construction of \( \calCl \) requires the dimension of the
+last order, \( d_{l} \), to satisfy \( d_{l} \geq 2 p_{l} d_{l+1} \);
+otherwise, we could not embed \( T^{(l+1)} \) into \( T^{(l)} \).
+It is straightforward to show that \( \calC^{(l)} \) is a convex cone
+(\cref{lemma:convex-recursive-cone-constraint}).
+More importantly, \( \calC^{(l)} \) is exactly the constraint set obtained
+by making the network wide enough that the weight sharing, low-rank,
+and width constraints in \( \calGl \) vanish.
+
+\begin{restatable}[Constraint Convexification]{proposition}{constraintConvexification}\label{prop:constraint-convexification}
+    If \( d_l \geq 2 p_l d_{l+1} \) for every \( l \in [k-1]  \), then
+    \( \calG^{(l)} = \calC^{(l)} \).
+\end{restatable}
