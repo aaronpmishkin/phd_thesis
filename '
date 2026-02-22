@@ -1,0 +1,163 @@
+%!TEX root=../../main.tex
+
+As in the previous chapters, our analysis will be based on enumerating
+the activation patterns associated with ReLU neurons.
+However, unlike the previous chapters, we focus on training deep ReLU networks.
+As a result, our description of activation patterns and the associated
+constraint cones will necessarily be hierarchical.
+Before proceeding, we briefly review our notation for deep networks as
+introduced in \cref{sec:preliminaries}.
+
+Recall that a deep ReLU network is
+parameterized by \( \theta = \rbr{W^{(1)}, \ldots, \Wk} \), where
+\( W^{(l)} \in \R^{d_{l} \times d_{l+1}} \) are the weights for the
+\( l^{\text{th}} \) layer.
+The dimension of the network inputs is given by \( d_1 = d \) and the output
+dimension is \( d_{L+1} = c \), where \( c \) is the number of targets.
+In accordance with \cref{eq:activations} and \cref{eq:predictions}, the model
+activations and predictions are given by
+\[
+    Z^{(l+1)} = \rbr{\Zl W^{(l)}}_+,
+    \quad \text{and} \quad
+    f_\theta(X) = Z^{(L)} W^{(L)},
+\]
+respectively, where we use \( Z^{(1)} = X \) for convenience.
+
+Each layer of a neural network is associated with its own set of achievable
+activation patterns.
+In order to refer to sub-networks,
+let \( \theta_l = \rbr{W^{(1)}, \ldots, \Wl} \) be the weights of the
+network up to and including the \( l^{\text{th}} \) layer.
+The prediction function associated with this sub-network is
+\begin{equation}\label{eq:sub-network}
+    f_{\theta_{l}}(X) = Z^{(l)} W^{(l)}.
+\end{equation}
+For a given architecture specified by the hidden dimensions
+\( \Delta = (d_2, \ldots, d_{L}) \), we can define the set of activation
+patterns at layer \( l \) as follows:
+\begin{equation}\label{eq:l-activation-patterns}
+    \begin{aligned}
+        \calDl_{\Delta} = \big\{
+        \Dl_{j_l} =
+        \diag\rbr{\mathds{1}\rbr{f_{\theta_{l-1}}(X) u \geq 0}}
+         & : \theta^{(l-1)} \in \Theta^{(l-1)}, \\
+         & u \in \R^{d_{l}}
+        \big\}.
+    \end{aligned}
+\end{equation}
+When \( l = 1 \), the sub-network satisfies \( f_{\theta_{l}}(X) = X \)
+and \( \calD^{(1)}_{\Delta} \) is fixed (i.e. independent of \( \Delta \))
+and equivalent to the standard definition of activation patterns for two-layer
+ReLU networks (\cref{eq:activation-patterns}).
+For \( l > 1 \), this definition is dependent on \( \Delta \), but taking
+all the network widths to infinity yields a canonical set of activations.
+\begin{restatable}{lemma}{limitingActivationSet}\label{lemma:activation-patterns}
+    The set of activation patterns in the \( l^{\text{th}} \) layer has a
+    finite limit, call it \( \calDl \), obtained by taking each layer width
+    \( d_{i} \) to be arbitrarily large,
+    \[
+        \calDl = \lim_{\Delta \rightarrow \infty} \calDl_{\Delta}.
+    \]
+\end{restatable}
+We use \( p_{l} = \abs{\calDl} \) to represent the number of unique activation
+patterns in layer \( l \).
+
+Similar to the two-layer setting, we use activation patterns to define
+a data-dependent basis expansion on which our convex reformulation will
+operate.
+Let \( X^{(1)} = X \in \R^{n \times d_1} \) and recursively define
+the tensor \( X^{(l+1)} \in \R^{n \times p_1 \times \cdots \times p_{l} \times d_1} \)
+such that
+\begin{equation}\label{eq:data-tensor}
+    X^{(l+1)}_{j_1,\ldots j_l}
+    := \Dl_{j_l} \Xl_{j_1, \ldots, j_{l-1}} \in \R^{n \times d_1},
+\end{equation}
+where we use the convention that \( j_{l} \) always indexes the
+\( l^{\text{th}} \) slice of \( X^{(l)} \).
+Unrolling this recursion implies that \( X^{(l)} \) is a \( l+1 \) order tensor
+satisfying
+\( \Xl_{j_1, \ldots, j_{l-1}} = D^{(l-1)}_{j_{l-1}} \cdots D^{(1)}_{j_1} X \).
+The order of the activation patterns is not important since activation
+patterns are diagonal and so commutative.
+Note that for clarity we shall use \( j_l \) as indices of activation patterns
+and \( i_l \) as indices of neurons.
+
+The main action of \( \Xl \) will occur in the following tensor reduction
+operator.
+\begin{definition}[Tensor Reduction]
+    Given two tensors
+    \( \Xll \in \R^{n \times p_1 \times \cdots \times p_l \times d_1} \)
+    and
+    \( \Tll \in \R^{d_1 \times p_1 \times \cdots \times d_{l+1}} \),
+    the tensor reduction operator denoted by \( \odot \) is defined as
+    \begin{equation}\label{eq:tensor-reduction}
+        \Xll \odot \Tll = \sum_{j_{l}} \cdots \sum_{j_{1}}
+        \Xll_{j_1, \ldots, j_{l}} \Tll_{j_1, \ldots, j_{l}}
+    \end{equation}
+\end{definition}
+It should be clear from the definition that the tensor reduction is a
+linear operator between tensors with conformal shapes.
+We will also use \( \odot \) with right-hand arguments of order
+\( l \), such as \( U^{(l)} \in \R^{d_1 \times p_1 \times \cdots \times p_{l-1}} \)
+in which case it is given by the following reduction over
+matrix-vector products:
+\[
+    \Xll \odot U^{(l)} = \sum_{j_{l}} \cdots \sum_{j_{1}}
+    \Xll_{j_1, \ldots, j_{l}} U^{(l)}_{j_1, \ldots, j_{l}, i_{l+1}}.
+\]
+We use this immediately to define the tensor cones associated with
+each activation pattern \( \Dl_{j_l} \),
+\begin{equation}\label{eq:tensor-cone}
+    \calK^{(l)}_{j_{l}} =
+    \cbr{
+    U^{(l)} \in \R^{d_1 \times p_{1} \times \cdots \times p_{l-1}}
+    :
+    (2D^{(l)}_{j_{l}} - I)
+    \sbr{X^{(l)} \odot U^{(l)}} \geq 0
+    }.
+\end{equation}
+These cones are a straightforward generalization of \( \calK_j \) from
+the two-layer setting seen in Chapters~\ref{chapter:fast-optimization}
+and~\ref{chapter:solution-functions}.
+In fact, choosing \( l = 1 \) and observing that \( X^{(1)} = X \) and
+\( U^{(l)} \in \R^{d_1} \) shows that \( \calK^{(1)}_{j_1} = \calK_j \)
+holds exactly.
+
+Now we prove that each \( L \)-layer ReLU neural network can be
+represented by a tensor of order \( L+1 \).
+\begin{restatable}{lemma}{layerElimination}[Layer Elimination]\label{lemma:layer-elimination}
+    Let \( \calG^{(1)} = \R^{d_1 \times d_2} \) and define \( G^{(l+1)} \)
+    recursively by
+    \begin{equation}\label{eq:rank-tensor-decomp}
+        \begin{aligned}
+            \calG^{(l+1)}
+            :=
+            \bigg\{
+            T^{(l+1)} \in \R^{d_{0} \times p_{1} \ldots \times p_{l} \times d_{l+1}}
+            : & \exists \, T^{(l)} \in \calG^{(l)} \text{ where }
+            \calI^{(l)}_{j_{l}} = \cbr{ i_l : T^{(l)}_{i_l} \in \calK^{(l)}_{j_{l}}}, \\
+              & \exists \, W^{(l+1)} \in \R^{d_l \times d_{l+1}},                     \\
+              & \text{s.t. } T^{(l+1)}_{j_1, \ldots, j_{l}}
+            = \sum_{i_l \in \calI^{(l)}_{j_l}} T^{(l)}_{j_1, \ldots, j_{l-1}, i_{l}}
+            \otimes
+            W^{(l+1)}_{i_l},                                                          \\
+              & \text{and } \sum_{j_l = 1}^{p_l} \abs{\calI^{(l)}_{j_l}} \leq d_{l}
+            \bigg\}.
+        \end{aligned}
+    \end{equation}
+
+    Let \( T^{(1)} = W^{(1)} \).
+    Then there exists \( T^{(l)} \in \calG^{(l)} \) such that
+    the activations at layer \( l+2 \) are given by
+    \begin{equation}\label{eq:layer-to-tensorize}
+        Z^{(l+2)} =
+        \rbr{\sum_{i_l=1}^{d_l} \rbr{X^{(l)} \odot T^{(l)}_{i_l}}_+
+            W^{(l+1)}_{i_l}}_+,
+    \end{equation}
+    if and only if the activations are also equal to
+    \[
+        Z^{(l+2)} = \rbr{X^{(l+1)} \odot T^{(l+1)}}_+,
+    \]
+    for some \( T^{(l+1)} \in \calG^{(l+1)} \).
+\end{restatable}
+
