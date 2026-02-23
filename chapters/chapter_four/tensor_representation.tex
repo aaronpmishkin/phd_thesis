@@ -90,7 +90,7 @@ To do so, we define a tensor reduction as follows.
     Given two tensors
     \( \Xll \in \R^{n \times p_1 \times \cdots \times p_l \times d_1} \)
     and
-    \( \Tll \in \R^{d_1 \times p_1 \times \cdots \times d_{l+1}} \),
+    \( \Tll \in \R^{d_1 \times p_1 \times \cdots \times p_l \times d_{l+1}} \),
     the tensor reduction operator denoted by \( \odot \) is defined as
     \begin{equation}\label{eq:tensor-reduction}
         \Xll \odot \Tll = \sum_{j_{l}} \cdots \sum_{j_{1}}
@@ -139,7 +139,7 @@ be defined recursively as
     \begin{aligned}
          & \calGll
         := \bigg\{ \Tll
-        \in \R^{d_{0} \times p_{1} \times \cdots \times p_{l} \times d_{l+1}}
+        \in \R^{d_{1} \times p_{1} \times \cdots \times p_{l} \times d_{l+1}}
         : \exists \, \Tl \in \calGl
         \text{ and } W^{(l+1)} \in \R^{d_l \times d_{l+1}} \text{ s.t. } \\
          & \hspace{0.5em} \Tll_{j_1, \ldots, j_{l}}

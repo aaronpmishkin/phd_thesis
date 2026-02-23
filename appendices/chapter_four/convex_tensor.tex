@@ -5,23 +5,23 @@
 \end{lemma}
 \begin{proof}
     By construction, \( \calC^{(1)} = \R^{d_1 \times d_2} \)
-    is a convex cone since any vector space is a convex cone.
+    is a convex cone since every vector space is a convex cone.
 
-    Assume \( \calCl \) is a convex cone for \( l \geq 1 \).
+    Assume \( \calCl \) is a convex cone for some \( l \geq 1 \).
     If \( \Tll, H^{(l+1)} \in \calCll \), then
-    for any \( \alpha, \beta \geq 0 \), \( \alpha \Tll + \beta H^{(l+1)} \)
-    satisfies
+    for any \( \alpha, \beta \geq 0 \),
+    \( \alpha \Tll + \beta H^{(l+1)} \) satisfies
     \begin{align*}
         \alpha \Tll_{j_l, i_{l+1}} + \beta H^{(l+1)}_{j_l, i_{l+1}}
-         & = \alpha \Tl_{j_l \cdot i_{l+1}}
-        - \alpha \Vl_{j_l \cdot i_{l+1}}
-        + \beta H^{(l)}_{j_l \cdot i_{l+1}}
-        - \beta U^{(l)}_{j_l \cdot i_{l+1}}                                           \\
-         & = \rbr{\alpha \Tl_{j_l \cdot i_{l+1}} + \beta H^{(l)}_{j_l \cdot i_{l+1}}}
-        - \rbr{\alpha \Vl_{j_l \cdot i_{l+1}} + \beta U^{(l)}_{j_l \cdot i_{l+1}}}
+         & = \alpha \Tl_{ \phi_l(1, j_l, i_{l+1})}
+        - \alpha \Tl_{ \phi_l(-1, j_l, i_{l+1})}
+        + \beta H^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
+        - \beta H^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}                                                 \\
+         & = \rbr{\alpha \Tl_{ \phi_l(1, j_l, i_{l+1})} + \beta H^{(l)}_{ \phi_l(1, j_l, i_{l+1})}}
+        - \rbr{\alpha \Tl_{ \phi_l(-1, j_l, i_{l+1})} + \beta H^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}}
     \end{align*}
-    where \( \alpha \Tl_{j_l \cdot i_{l+1}} + \beta H^{(l)}_{j_l \cdot i_{l+1}},
-    \alpha \Vl_{j_l \cdot i_{l+1}} + \beta U^{(l)}_{j_l \cdot i_{l+1}}
+    where \( \alpha \Tl_{ \phi_l(1, j_l, i_{l+1})} + \beta H^{(l)}_{\phi_l(1, j_l, i_{l+1})},
+    \alpha \Tl_{ \phi_l(-1, j_l, i_{l+1})} + \beta H^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
     \in \calKl_{j_l} \) since \( \calKl_{j_l} \) is a convex cone.
     Similarly, \( \alpha \Tl + \beta H^{(l)} \in \calCl \)
     since \( \calCl \) is a convex cone by the inductive assumption.
@@ -32,7 +32,7 @@
 \constraintConvexification*
 \begin{proof}
     Recall that
-    \( \calG^{(1)} = \R^{d_0 \times d_1} = \calC^{(1)} \);
+    \( \calG^{(1)} = \R^{d_1 \times d_2} = \calC^{(1)} \);
     this establishes our base case.
 
     Now, assume that
@@ -58,53 +58,49 @@
     \end{align*}
     We can now define
     \[
-        H^{(l)}_{j_l \cdot i_{l+1}}
+        T^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
         = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
             \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
     \]
     and
     \[
-        V^{(l)}_{j_l \cdot i_{l+1}}
+        T^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
         = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
             \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} < 0),
     \]
     to show that
     \( \Tll_{(j_l, i_{l+1})}
-    = H^{(l)}_{j_l \cdot i_{l+1}} - V^{(l)}_{j_l \cdot i_{l+1}}\).
+    = T^{(l)}_{ \phi_l(1, j_l, i_{l+1})} - T^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}\).
     Moreover,
     \( \calKl_{j_l} \) is a convex cone, so
-    \( H^{(l)}_{j_l \cdot i_{l+1}}, V^{(l)}_{j_l \cdot i_{l+1}}
+    \( T^{(l)}_{ \phi_l(1, j_l, i_{l+1})}, B^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
     \in \calKl_{j_l} \) as required.
     Finally, since \( \Tl \in \calG^{(l)} = \calC^{(l)} \), we know
-    that \( H^{(l)} \) has a decomposition as follows:
+    that \( T^{(l)} \) has a decomposition as follows:
     \begin{align*}
-        H^{(l)}_{j_{l-1}, j_l \cdot i_{l+1}}
+        T^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
          & = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{j_{l-1}, i_l}
         \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0) \\
          & = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{
-        \sbr{T^{(l-1)}_{j_{l-1} \cdot i_l} - T^{(l-1)}_{2j_{l-1} \cdot i_l}}
-        \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0).
+            \sbr{T^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)} - T^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}}
+            \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0).
     \end{align*}
-    Define \( \leftindex_{i_{l}}{T}^{(l)} \) be such that
+    Define \( \leftindex_{i_{l}}{T}^{(l)} \) such that
     \[
-        \leftindex_{i_{l}}{T}^{(l)}_{j_{l-1}, j_l \cdot i_{l+1}}
+        \leftindex_{i_{l}}{T}^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
         =
-        \sbr{T^{(l-1)}_{j_{l-1} \cdot i_l} - T^{(l-1)}_{2j_{l-1} \cdot i_l}}
+        \sbr{T^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)} - T^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}}
+        \abs{W_{i_l, i_{l+1}}^{(l+1)}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
         \mathds{1}(i_l \in \calI_{j_l}^{(l)}),
     \]
-    which shows that
-    \( \leftindex_{i_{l}}{T}^{(l)} \oplus \mathbf{0} \in \calCl \).
+    which shows that \( \leftindex_{i_{l}}{T}^{(l)} \in \calCl \).
     But now we can write
     \[
-        H^{(l)}_{j_{l-1}, j_l \cdot i_{l+1}}
-        = \sum_{i_l \in [d_l]} \leftindex_{i_{l}}{T}^{(l)}
-        \abs{W_{i_l, i_{l+1}}^{(l+1)}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0),
+        T^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
+        = \sum_{i_l \in [d_l]} \leftindex_{i_{l}}{T}^{(l)}.
     \]
-    which shows that \( H^{(l)} \oplus \mathbf{0} \in \calCl \) because \( \calCl \) is
-    a convex cone (\cref{lemma:convex-recursive-cone-constraint}).
-    Repeating this argument for \( \Vl \) shows that
-    \( \Vl \oplus \mathbf{0} \in \calCl \) and thus
-    \( H^{(l)} \oplus \Vl \oplus \mathbf{0} \in \calCl \).
+    to show that \( \Tl \in \calC \)  because \( \calC \) is a convex cone
+    (\cref{lemma:convex-recursive-cone-constraint}).
     Note that these inclusions require \( d_{l} \geq 2 p_l d_{l+1} \),
     which holds by assumption.
     We conclude that \( \Tll \in \calCll \) and so
@@ -115,26 +111,26 @@
     Towards that goal, take
     \( \Tll \in \calC^{(l+1)} \) to be arbitrary.
     By definition of \( \calC^{(l+1)} \), there exists
-    \( \Tl \oplus \Vl \oplus \mathbf{0} \in \calC^{(l)} \) such that
+    \( \Tl \in \calCl \) such that
     \begin{align*}
         \Tll_{j_l, i_{l+1}}
-         & = \Tl_{j_l \cdot i_{l+1}} - \Vl_{j_l \cdot i_{l+1}},
+         & = \Tl_{ \phi_l(1, j_l, i_{l+1})} - \Tl_{ \phi_l(-1, j_l, i_{l+1})},
     \end{align*}
-    where \( \Tl_{j_l \cdot i_{l+1}}, \Vl_{j_l \cdot i_{l+1}}
+    where \( \Tl_{ \phi_l(1, j_l, i_{l+1})}, \Tl_{ \phi_l(-1, j_l, i_{l+1})}
     \in \calK_{j_l} \).
     That is,
     \[
         \Tll_{j_1, \ldots, j_l}
         = \sum_{i_{l+1}=1}^{d_{l+1}}
         \begin{bmatrix}
-            \Tl_{j_1, \ldots, j_l \cdot i_{l+1}} \otimes e_{i_{l+1}}
-            - \Vl_{j_1, \ldots, j_l \cdot i_{l+1}} \otimes e_{i_{l+1}}
+            \Tl_{j_1, \ldots,  \phi_l(1, j_l, i_{l+1})} \otimes e_{i_{l+1}}
+            - \Tl_{j_1, \ldots,  \phi_l(-1 j_l, i_{l+1})} \otimes e_{i_{l+1}}
         \end{bmatrix},
     \]
     where we are using standard basis vectors \( e_{i_{l+1}} \) to embed
     the tensors into the correct dimensions of \( \Tll \).
     Since \( C^{(l)} = G^{(l)} \),
-    \( \Tl \oplus \Vl \oplus \mathbf{0} \in \calG^{(l)} \) as required.
+    \( \Tl \in \calG^{(l)} \) as required.
     Choosing \( W^{(l+1)} \in \R^{d_{l} \times d_{l+1}} \) to be the block matrix
     with \( p_l + 1 \) blocks given by
     \[
@@ -142,9 +138,10 @@
         =
         \begin{bmatrix}
             I      \\
-            -I     \\
             \vdots \\
             I      \\
+            -I     \\
+            \vdots
             -I     \\
             \mathbf{0}
         \end{bmatrix},
@@ -152,19 +149,159 @@
     we can now write
     \begin{align*}
         \Tll_{j_1, \ldots, j_{l}}
-         & = \sum_{i_{l+1} = 1}^{d_{l+1}}
-        \Tl_{j_1, \ldots, j_l \cdot i_{l+1}}
-        \otimes W_{i_{l+1}}
-        +
-        \sum_{i_{l+1} = 1}^{d_{l+1}}
-        \Vl_{j_1, \ldots, j_l \cdot i_{l+1}}
-        \otimes W_{i_{l+1}}.
+         & = \sum_{i_{l} \in \calI_{j_l}^{(l)}}
+        \Tl_{j_1, \ldots, j_{l-1}, i_l}
+        \otimes W_{i_{l}},
     \end{align*}
+    where the activation indices are given by
+    \[
+        \calI_{j_l}^{(l)}
+        = \cbr{ \phi_l(1, j_l, i_{l+1}) : i_{l+1} \in [d_{l+1}]}
+        \cup
+        \cbr{ \phi_l(2, j_l, i_{l+1}) : i_{l+1} \in [d_{l+1}]}.
+    \]
     Thus, we need \( 2 d_{l+1} \) outer-products per \( j_l \in [p_l] \) to
-    represent \( \Tll \)
+    represent \( \Tll \).
     This is possible since \( d_l \geq 2 p_l d_{l+1} \),
     by assumption.
     We conclude that \( \Tll \in \calGll \) and thus \( \calGll = \calCll \)
     as required.
 \end{proof}
 
+\tensorSolutionMapping*
+\begin{proof}
+    The proof reverses the layer elimination lemma.
+    For any \( l \in [k-1] \), we have
+    \begin{align*}
+        X^{(l+1)} \odot T^{(l+1)}
+         & = \sum_{j_{l}=1}^{p_l} X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}}          \\
+         & = \sum_{j_{l}=1}^{p_l} \sum_{i_{l+1}=1}^{d_{l+1}}
+        \rbr{X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}, i_{l+1}}} \otimes e_{i_{l+1}} \\
+         & = \sum_{j_{l}=1}^{p_l} \sum_{i_{l+1}=1}^{d_{l+1}}
+        \rbr{X^{(l+1)}_{j_{l}} \odot
+        \sbr{T^{(l)}_{\phi_l(1, j_{l}, i_{l+1})} - T^{(l)}_{\phi_l(-1, j_{l}, t i_{l+1})}}}
+        \otimes e_{i_{l+1}}                                                          \\
+         & = \sum_{i_{l}=1}^{d_{l}}
+        D^{(l)}_{i_{l}} \rbr{X^{(l)} \odot
+        T^{(l)}_{i_{l}}} \otimes W^{(l+1)}_{i_{l}}                                   \\
+         & = \sum_{i_{l}=1}^{d_{l}}
+        \rbr{X^{(l)} \odot T^{(l)}_{i_{l}}}_+ \otimes W^{(l+1)}_{i_{l}}              \\
+         & = \rbr{X^{(l)} \odot T^{(l)}}_+ W^{(l+1)}.
+    \end{align*}
+    Applying this recursively from \( l = k - 1 \)
+    and using \( X^{(1)} \odot T^{(1)} = X W^{(1)} \) completes the proof.
+\end{proof}
+
+\minimumSolutionWidth*
+\begin{proof}
+    Let \( T^{(k)} \in \calC^{(k)} \) be a solution to
+    \cref{eq:convex-tensor-program}.
+    We shall construct a solution with the desired width bounds from
+    \( T^{(k)} \).
+    Let \( l \in [k-1] \) and suppose that the layer at \( l+1 \)
+    has \( c \) non-zero outputs.
+    That is, the set
+    \[
+        \cbr{i_{l+1} : T^{(l+1)}_{i_{l+1}} \neq 0 },
+    \]
+    has \( c \) elements.
+    Now, observe that for each \( i_{l+1} \in \calA(T^{(l+1)}) \),
+    \begin{align*}
+        X^{(l+1)} \odot T^{(l+1)}_{i_{l+1}}
+         & = \sum_{j_{l} = 1}^{p_{l}}
+        X^{(l+1)}_{j_l}  \odot T^{(l+1)}_{j_{l}, i_{l+1}} \\
+         & = \sum_{j_{l} = 1}^{p_{l}}
+        X^{(l+1)}_{j_l}  \odot
+        \sbr{T^{(l)}_{j_{l} \cdot i_{l+1}} - T^{(l)}_{2j_{l} \cdot i_{l+1}}}.
+    \end{align*}
+    The non-zero terms in this sum must each be embedded into the \( i_{l+1} \)
+    slice of \( T^{(l)} \), meaning each contributes one to the activation cone
+    rank.
+    The set of non-zero terms is,
+    \[
+        \calN_{i_{l+1}}(T^{(l)})
+        = \cbr{q_{j_l \cdot i_{l+1}} :=
+        X^{(l+1)}_{j_l} \odot T^{(l)}_{j_{l} \cdot i_{l+1}}
+        : T^{(l)}_{j_{l} \cdot i_{l+1}} \neq 0}
+        \cup
+        \cbr{q_{2 j_l \cdot i_{l+1}} :=
+        X^{(l+1)}_{j_l} \odot T^{(l)}_{2 j_{l} \cdot i_{l+1}}
+        : T^{(l)}_{2 j_{l} \cdot i_{l+1}} \neq 0}
+    \]
+    Since each vector
+    \( q_{i_l} \in \mathcal{N}(T^{(k)}_{i_{l+1}}) \) is
+    \( n \)-dimensional, \( \calN_{i_{l+1}}(T^{(k)}) \)
+    contains a linearly dependent set if it contains are more than \( n \) vectors.
+    Let
+    \[
+        \calA_{i_{l+1}}(T^{(l)})
+        = \cbr{j_l : q_{j_l \cdot i_{l+1}} \in \calN_{i_{l+1}}(T^{(l)})}
+        \cup \cbr{2 j_l : q_{2 j_l \cdot i_{l+1}} \in \calN_{i_{l+1}}(T^{(l)})}.
+    \]
+    Then linear dependence implies there exists
+    \( \cbr{\alpha_r : r \in \calA_{i_{l+1}}(T^{(l)})} \) not all equal to
+    zero such that
+    \begin{align*}
+        0 & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})} \alpha_{i_{l}} q_{r \cdot i_{l+1}} \\
+          & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
+        \alpha_{r} \rbr{X^{(l)}_{r} \odot T^{(l)}_{r \cdot i_{l+1}}}                   \\
+          & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
+        \rbr{X^{(l+1)}_{r} \odot \sbr{\alpha_{r} T^{(l)}_{r \cdot i_{l+1}}}}.
+    \end{align*}
+    Let \( r^* = \argmax_r \cbr{ \abs{\alpha_r} : r \in \calA_{i_{l+1}}(T^{(l)})} \)
+    and define \( \tilde{\alpha}_r = \alpha_r / \alpha_{r^*} \).
+    Clearly \( \tilde{\alpha}_r \leq 1 \) for all \( r \) and
+    \( \tilde{\alpha}_{r^*} = 1 \).
+    Using this notation, we have
+    \begin{align*}
+        0 & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
+        \rbr{X^{(l)}_{r} \odot \sbr{\tilde{\alpha}_{r} T^{(l)}_{r \cdot i_{l+1}}}}.
+    \end{align*}
+    This implies
+    \begin{align*}
+        X^{(l+1)} \odot T^{(l+1)}_{i_{l+1}}
+         & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
+        X^{(l+1)}_r \odot
+        \sbr{(1 + \tilde{\alpha}_{r}) T^{(l)}_{r \cdot i_{l+1}}} \\
+         & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
+        X^{(l+1)}_r \odot
+        \hat{T}^{(l)}_{r \cdot i_{l+1}},
+    \end{align*}
+    where \( \hat{T^{(l)}} \) is the scaled version of \( T^{(l)} \)
+    satisfying
+    \( \hat{T}^{(l)}_{r \cdot i_{l+1}}
+    = \sbr{(1 + \tilde{\alpha}_{r}) T^{(l)}_{r \cdot i_{l+1}}} \)
+    for each \( r \in \calA_{i_{l+1}}(T^{(l)}) \).
+    It is clear from the above calculation that \( \hat{T}^{(l)} \) preserves
+    the predictions of \( T^{(l)} \)
+    and maintains \( \hat{T}^{(l)}_{r \cdot i_{l+1}} \in \calK_{r}^{(l)} \)
+    since \( \tilde{\alpha_{r}} \geq 0 \) for each \( r \).
+    Defining
+    \[
+        \hat{T}^{(l+1)}_{r, i_{l+1}} =
+        \begin{cases}
+            \hat{T}^{(l)}_{j_l \cdot i_{l+1}} - \hat{T}^{(l)}_{2 j_l \cdot i_{l+1}}
+             & \mbox{for \(j_l  \in \calA_{i_{l+1}}(\calT^{(l)}) \)} \\
+            T^{(l)}_{r \cdot i_{l+1}}
+             & \mbox{otherwise.}
+        \end{cases},
+    \]
+    \aside{This notation is wrong.}
+    we see that \( \hat{T}^{(l+1)} \in \calC^{(l+1)} \)
+    and thus \( \hat{T}^{(l+1)} \) is also optimal.
+    Moreover,
+    \( \calA_{i_{l+1}}(\hat{T}^{(l)}) \leq \calA_{i_{l+1}}(\hat{T}^{(l)}) - 1 \).
+    In other words, the activation cone rank of the \( l^{\text{th}} \)
+    layer is reduced by one.
+
+    For each \( i_{l+1} \), we can repeat this argument until the vectors
+    in \( \calN_{i_{l+1}}(\hat{T}^{(l)}) \) are linearly independent.
+    This implies there exists optimal \( \hat{T}^{(l)} \)
+    for which \( \abs{\calN_{i_{l+1}}(\hat{T}^{(l)})} = m \leq n \).
+    Repeating this procedure independently for each \( i_{l+1} \)
+    for which \( T^{(l+1)}_{i_{l+1}} \neq 0 \), we construct
+    \( \hat{T}^{(l+1)} \) with
+    \( r^{(l+1)}_{\text{ac}}(\hat{T}^{(l+1)}) \leq c n \).
+    Noting that \( c \leq k \) when \( l = k - 1 \)
+    and applying a simple inductive argument completes the proof.
+\end{proof}
