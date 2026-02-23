@@ -45,7 +45,18 @@ More importantly, \( \calC^{(l)} \) is exactly the constraint set obtained
 by making the network wide enough that the weight sharing, low-rank,
 and width constraints in \( \calGl \) vanish.
 
-\begin{restatable}[Constraint Convexification]{proposition}{constraintConvexification}\label{prop:constraint-convexification}
-    If \( d_l \geq 2 p_l d_{l+1} \) for every \( l \in [k-1]  \), then
-    \( \calG^{(l)} = \calC^{(l)} \).
+\begin{restatable}[Constraint Convexification]{proposition}{constraintConvexification}%
+    \label{prop:constraint-convexification}
+    If \( d_l \geq 2 p_l d_{l+1} \) for every \( l \in [L]  \), then
+    \( \calG^{(L)} = \calC^{(L)} \).
 \end{restatable}
+
+Although short, \cref{prop:constraint-convexification} is the critical 
+proposition for our convex reformulation.
+It says that if the network is sufficiently wide, the constraint set
+in Problem~\ref{eq:non-convex-tensor-program} is convex and obtain a 
+fully convex optimization program.
+
+\aside{Now I characterize the minimum size solution before giving the true 
+conditions for the convex reformulation to hold. But, I need to think about
+this a bit more first.}
