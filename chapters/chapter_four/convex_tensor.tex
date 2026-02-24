@@ -61,7 +61,7 @@ layer is multiplicatively larger than the succeeding one,
 for the constraint set to convexify and \( \calGk = \calCk \) to hold.
 This leads to the following corollary.
 \begin{corollary}\label{cor:convex-tensor-program}
-    If \( d_l \geq c 2^{L-l} \prod_{i = l+1}^{L} p_l \) for every
+    If \( d_l \geq c \, 2^{L-l} \prod_{i = l}^{L-1} p_l \) for every
     \( l \in [L-1]  \), then
     \begin{equation*}
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
@@ -106,7 +106,7 @@ Moreover, it shows that the number of non-zero neurons in the
 \( l^{\text{th}} \) layer of the network is given by
 \( m_{l}(\Tk) = \abs{\calA(\Tl)} \).
 Collecting these widths as \( \Delta(\Tk) = \rbr{m_1(\Tk), \ldots, m_{L-1}(\Tk)} \),
-the optimal solutions to Problem~\ref{eq:convex-tensor-program} thus define
+the optimal solutions to Problem~\ref{eq:convex-tensor-program} define
 a Pareto frontier of minimal-width networks with the same optimal
 value as the convex reformulation.
 Let
@@ -137,7 +137,7 @@ As an immediate result, we obtain the main theorem of this section.
 
 \begin{restatable}{theorem}{deepConvexReformulation}\label{thm:deep-convex-reformulation}
     If for every \( l \in [L-1]  \) it holds that
-    \( d_l \geq m^{*}_{l} \) for some threshold \( m^{*}_{l} \leq c n^{L - l} \),
+    \( d_l \geq m^{*}_{l} \) for some threshold \( m^{*}_{l} \leq c \, n^{L - l} \),
     then
     \begin{equation*}
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
@@ -150,6 +150,17 @@ As an immediate result, we obtain the main theorem of this section.
     \end{equation}
 \end{restatable}
 
-\aside{Add interpretation.}
-
-
+In comparison to \cref{cor:convex-tensor-program}, this theorem reduces
+the width requirement on the \( l^{\text{th}} \) layer of the neural network
+from \( d_l \geq c \, 2^{(L- l)} \prod_{i=l}^{L-1} p_l \) to
+\( d_l \geq m^*_{l} \) where \( m^*_{l} \) is an unknown threshold
+bounded as \( m^*_{l} \leq c \, n^{L - 1} \).
+If the number of layers in the network, \( L \), is fixed ahead of time, then
+this is fully polynomial in the input data.
+Moreover, the bound on \( m^*_l \) is tight with existing results on
+convex reformulations.
+For example, \citep{sahiner2021vector} show that a convex reformulation exists
+for two-layer ReLU networks with vector outputs if \( d_1 \geq m_1^* \) for 
+\( m_1^* \leq c \, n \).
+Specializing \cref{thm:deep-convex-reformulation} to \( L = 2 \) yields exactly
+the same condition.
