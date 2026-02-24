@@ -194,17 +194,17 @@
 
 \minimumSolutionWidth*
 \begin{proof}
-    Let \( T^{(k)} \in \calC^{(k)} \) be a solution to
+    Let \( \Tk \in \calCk \) be a solution to
     \cref{eq:convex-tensor-program}.
     We shall construct a solution with the desired width bounds from
-    \( T^{(k)} \).
-    Let \( l \in [k-1] \) and suppose that the layer at \( l+1 \)
-    has \( c \) non-zero outputs.
+    \( \Tk \).
+    Let \( l \in [L-1] \) and suppose that the layer at \( l+1 \)
+    has \( k \) non-zero outputs.
     That is, the set
     \[
-        \cbr{i_{l+1} : T^{(l+1)}_{i_{l+1}} \neq 0 },
+        \calA(\Tll) = \cbr{i_{l+1} \in [d_{l+1}] : T^{(l+1)}_{i_{l+1}} \neq 0 },
     \]
-    has \( c \) elements.
+    has \( k \) elements.
     Now, observe that for each \( i_{l+1} \in \calA(T^{(l+1)}) \),
     \begin{align*}
         X^{(l+1)} \odot T^{(l+1)}_{i_{l+1}}
@@ -212,96 +212,92 @@
         X^{(l+1)}_{j_l}  \odot T^{(l+1)}_{j_{l}, i_{l+1}} \\
          & = \sum_{j_{l} = 1}^{p_{l}}
         X^{(l+1)}_{j_l}  \odot
-        \sbr{T^{(l)}_{j_{l} \cdot i_{l+1}} - T^{(l)}_{2j_{l} \cdot i_{l+1}}}.
+        \sbr{T^{(l)}_{\phi_{l}(1, j_{l}, i_{l+1})} - T^{(l)}_{\phi_{l}(-1, j_{l}, i_{l+1})}}.
     \end{align*}
-    The non-zero terms in this sum must each be embedded into the \( i_{l+1} \)
-    slice of \( T^{(l)} \), meaning each contributes one to the activation cone
-    rank.
+    The non-zero terms in this sum must each be embedded into \( T^{(l)} \),
+    meaning each contributes one to the width of the
+    \( (l+1)^{\text{th}} \) layer.
     The set of non-zero terms is,
     \[
         \calN_{i_{l+1}}(T^{(l)})
-        = \cbr{q_{j_l \cdot i_{l+1}} :=
-        X^{(l+1)}_{j_l} \odot T^{(l)}_{j_{l} \cdot i_{l+1}}
-        : T^{(l)}_{j_{l} \cdot i_{l+1}} \neq 0}
-        \cup
-        \cbr{q_{2 j_l \cdot i_{l+1}} :=
-        X^{(l+1)}_{j_l} \odot T^{(l)}_{2 j_{l} \cdot i_{l+1}}
-        : T^{(l)}_{2 j_{l} \cdot i_{l+1}} \neq 0}
+        = \cbr{q_{s, j_l, i_{l+1}} :=
+            X^{(l+1)}_{j_l} \odot T^{(l)}_{\phi_{l}(1, j_{l}, i_{l+1})}
+            : j_l \in [p_l], s \in \cbr{+1, -1},
+            T^{(l)}_{\phi_{l}(s, j_{l}, i_{l+1})} \neq 0}
     \]
     Since each vector
-    \( q_{i_l} \in \mathcal{N}(T^{(k)}_{i_{l+1}}) \) is
-    \( n \)-dimensional, \( \calN_{i_{l+1}}(T^{(k)}) \)
-    contains a linearly dependent set if it contains are more than \( n \) vectors.
+    \( q_{s, j_l, i_{l+1}} \in \mathcal{N}_{i_{l+1}}(\Tl) \) is
+    \( n \)-dimensional, \( \calN_{i_{l+1}}(\Tl) \)
+    contains a linearly dependent set if it contains are more than \( n \)
+    vectors.
     Let
     \[
-        \calA_{i_{l+1}}(T^{(l)})
-        = \cbr{j_l : q_{j_l \cdot i_{l+1}} \in \calN_{i_{l+1}}(T^{(l)})}
-        \cup \cbr{2 j_l : q_{2 j_l \cdot i_{l+1}} \in \calN_{i_{l+1}}(T^{(l)})}.
+        \calQ_{i_{l+1}}(T^{(l)})
+        = \cbr{(s, j_l) : q_{s, j_l, i_{l+1}} \in \calN_{i_{l+1}}(\Tl)}.
     \]
     Then linear dependence implies there exists
-    \( \cbr{\alpha_r : r \in \calA_{i_{l+1}}(T^{(l)})} \) not all equal to
-    zero such that
+    \( \cbr{\alpha_(s,j_l) : (s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \)
+    not all equal to zero such that
     \begin{align*}
-        0 & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})} \alpha_{i_{l}} q_{r \cdot i_{l+1}} \\
-          & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
-        \alpha_{r} \rbr{X^{(l)}_{r} \odot T^{(l)}_{r \cdot i_{l+1}}}                   \\
-          & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
-        \rbr{X^{(l+1)}_{r} \odot \sbr{\alpha_{r} T^{(l)}_{r \cdot i_{l+1}}}}.
+        0 & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \alpha_{s, j_l} q_{s, j_l, i_{l+1}} \\
+          & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        \alpha_{s,j_l} \rbr{X^{(l)}_{j_l} \odot T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}}          \\
+          & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        \rbr{X^{(l+1)}_{j_l} \odot \sbr{\alpha_{s,j_l} T^{(l)}_{\phi_{l}(s,j_l,i_{l+1})}}}.
     \end{align*}
-    Let \( r^* = \argmax_r \cbr{ \abs{\alpha_r} : r \in \calA_{i_{l+1}}(T^{(l)})} \)
-    and define \( \tilde{\alpha}_r = \alpha_r / \alpha_{r^*} \).
-    Clearly \( \tilde{\alpha}_r \leq 1 \) for all \( r \) and
-    \( \tilde{\alpha}_{r^*} = 1 \).
+    Let \( (s^*, r^*) =
+    \argmax_(s, j_l) \cbr{ \abs{\alpha_{s, j_l}} :
+        (s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \)
+    and define \( \tilde{\alpha}_{s, j_l} = \alpha_{s, j_l} / \alpha_{s^* ,r^*} \).
+    Clearly \( \tilde{\alpha}_{s, j_l} \leq 1 \) for all \( (s, j_l) \) and
+    \( \tilde{\alpha}_{(s^*, r^*)} = 1 \).
     Using this notation, we have
     \begin{align*}
-        0 & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
-        \rbr{X^{(l)}_{r} \odot \sbr{\tilde{\alpha}_{r} T^{(l)}_{r \cdot i_{l+1}}}}.
+        0 & = \sum_{(s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        \rbr{X^{(l)}_{j_l} \odot \sbr{\tilde{\alpha}_{s, j_l} T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}}}.
     \end{align*}
     This implies
     \begin{align*}
         X^{(l+1)} \odot T^{(l+1)}_{i_{l+1}}
-         & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
-        X^{(l+1)}_r \odot
-        \sbr{(1 + \tilde{\alpha}_{r}) T^{(l)}_{r \cdot i_{l+1}}} \\
-         & = \sum_{r \in \calA_{i_{l+1}}(T^{(l)})}
-        X^{(l+1)}_r \odot
-        \hat{T}^{(l)}_{r \cdot i_{l+1}},
+         & = \sum_{(s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        X^{(l+1)}_{j_l} \odot
+        \sbr{(1 + \tilde{\alpha}_{s, j_l}) T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}} \\
+         & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        X^{(l+1)}_{j_l} \odot
+        \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})},
     \end{align*}
     where \( \hat{T^{(l)}} \) is the scaled version of \( T^{(l)} \)
     satisfying
-    \( \hat{T}^{(l)}_{r \cdot i_{l+1}}
-    = \sbr{(1 + \tilde{\alpha}_{r}) T^{(l)}_{r \cdot i_{l+1}}} \)
-    for each \( r \in \calA_{i_{l+1}}(T^{(l)}) \).
+    \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}
+    = \sbr{(1 + \tilde{\alpha}_{s, j_l}) T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}} \)
+    for each \( (s, j_l) \in \calQ_{i_{l+1}}(T^{(l)}) \) and
+    \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} = T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} \)
+    otherwise.
     It is clear from the above calculation that \( \hat{T}^{(l)} \) preserves
     the predictions of \( T^{(l)} \)
-    and maintains \( \hat{T}^{(l)}_{r \cdot i_{l+1}} \in \calK_{r}^{(l)} \)
-    since \( \tilde{\alpha_{r}} \geq 0 \) for each \( r \).
+    and maintains \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} \in \calK_{j_l}^{(l)} \)
+    since \( \tilde{\alpha}_{s, j_l} \geq 0 \) for each \( (s, j_l) \).
     Defining
     \[
-        \hat{T}^{(l+1)}_{r, i_{l+1}} =
-        \begin{cases}
-            \hat{T}^{(l)}_{j_l \cdot i_{l+1}} - \hat{T}^{(l)}_{2 j_l \cdot i_{l+1}}
-             & \mbox{for \(j_l  \in \calA_{i_{l+1}}(\calT^{(l)}) \)} \\
-            T^{(l)}_{r \cdot i_{l+1}}
-             & \mbox{otherwise.}
-        \end{cases},
+        \hat{T}^{(l+1)}_{s, j_l, i_{l+1}} =
+        \hat{T}^{(l)}_{\phi_{l}(1, j_l, i_{l+1})}
+        - \hat{T}^{(l)}_{\phi_{l}(-1, j_l, i_{l+1})}
     \]
-    \aside{This notation is wrong.}
     we see that \( \hat{T}^{(l+1)} \in \calC^{(l+1)} \)
     and thus \( \hat{T}^{(l+1)} \) is also optimal.
     Moreover,
-    \( \calA_{i_{l+1}}(\hat{T}^{(l)}) \leq \calA_{i_{l+1}}(\hat{T}^{(l)}) - 1 \).
-    In other words, the activation cone rank of the \( l^{\text{th}} \)
-    layer is reduced by one.
+    \( \calA(\hat{T}^{(l)}) \leq \calA(\hat{T}^{(l)}) - 1 \).
+    In other words, the width of \( m_l(\Tk) \) is reduced by one.
 
     For each \( i_{l+1} \), we can repeat this argument until the vectors
     in \( \calN_{i_{l+1}}(\hat{T}^{(l)}) \) are linearly independent.
     This implies there exists optimal \( \hat{T}^{(l)} \)
-    for which \( \abs{\calN_{i_{l+1}}(\hat{T}^{(l)})} = m \leq n \).
+    for which \( \abs{\calN_{i_{l+1}}(\hat{T}^{(l)})} \leq n \).
     Repeating this procedure independently for each \( i_{l+1} \)
     for which \( T^{(l+1)}_{i_{l+1}} \neq 0 \), we construct
     \( \hat{T}^{(l+1)} \) with
-    \( r^{(l+1)}_{\text{ac}}(\hat{T}^{(l+1)}) \leq c n \).
-    Noting that \( c \leq k \) when \( l = k - 1 \)
-    and applying a simple inductive argument completes the proof.
+    \( m_{l}(\hat{T}^{(l)}) \leq k n \).
+    Noting that \( k \leq c \) (the number of network outputs) when
+    \( l = k - 1 \) and applying a simple inductive argument completes the
+    proof.
 \end{proof}

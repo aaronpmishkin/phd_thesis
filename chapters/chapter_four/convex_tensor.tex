@@ -100,33 +100,36 @@ non-zero activation patterns.
     Then \( X^{(k)} \odot T^{(k)} = f_\theta(X) \).
 \end{restatable}
 
-\cref{lemma:convex-tensor-solution-mapping} is only one way of computing
-an equivalent neural network given a tensor model \( \Tk \).
-More generally, suppose \( \Tkopt \) is any optimal solution to
-\cref{eq:convex-tensor-program} and let \( \theta^* \) be the parameters of an
-equivalent neural network, i.e. \( f_{\theta^*}(X) = \Xk \odot \Tkopt \).
-Moreover, assume that \( \theta^* \) is highly neuron sparse, meaning
-\[
-    d_l' := \abs{\cbr{i_l \in [d_l] : \Wl_{\cdot, i_l} \neq 0}} \ll d_l.
-\]
-Let \( \Theta' \) is the parameter space associated with
-the architecture \( \Delta' = \rbr{d_2', \ldots, d_{L-1}'} \).
-The existence of \( \theta^* \) implies
-\[
-    \calL\rbr{f_{\theta^*}(X), y}
-    = \min_{\theta \in \Theta'} \calL\rbr{f_{\theta}(X), y}
-    \leq \min_{\theta \in \Theta} \calL\rbr{f_{\theta}(X), y}
-    = \calL\rbr{f_{\theta^*}(X), y}.
-\]
-That is, \cref{cor:convex-tensor-program} holds with the much more parsimonious
-architecture specified by \( \Delta' \).
-We now exhibit such a network \( \theta^* \) with the goal of greatly refining
-the width requirements for our deep convex reformulation.
+Given any tensor model \( \Tk \in \calCk \), \cref{lemma:convex-tensor-solution-mapping}
+provides a simple way of computing an equivalent neural network \( f_\theta \).
+Moreover, it shows that the number of non-zero neurons in the
+\( (l+1)^{\text{th}} \) layer of the network is given by
+\( m_{l+1}(\Tk) = \abs{\calA(\Tl)} \) (we note that \( m_1 = m_2 \)).
+Collecting these widths as \( \Delta(\Tk) = \rbr{m_1(\Tk), \ldots, m_{L-1}(\Tk)} \),
+the optimal solutions to Problem~\ref{eq:convex-tensor-program} thus define
+a Pareto frontier of minimal-width networks with the same optimal
+value as the convex reformulation.
+Let
+\begin{equation}\label{eq:tensor-optima}
+    \calO^* = \argmin_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y)
+\end{equation}
+be the set of optimal solutions to Problem~\ref{eq:convex-tensor-program}.
+Then the frontier of minimal widths is given as follows:
+\begin{equation}
+    \calD^* :=
+    \cbr{\Delta(\Tkopt)
+        : \nexists T^{(L)'} \in \calO^*,
+        \Delta(T^{(L)'}) \prec \Delta(\Tkopt)}.
+\end{equation}
+
+We now exhibit a solution \( \Tkopt \in \calO^* \) which allows us to
+upper bound \( m^*_l \) for at least one point
+\( \Delta^* = (m^*_1, \ldots, m^*_{L-1}) \in \calD^* \).
 
 \begin{restatable}{proposition}{minimumSolutionWidth}\label{thm:convex-minimal-solution-width}
     There exists at least one solution to the convex tensor optimization
     program in \cref{eq:convex-tensor-program} satisfying
-    \( r^{(l+1)}_{\text{ac}}(T^{(k)}) \leq k n^{k - l} \) for every
-    \( l \in [k-1] \).
-    As a result, \( m^{*}_{l+1} \leq k n^{k - l} \).
+    \( m_l(\Tk) \leq c n^{L - l} \) for every
+    \( l \in [L-1] \).
+    As a result, \( m^{*}_{l+1} \leq c n^{L - l} \).
 \end{restatable}
