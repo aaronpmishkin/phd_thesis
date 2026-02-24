@@ -12,8 +12,8 @@ Recall that a deep ReLU network is
 parameterized by \( \theta = \rbr{W^{(1)}, \ldots, \Wk} \), where
 \( W^{(l)} \in \R^{d_{l} \times d_{l+1}} \) are the weights for the
 \( l^{\text{th}} \) layer.
-The dimension of the network inputs is given by \( d_1 = d \) and the output
-dimension is \( d_{L+1} = c \), where \( c \) is the number of targets.
+The dimension of the network inputs is given by \( d_0 = d \) and the output
+dimension is \( d_{L} = c \), where \( c \) is the number of targets.
 In accordance with \cref{eq:activations} and \cref{eq:predictions}, the model
 activations and predictions are given by
 \[
@@ -34,17 +34,19 @@ The prediction function associated with this sub-network is
 \end{equation}
 When \( l = 1 \), the sub-network is defined to be \( f_{\theta_{l}}(X) = X \).
 For a given architecture specified by the hidden dimensions
-\( \Delta = (d_2, \ldots, d_{L}) \), we can define the set of activation
+\( \Delta = (d_1, \ldots, d_{L-1}) \), we can define the set of activation
 patterns at layer \( l \) as follows:
 \begin{equation}\label{eq:l-activation-patterns}
     \begin{aligned}
         \calDl_{\Delta} = \big\{
         \Dl_{j_l} =
         \diag\rbr{\mathds{1}\rbr{f_{\theta_{l-1}}(X) u \geq 0}}
-        : \theta^{(l-1)} \in \Theta^{(l-1)}, u \in \R^{d_{l}}
-        \big\}.
+        : \theta^{(l-1)} \in \Theta_\Delta^{(l-1)}, u \in \R^{d_{l}}
+        \big\},
     \end{aligned}
 \end{equation}
+where \( \Theta^{(l-1)}_{\Delta} \) is the parameter space of the sub-network
+associated with the architecture \( \Delta \).
 When \( l = 1 \), \( \calD^{(1)}_{\Delta} \) is independent of \( \Delta \)
 and equivalent to the standard definition of activation patterns for two-layer
 ReLU networks (\cref{eq:activation-patterns}).
@@ -54,8 +56,8 @@ However, it is straightforward to obtain a canonical (and maximal) set of
 patterns by taking all the layer widths to be arbitrarily large.
 \begin{restatable}{lemma}{limitingActivationSet}\label{lemma:activation-patterns}
     The set of activation patterns in the \( l^{\text{th}} \) layer has a
-    finite limit, call it \( \calDl \), obtained by taking each layer width
-    \( d_{i} \rightarrow \infty \),
+    finite limit, call it \( \calDl \), obtained by taking each hidden layer
+    width \( d_{i} \rightarrow \infty \),
     \begin{equation}\label{eq:limiting-activation-set}
         \calDl = \lim_{\Delta \rightarrow \infty} \calDl_{\Delta}.
     \end{equation}
@@ -66,12 +68,12 @@ patterns in layer \( l \).
 Similar to the two-layer setting, we use activation patterns to define
 a data-dependent basis expansion on which our convex reformulation will
 operate.
-Let \( X^{(1)} = X \in \R^{n \times d_1} \) and recursively define
-the tensor \( X^{(l+1)} \in \R^{n \times p_1 \times \cdots \times p_{l} \times d_1} \)
+Let \( X^{(1)} = X \in \R^{n \times d_0} \) and recursively define
+the tensor \( X^{(l+1)} \in \R^{n \times p_1 \times \cdots \times p_{l} \times d_0} \)
 such that
 \begin{equation}\label{eq:data-tensor}
     X^{(l+1)}_{j_1,\ldots, j_l}
-    := \Dl_{j_l} \Xl_{j_1, \ldots, j_{l-1}} \in \R^{n \times d_1},
+    := \Dl_{j_l} \Xl_{j_1, \ldots, j_{l-1}} \in \R^{n \times d_0},
 \end{equation}
 where we use the convention that \( j_{l} \) always indexes the
 \( l^{\text{th}} \) slice of \( \Xl \).
@@ -88,19 +90,19 @@ operator on \( \Xk \).
 To do so, we define a tensor reduction as follows.
 \begin{definition}[Tensor Reduction]
     Given two tensors
-    \( \Xll \in \R^{n \times p_1 \times \cdots \times p_l \times d_1} \)
+    \( \Xll \in \R^{n \times p_1 \times \cdots \times p_l \times d_0} \)
     and
-    \( \Tll \in \R^{d_1 \times p_1 \times \cdots \times p_l \times d_{l+1}} \),
+    \( \Tll \in \R^{d_0 \times p_1 \times \cdots \times p_l \times d_{l+1}} \),
     the tensor reduction operator denoted by \( \odot \) is defined as
     \begin{equation}\label{eq:tensor-reduction}
-        \Xll \odot \Tll = \sum_{j_{l}} \cdots \sum_{j_{1}}
+        \Xll \odot \Tll = \sum_{j_{1}} \cdots \sum_{j_{l}}
         \Xll_{j_1, \ldots, j_{l}} \Tll_{j_1, \ldots, j_{l}}
     \end{equation}
 \end{definition}
 It should be clear from the definition that the tensor reduction is
 linear and acts on tensors of conformal shapes.
 We will also use \( \odot \) with right-hand arguments of order
-\( l \), such as \( U^{(l)} \in \R^{d_1 \times p_1 \times \cdots \times p_{l-1}} \)
+\( l \), such as \( U^{(l)} \in \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \)
 in which case it is given by the following reduction over
 matrix-vector products:
 \[
@@ -112,7 +114,7 @@ associated with our higher-order activation activation patterns as
 \begin{equation}\label{eq:tensor-cone}
     \calK^{(l)}_{j_{l}} =
     \cbr{
-    U^{(l)} \in \R^{d_1 \times p_{1} \times \cdots \times p_{l-1}}
+    U^{(l)} \in \R^{d_0 \times p_{1} \times \cdots \times p_{l-1}}
     :
     (2D^{(l)}_{j_{l}} - I)
     \sbr{\Xl \odot U^{(l)}} \geq 0
@@ -122,7 +124,7 @@ These cones are a straightforward generalization of \( \calK_j \) from
 the two-layer setting, as seen in Chapters~\ref{chapter:fast-optimization}
 and~\ref{chapter:solution-functions}.
 In fact, choosing \( l = 1 \) and observing that \( X^{(1)} = X \) and
-\( U^{(l)} \in \R^{d_1} \) shows that \( \calK^{(1)}_{j_1} = \calK_j \).
+\( U^{(l)} \in \R^{d_0} \) shows that \( \calK^{(1)}_{j_1} = \calK_j \).
 We have already illustrated that \( \calD^{(1)} = \calD_X \); taken together,
 these two facts imply that \cref{eq:tensor-cone} and
 \cref{eq:l-activation-patterns} reduce directly to the standard two-layer setup
@@ -133,13 +135,13 @@ every neural network prediction function can be represented by a linear
 operator on a \( L+1 \) order tensor.
 Key to this representation is a recursive constraint set encoding the network
 structure in tensor form.
-Define \( \calG^{(1)} = \R^{d_1 \times d_2} \) and let \( \calGl \)
+Define \( \calG^{(1)} = \R^{d_0 \times d_1} \) and let \( \calGl \)
 be defined recursively as
 \begin{equation}\label{eq:rank-tensor-decomp}
     \begin{aligned}
          & \calGll
         := \bigg\{ \Tll
-        \in \R^{d_{1} \times p_{1} \times \cdots \times p_{l} \times d_{l+1}}
+        \in \R^{d_{0} \times p_{1} \times \cdots \times p_{l} \times d_{l+1}}
         : \exists \, \Tl \in \calGl
         \text{ and } W^{(l+1)} \in \R^{d_l \times d_{l+1}} \text{ s.t. } \\
          & \hspace{0.5em} \Tll_{j_1, \ldots, j_{l}}
@@ -204,15 +206,14 @@ with non-convex decomposition constraints.
     \end{equation}
 \end{corollary}
 
-Problem~\ref{eq:non-convex-tensor-program} is attractive because it 
-linearizes the ReLU prediction function using the 
+Problem~\ref{eq:non-convex-tensor-program} is attractive because it
+linearizes the ReLU prediction function using the
 expanded data basis given by \( \Xk \).
-Moreover, it holds for any fully-connected architecture. 
-The drawbacks are that \( \calGk \) is non-convex and \( \Tk \) has 
+Moreover, it holds for any fully-connected architecture.
+The drawbacks are that \( \calGk \) is non-convex and \( \Tk \) has
 exponentially many parameters (recall that \( T^{(2)} \) alone
-has \( d_1 p_1 c \) parameters, which is exponential when \( X \)
+has \( d_0 p_1 c \) parameters, which is exponential when \( X \)
 is full-rank).
 In the next section, we derive an equivalent convex program at the cost
 of new requirements on the minimum width of the network layers.
-
 

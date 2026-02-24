@@ -1,13 +1,13 @@
 %!TEX root=../../main.tex
 
-Let \( X \in \R^{n \times d_1} \) be a matrix of observations and \( y \in
+Let \( X \in \R^{n \times d_0} \) be a matrix of observations and \( y \in
 \R^{n \times c} \) a matrix of \( c \)-dimensional responses for each
 observation.
 This setup covers both multi-class classification and regression with
 vector-valued targets.
 We are interested in fully-connected ReLU neural networks with arbitrarily many
 layers.
-Let \( \Wl \in \R^{d_{l} \times d_{l+1}} \) be the matrix of weights for the \(
+Let \( \Wl \in \R^{d_{l-1} \times d_{l}} \) be the matrix of weights for the \(
 ^{\text{th}} \) layer.
 We will use \( \Wl_{i} \) to refer to the \( i^{\text{th}} \) row of \( \Wl \)
 and \( \Wl_{\cdot, j} \) to refer to the \( j^{\text{th}} \) column.
@@ -22,7 +22,7 @@ the prediction function given by,
 \begin{equation}\label{eq:predictions}
     f_\theta(X) = Z^{(L)} W^{(L)},
 \end{equation}
-where \( W^{(L)} \in \R^{d_{L} \times c} \) ensures
+where \( W^{(L)} \in \R^{d_{L-1} \times c} \) ensures
 that the prediction is of the right dimension.
 Here, \( \theta = \cbr{W^{(1)}, \ldots, \Wk} \) denotes the collection of
 weights for the network and \( \Theta \) the complete parameter space.
@@ -34,8 +34,8 @@ and explicit prediction function,
     f_\theta(X) = \rbr{X W^{(1)}}_+ W^{(2)}.
 \end{equation}
 For simplicity, when \( L = 2 \) we will often use \( d \) for the input
-dimension (instead of \( d_1 \)) and \( m \) as the number of hidden units
-(instead of \( d_2 \)).
+dimension (instead of \( d_0 \)) and \( m \) as the number of hidden units
+(instead of \( d_1 \)).
 
 Many of our results are focused on two-layer ReLU networks with scalar
 outputs, meaning \( c = 1 \).

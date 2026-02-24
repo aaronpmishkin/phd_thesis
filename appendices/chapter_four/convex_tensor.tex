@@ -4,7 +4,7 @@
     The set \( \calCl \) is a convex cone for any \( l \geq 1 \).
 \end{lemma}
 \begin{proof}
-    By construction, \( \calC^{(1)} = \R^{d_1 \times d_2} \)
+    By construction, \( \calC^{(1)} = \R^{d_0 \times d_1} \)
     is a convex cone since every vector space is a convex cone.
 
     Assume \( \calCl \) is a convex cone for some \( l \geq 1 \).
@@ -32,7 +32,7 @@
 \constraintConvexification*
 \begin{proof}
     Recall that
-    \( \calG^{(1)} = \R^{d_1 \times d_2} = \calC^{(1)} \);
+    \( \calG^{(1)} = \R^{d_0 \times d_1} = \calC^{(1)} \);
     this establishes our base case.
 
     Now, assume that
@@ -219,7 +219,7 @@
     \( (l+1)^{\text{th}} \) layer.
     The set of non-zero terms is,
     \[
-        \calN_{i_{l+1}}(T^{(l)})
+        \calQ_{i_{l+1}}(T^{(l)})
         = \cbr{q_{s, j_l, i_{l+1}} :=
             X^{(l+1)}_{j_l} \odot T^{(l)}_{\phi_{l}(1, j_{l}, i_{l+1})}
             : j_l \in [p_l], s \in \cbr{+1, -1},
@@ -227,42 +227,42 @@
     \]
     Since each vector
     \( q_{s, j_l, i_{l+1}} \in \mathcal{N}_{i_{l+1}}(\Tl) \) is
-    \( n \)-dimensional, \( \calN_{i_{l+1}}(\Tl) \)
+    \( n \)-dimensional, \( \calQ_{i_{l+1}}(\Tl) \)
     contains a linearly dependent set if it contains are more than \( n \)
     vectors.
     Let
     \[
-        \calQ_{i_{l+1}}(T^{(l)})
-        = \cbr{(s, j_l) : q_{s, j_l, i_{l+1}} \in \calN_{i_{l+1}}(\Tl)}.
+        \calN_{i_{l+1}}(T^{(l)})
+        = \cbr{(s, j_l) : q_{s, j_l, i_{l+1}} \in \calQ_{i_{l+1}}(\Tl)}.
     \]
     Then linear dependence implies there exists
-    \( \cbr{\alpha_(s,j_l) : (s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \)
+    \( \cbr{\alpha_(s,j_l) : (s,j_l) \in \calN_{i_{l+1}}(T^{(l)})} \)
     not all equal to zero such that
     \begin{align*}
-        0 & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \alpha_{s, j_l} q_{s, j_l, i_{l+1}} \\
-          & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        0 & = \sum_{(s,j_l) \in \calN_{i_{l+1}}(T^{(l)})} \alpha_{s, j_l} q_{s, j_l, i_{l+1}} \\
+          & = \sum_{(s,j_l) \in \calN_{i_{l+1}}(T^{(l)})}
         \alpha_{s,j_l} \rbr{X^{(l)}_{j_l} \odot T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}}          \\
-          & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+          & = \sum_{(s,j_l) \in \calN_{i_{l+1}}(T^{(l)})}
         \rbr{X^{(l+1)}_{j_l} \odot \sbr{\alpha_{s,j_l} T^{(l)}_{\phi_{l}(s,j_l,i_{l+1})}}}.
     \end{align*}
     Let \( (s^*, r^*) =
     \argmax_(s, j_l) \cbr{ \abs{\alpha_{s, j_l}} :
-        (s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})} \)
+        (s, j_l) \in \calN_{i_{l+1}}(T^{(l)})} \)
     and define \( \tilde{\alpha}_{s, j_l} = \alpha_{s, j_l} / \alpha_{s^* ,r^*} \).
     Clearly \( \tilde{\alpha}_{s, j_l} \leq 1 \) for all \( (s, j_l) \) and
     \( \tilde{\alpha}_{(s^*, r^*)} = 1 \).
     Using this notation, we have
     \begin{align*}
-        0 & = \sum_{(s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+        0 & = \sum_{(s, j_l) \in \calN_{i_{l+1}}(T^{(l)})}
         \rbr{X^{(l)}_{j_l} \odot \sbr{\tilde{\alpha}_{s, j_l} T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}}}.
     \end{align*}
     This implies
     \begin{align*}
         X^{(l+1)} \odot T^{(l+1)}_{i_{l+1}}
-         & = \sum_{(s, j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+         & = \sum_{(s, j_l) \in \calN_{i_{l+1}}(T^{(l)})}
         X^{(l+1)}_{j_l} \odot
         \sbr{(1 + \tilde{\alpha}_{s, j_l}) T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}} \\
-         & = \sum_{(s,j_l) \in \calQ_{i_{l+1}}(T^{(l)})}
+         & = \sum_{(s,j_l) \in \calN_{i_{l+1}}(T^{(l)})}
         X^{(l+1)}_{j_l} \odot
         \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})},
     \end{align*}
@@ -270,7 +270,7 @@
     satisfying
     \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}
     = \sbr{(1 + \tilde{\alpha}_{s, j_l}) T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})}} \)
-    for each \( (s, j_l) \in \calQ_{i_{l+1}}(T^{(l)}) \) and
+    for each \( (s, j_l) \in \calN_{i_{l+1}}(T^{(l)}) \) and
     \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} = T^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} \)
     otherwise.
     It is clear from the above calculation that \( \hat{T}^{(l)} \) preserves
@@ -290,9 +290,9 @@
     In other words, the width of \( m_l(\Tk) \) is reduced by one.
 
     For each \( i_{l+1} \), we can repeat this argument until the vectors
-    in \( \calN_{i_{l+1}}(\hat{T}^{(l)}) \) are linearly independent.
+    in \( \calQ_{i_{l+1}}(\hat{T}^{(l)}) \) are linearly independent.
     This implies there exists optimal \( \hat{T}^{(l)} \)
-    for which \( \abs{\calN_{i_{l+1}}(\hat{T}^{(l)})} \leq n \).
+    for which \( \abs{\calQ_{i_{l+1}}(\hat{T}^{(l)})} \leq n \).
     Repeating this procedure independently for each \( i_{l+1} \)
     for which \( T^{(l+1)}_{i_{l+1}} \neq 0 \), we construct
     \( \hat{T}^{(l+1)} \) with
@@ -301,3 +301,28 @@
     \( l = k - 1 \) and applying a simple inductive argument completes the
     proof.
 \end{proof}
+
+\deepConvexReformulation*
+\begin{proof}
+    Let \( \Tk \in \calCk \) be the solution to \cref{eq:convex-tensor-program}
+    which is guaranteed to exist by \cref{prop:convex-minimal-solution-width}.
+    This solution is sparse and satisfies \( m_l = \calA\rbr{\Tl} \leq c n^{L - l} \).
+    \cref{lemma:convex-tensor-solution-mapping} now implies that there
+    exists a optimal sparse neural network \( \theta^* \) with at 
+    most \( m_l \) neurons in the \( l^{\text{th}} \) layer.
+    Removing zero neurons results in the architecture 
+    \( \Delta(\Tk) = \rbr{m_1, \ldots, m_{L-1}} \)
+    with associated parameter space \( \Theta_{\Delta(\Tk)} \).
+    Let \( \Delta \) be any architecture satisfying 
+    \( d_l \geq 2 p_l d_{l+1} \).
+    Now can obtain
+    \begin{align*}
+        \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y)
+        & = \min_{\theta \in \Theta} \calL(f_\theta(X), y)\\
+        & \leq \min_{\theta \in \Theta_{\Delta(\Tk)}} \calL(f_\theta(X), y)\\
+        &\leq \calL(f_{\theta^*}(X), y)\\
+        &= \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y),
+    \end{align*}
+    which shows that the two problems have the same optimal value.
+\end{proof}
+

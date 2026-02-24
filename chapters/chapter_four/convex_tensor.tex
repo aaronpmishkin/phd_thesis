@@ -16,12 +16,12 @@ Let \( \phi_l : \cbr{1, -1} \times [p_l] \times [d_{l+1}] \rightarrow [2 p_l \cd
 be a one-to-one function from the index triplets
 \( (s, j_l, i_{l+1}) \) to a unique index in \( [2 p_l \cdot d_{l+1}] \).
 Using this notation, consider the tensor constraint defined recursively by
-\( \calC^{(1)} = \R^{d_1 \times d_2} \) and
+\( \calC^{(1)} = \R^{d_0 \times d_1} \) and
 \begin{equation}\label{eq:recursive-cone-constraint}
     \begin{aligned}
         \calC^{(l+1)}
          & = \bigg\{
-        \Tll \in \R^{d_1 \times p_1 \cdots \times p_{l} \times d_{l+1}}
+        \Tll \in \R^{d_0 \times p_1 \cdots \times p_{l} \times d_{l+1}}
         :
         \Tll_{j_{l}, i_{l+1}}
         = \Tl_{ \phi_l(1, j_l, i_{l+1})}
@@ -103,8 +103,8 @@ non-zero activation patterns.
 Given any tensor model \( \Tk \in \calCk \), \cref{lemma:convex-tensor-solution-mapping}
 provides a simple way of computing an equivalent neural network \( f_\theta \).
 Moreover, it shows that the number of non-zero neurons in the
-\( (l+1)^{\text{th}} \) layer of the network is given by
-\( m_{l+1}(\Tk) = \abs{\calA(\Tl)} \) (we note that \( m_1 = m_2 \)).
+\( l^{\text{th}} \) layer of the network is given by
+\( m_{l}(\Tk) = \abs{\calA(\Tl)} \).
 Collecting these widths as \( \Delta(\Tk) = \rbr{m_1(\Tk), \ldots, m_{L-1}(\Tk)} \),
 the optimal solutions to Problem~\ref{eq:convex-tensor-program} thus define
 a Pareto frontier of minimal-width networks with the same optimal
@@ -126,10 +126,27 @@ We now exhibit a solution \( \Tkopt \in \calO^* \) which allows us to
 upper bound \( m^*_l \) for at least one point
 \( \Delta^* = (m^*_1, \ldots, m^*_{L-1}) \in \calD^* \).
 
-\begin{restatable}{proposition}{minimumSolutionWidth}\label{thm:convex-minimal-solution-width}
+\begin{restatable}{proposition}{minimumSolutionWidth}\label{prop:convex-minimal-solution-width}
     There exists at least one solution to the convex tensor optimization
     program in \cref{eq:convex-tensor-program} satisfying
     \( m_l(\Tk) \leq c n^{L - l} \) for every
-    \( l \in [L-1] \).
-    As a result, \( m^{*}_{l+1} \leq c n^{L - l} \).
+    \( l \in \cbr{1, \ldots, L-1} \).
 \end{restatable}
+
+As an immediate result, we obtain the main theorem of this section.
+
+\begin{restatable}{theorem}{deepConvexReformulation}\label{thm:deep-convex-reformulation}
+    If for every \( l \in [L-1]  \) it holds that
+    \( d_l \geq m^{*}_{l} \) for some threshold \( m^{*}_{l} \leq c n^{L - l} \),
+    then
+    \begin{equation*}
+        \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
+    \end{equation*}
+    is equivalent to the convex tensor program
+    \begin{equation}
+        \min_{\Tk}
+        \calL\rbr{\Xk \odot \Tk, y} \quad \text{s.t.} \quad
+        \Tk \in \calC^{(k)}.
+    \end{equation}
+\end{restatable}
+
