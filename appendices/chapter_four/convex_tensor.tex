@@ -29,6 +29,52 @@
     and we conclude that \( \calCll \) is a convex cone.
 \end{proof}
 
+\begin{lemma}\label{lemma:cone-scaling}
+    If \( \leftindex_{k}{\Tl} \in \calCl \) and
+    \( \leftindex_{k}{\alpha}_{i_{l}} \geq 0 \), then \( \hat{T}^{(l)} \) given
+    by
+    \begin{equation*}
+        \hat{T}^{(l)}_{i_{l}}
+        = \sum_{k=1}^{K}
+        \leftindex_{k}{\alpha}_{i_{l}} \leftindex_{k}{\Tl}_{i_{l}}
+    \end{equation*}
+    also satisfies \( \hat{T}^{(l)} \in \calCl \).
+\end{lemma}
+\begin{proof}
+    The proof follows by induction.
+    If \( l = 1 \), then \( \calCl = \R^{d_0 \times d_1} \) and the result
+    follows immediately.
+    Now let \( l \geq 2 \) and suppose the result holds for \( l - 1 \).
+    Since \( \leftindex_{k}{\Tl} \in \calCl \), it satisfies
+    \[
+        \leftindex_{k}{\Tl}_{j_{l-1}, i_l}
+        = \leftindex_{k}{T}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
+        - \leftindex_{k}{T}^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}.
+    \]
+    Define
+    \[
+        \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
+        = \leftindex_{k}{\alpha}_{i_{l}} \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}.
+    \]
+    The inductive assumption implies
+    \( \leftindex_{k}{\hat{T}}^{(l-1)} \in \calC^{(l-1)} \).
+    Moreover,
+    \( \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
+    \in \calK^{(l-1)}_{j_{l-1}} \) since \( \calK^{(l-1)}_{j_{l-1}} \) is a
+    convex cone.
+    Thus,
+    \begin{equation*}
+        \leftindex_{k}{\hat{T}}^{(l)}_{i_{l}} :=
+        \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
+        - \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}
+    \end{equation*}
+    must be in \( \calCl \).
+    We conclude that \( \hat{T}^{(l)} \in \calCl \) since it is a non-negative
+    combination of elements of \( \calCl \) and \( \calCl \) is a convex cone
+    by \cref{lemma:convex-recursive-cone-constraint}.
+
+\end{proof}
+
 \constraintConvexification*
 \begin{proof}
     Recall that
@@ -52,55 +98,31 @@
          & = \sum_{i_l \in \calI_{j_l}^{(l)}} \Tl_{i_l}
         \cdot W_{i_l, i_{l+1}}^{(l+1)}                       \\
          & = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
-            \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
+            \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
         - \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
-            \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} < 0).
+            \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} < 0).
     \end{align*}
     We can now define
     \[
-        T^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
+        \hat{T}^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
         = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
             \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
     \]
     and
     \[
-        T^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
+        \hat{T}^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
         = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{i_l}
             \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} < 0),
     \]
     to show that
-    \( \Tll_{(j_l, i_{l+1})}
-    = T^{(l)}_{ \phi_l(1, j_l, i_{l+1})} - T^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}\).
+    \( \Tll_{j_l, i_{l+1}}
+    = \hat{T}^{(l)}_{ \phi_l(1, j_l, i_{l+1})} - \hat{T}^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}\).
     Moreover,
     \( \calKl_{j_l} \) is a convex cone, so
-    \( T^{(l)}_{ \phi_l(1, j_l, i_{l+1})}, B^{(l)}_{ \phi_l(1, j_l, i_{l+1})}
+    \( \hat{T}^{(l)}_{ \phi_l(1, j_l, i_{l+1})}, \hat{T}^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
     \in \calKl_{j_l} \) as required.
-    Finally, since \( \Tl \in \calG^{(l)} = \calC^{(l)} \), we know
-    that \( T^{(l)} \) has a decomposition as follows:
-    \begin{align*}
-        T^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
-         & = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{\Tl_{j_{l-1}, i_l}
-        \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0) \\
-         & = \sum_{i_l \in \calI_{j_l}^{(l)}} \rbr{
-            \sbr{T^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)} - T^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}}
-            \cdot \abs{W_{i_l, i_{l+1}}^{(l+1)}}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0).
-    \end{align*}
-    Define \( \leftindex_{i_{l}}{T}^{(l)} \) such that
-    \[
-        \leftindex_{i_{l}}{T}^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
-        =
-        \sbr{T^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)} - T^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}}
-        \abs{W_{i_l, i_{l+1}}^{(l+1)}} \mathds{1}(W_{i_l, i_{l+1}}^{(l+1)} \geq 0)
-        \mathds{1}(i_l \in \calI_{j_l}^{(l)}),
-    \]
-    which shows that \( \leftindex_{i_{l}}{T}^{(l)} \in \calCl \).
-    But now we can write
-    \[
-        T^{(l)}_{j_{l-1},  \phi_l(s, j_l, i_{l+1})}
-        = \sum_{i_l \in [d_l]} \leftindex_{i_{l}}{T}^{(l)}.
-    \]
-    to show that \( \Tl \in \calC \)  because \( \calC \) is a convex cone
-    (\cref{lemma:convex-recursive-cone-constraint}).
+    Finally, since \( \Tl \in \calG^{(l)} = \calC^{(l)} \), we can invoke
+    \cref{lemma:cone-scaling} to show that \( \hat{T}^{(l)} \in \calC \).
     Note that these inclusions require \( d_{l} \geq 2 p_l d_{l+1} \),
     which holds by assumption.
     We conclude that \( \Tll \in \calCll \) and so
@@ -277,6 +299,7 @@
     the predictions of \( T^{(l)} \)
     and maintains \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} \in \calK_{j_l}^{(l)} \)
     since \( \tilde{\alpha}_{s, j_l} \geq 0 \) for each \( (s, j_l) \).
+    Additionally, \( \hat{T}^{(l)} \in \calCl \) by \cref{lemma:cone-scaling}.
     Defining
     \[
         \hat{T}^{(l+1)}_{s, j_l, i_{l+1}} =
@@ -308,20 +331,20 @@
     which is guaranteed to exist by \cref{prop:convex-minimal-solution-width}.
     This solution is sparse and satisfies \( m_l = \calA\rbr{\Tl} \leq c n^{L - l} \).
     \cref{lemma:convex-tensor-solution-mapping} now implies that there
-    exists a optimal sparse neural network \( \theta^* \) with at 
+    exists a optimal sparse neural network \( \theta^* \) with at
     most \( m_l \) neurons in the \( l^{\text{th}} \) layer.
-    Removing zero neurons results in the architecture 
-    \( \Delta(\Tk) = \rbr{m_1, \ldots, m_{L-1}} \)
-    with associated parameter space \( \Theta_{\Delta(\Tk)} \).
-    Let \( \Delta \) be any architecture satisfying 
+    Removing zero neurons results in the architecture
+    \( \Delta' = \rbr{m_1, \ldots, m_{L-1}} \)
+    with associated parameter space \( \Theta_{\Delta'} \).
+    Let \( \Delta \) be any architecture satisfying
     \( d_l \geq 2 p_l d_{l+1} \).
     Now can obtain
     \begin{align*}
         \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y)
-        & = \min_{\theta \in \Theta} \calL(f_\theta(X), y)\\
-        & \leq \min_{\theta \in \Theta_{\Delta(\Tk)}} \calL(f_\theta(X), y)\\
-        &\leq \calL(f_{\theta^*}(X), y)\\
-        &= \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y),
+         & = \min_{\theta \in \Theta} \calL(f_\theta(X), y)              \\
+         & \leq \min_{\theta \in \Theta_{\Delta'}} \calL(f_\theta(X), y) \\
+         & \leq \calL(f_{\theta^*}(X), y)                                \\
+         & = \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y),
     \end{align*}
     which shows that the two problems have the same optimal value.
 \end{proof}
