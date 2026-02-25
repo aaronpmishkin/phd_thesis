@@ -411,27 +411,58 @@
     \cref{eq:gated-layer-to-tensorize}.
 \end{proof}
 
-%\convexGatedReLU*
+\convexGatedReLU*
 \begin{proof}
-    Let \( \Tk \) be a solution to \cref{eq:convex-gated-relu-program}.
-    Since \( \Tk \in \R^{d_0 \times \tilde{p}_1 \times \cdots \times \tilde{p}_{L-1} \times c} \),
-    it admits a canonical polyadic decomposition as
-    \[
-        \Tk = \sum_{r=1}^{k} a^{(0)}_{r} \otimes \cdots \otimes a^{(L)}_{r},
-    \]
-    where \( r \) is upper-bounded by \( d_0 \tilde{p}_1 \cdots \tilde{p}_{L-1} c  \).
-    In particular, we can write
-    \[
-        \Tk \sum_{r=1}^{k} a^{(0)}_{r} \otimes \cdots \otimes a^{(L)}_{r}
-    \]
-
-    The prediction function is
+    Let \( \theta = (W^{(1), \ldots, W^{(L)}}) \) be any optimal
+    solution to \cref{eq:expanded-gated-program}.
+    We will define a corresponding tensor model with the
+    same predictions.
+    Let \( T^{(1)} = W^{(1)} \).
+    This choice trivially satisfies
     \begin{align*}
-        \tilde{X}^{(L)} \odot \Tk
-         & = \sum_{j_1=1}^{\tilde{p_1}} \cdots \sum_{j_{L-1}=1}^{\tilde{p_{L-1}}}
-        \tilde{X}^{(L)}_{j_1, \ldots, j_{L-1}} \Tk                                \\
-         & = \sum_{j_1=1}^{\tilde{p_1}} \cdots \sum_{j_{L-1}=1}^{\tilde{p_{L-1}}}
-        \tilde{X}^{(L)}_{j_1, \ldots, j_{L-1}} \Tk
+        g_{\theta_1}^{\text{exp}}(X)
+         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot X W^{(1)}  \\
+         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(1)}).
     \end{align*}
+    Now assume that for \( l \in [L-1] \),
+    \( g_{\theta_l}^{\text{exp}}(X) = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(l)}) \).
+    We will show that this equation also holds at \( l+1 \).
+    Let \( \calI^{(l)}_{j_l} \) contain the indices of the parameters in the
+    layer \( l \) which are associated with the \( p_{l+1} \) copies of 
+    \( \tilde{D}^{(l)}_{j_l} \).
+    Let
+    \begin{equation*}
+        \Tll_{j_1, \ldots, j_l}
+        = \sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{j_1, \ldots, j_{l-1}, i_l} \otimes W^{(l+1)}_{i_l}.
+    \end{equation*}
+    Using this notation, we re-write the feature map
+    for the expanded gated ReLU model as follows:
+    \begin{align*}
+        g_{\theta_{l+1}}^{\text{exp}}(X)
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \sum_{i_l \in \calI^{(l)}_{j_l}} 
+            \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{i_l}}}
+        \otimes W^{(l+1)}_{i_l}}                                              \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \sbr{\sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{i_l}
+        \otimes W^{(l+1)}_{i_l}}}}                                            \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \Tll_{j_l}}} \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot \sbr{\Xll \odot \Tll}.
+    \end{align*}
+    Induction (with a minor modification to drop the activation patterns
+    from the final layer) now implies that
+    \[
+        g_{\theta}^{\text{exp}}(X) = \Xk \odot \Tk.
+    \]
+    This implies that 
+    \[
+        \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{g^{\text{exp}}_{\theta}(X), y}
+        \geq 
+        \min_{\Tk \in \calHk} \calL\rbr{\Xk \odot \Tk, y}.
+    \]
+    This establishes one direction of theorem.
+
+    For the other direction...
 \end{proof}
 
