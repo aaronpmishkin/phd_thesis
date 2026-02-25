@@ -379,3 +379,59 @@
     which completes the proof.
 \end{proof}
 
+\gatedReLULayerElimination*
+\begin{proof}
+    We start by defining a suitable \( \Tll \) as follows:
+    \begin{equation}\label{eq:gated-t-plus-characterization}
+        \Tll_{j_1, \ldots, j_l}
+        = \Tl_{j_1, \ldots, j_{l-1}, j_l} \otimes W^{(l+1)}_{j_l}.
+    \end{equation}
+    Using this notation, we re-write the sum
+    in \cref{eq:gated-layer-to-tensorize} as follows:
+    \begin{align*}
+        Z^{(l+2)}
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{j_l}}}
+        \otimes W^{(l+1)}_{j_l}}                                              \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \sbr{\Tl_{j_l}
+        \otimes W^{(l+1)}_{j_l}}}}                                            \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \Tll_{j_l}}} \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot \sbr{\Xll \odot \Tll}.
+    \end{align*}
+    It should be clear from the way that we constructed \( \Tll \) that
+    it is contained \( \calH^{(l+1)} \).
+    This establishes one direction of theorem.
+    The other direction can be shown by instead assuming that
+    \( \Tll \in \calH^{(l+1)} \) and then noting that the characterization
+    in \cref{eq:gated-t-plus-characterization} immediately follows for some
+    \( \Tl \in \calH^{(l)} \) and \( W^{(l+1)} \in \R^{p_l \times p_{l+1}} \).
+    The preceding calculation is then reversed to obtain
+    \cref{eq:gated-layer-to-tensorize}.
+\end{proof}
+
+%\convexGatedReLU*
+\begin{proof}
+    Let \( \Tk \) be a solution to \cref{eq:convex-gated-relu-program}.
+    Since \( \Tk \in \R^{d_0 \times \tilde{p}_1 \times \cdots \times \tilde{p}_{L-1} \times c} \),
+    it admits a canonical polyadic decomposition as
+    \[
+        \Tk = \sum_{r=1}^{k} a^{(0)}_{r} \otimes \cdots \otimes a^{(L)}_{r},
+    \]
+    where \( r \) is upper-bounded by \( d_0 \tilde{p}_1 \cdots \tilde{p}_{L-1} c  \).
+    In particular, we can write
+    \[
+        \Tk \sum_{r=1}^{k} a^{(0)}_{r} \otimes \cdots \otimes a^{(L)}_{r}
+    \]
+
+    The prediction function is
+    \begin{align*}
+        \tilde{X}^{(L)} \odot \Tk
+         & = \sum_{j_1=1}^{\tilde{p_1}} \cdots \sum_{j_{L-1}=1}^{\tilde{p_{L-1}}}
+        \tilde{X}^{(L)}_{j_1, \ldots, j_{L-1}} \Tk                                \\
+         & = \sum_{j_1=1}^{\tilde{p_1}} \cdots \sum_{j_{L-1}=1}^{\tilde{p_{L-1}}}
+        \tilde{X}^{(L)}_{j_1, \ldots, j_{L-1}} \Tk
+    \end{align*}
+\end{proof}
+
