@@ -349,6 +349,51 @@
     which shows that the two problems have the same optimal value.
 \end{proof}
 
+%\activationCharacterization*
+%\begin{proof}
+%    Define
+%    \[
+%        \tilde{\calD}^{(l)} =
+%        \cbr{\Dl_{j_l} = \mathds{1}\rbr{\diag
+%                \rbr{ \Xl \odot U^{(l)}_{i_l} \geq 0 }} :
+%            U_l \in \calCl}
+%    \]
+%    and let \( \Dl \in \calDl \) as defined in
+%    \cref{eq:limiting-activation-set}.
+%    By definition,
+%    \[
+%        \Dl_{j_l} =
+%        \diag\rbr{\mathds{1}\rbr{f_{\theta_{l-1}}(X) u \geq 0}},
+%    \]
+%    for some \( \theta_{l-1} \in \Theta^{(l-1)} \) and \( u \in \R^{d_l} \).
+%    Let \( U^{(l)} \in \R^{d_{l-1} \times d_{l}} \) such that
+%    \( U^{(l)}_{i_l} = u \).
+%    Then we can write
+%    \begin{align*}
+%        f_{\theta_{l-1}}(X) u
+%         & = \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}_{i_l}.
+%    \end{align*}
+%    \cref{prop:layer-elimination} implies that there exists
+%    \( \Tl \in \calG^{(l)} \) such that
+%    \[
+%        \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}
+%        = \Xl \odot \Tl,
+%    \]
+%    and, in particular, that
+%    \[
+%        f_{\theta_{l-1}}(X) u
+%        = \Xl \odot \Tl_{i_l}.
+%    \]
+%    Since the network widths can be made arbitrarily wide, they
+%    can be as wide as \( d_{l} \geq 2 p_l d_{l+1} \), which
+%    allows us to use \cref{prop:constraint-convexification}
+%    to obtain \( \calGl = \calCl \).
+%    We deduce that \( \Dl_{j_l} \in \tilde{\calD}^{(l)} \) as required.
+%    Since \cref{prop:layer-elimination} establishes an if-and-only-if
+%    relationship, this derivation is easily reversed to obtain
+%    \( \tilde{\calD}^{(l)} \subset \calDl \).
+%\end{proof}
+
 \subsection{Deep Gated ReLU Networks: Proofs}
 
 \gatedReLUActivationSet*
@@ -509,61 +554,61 @@
 
 \end{proof}
 
+\subsection{Deep Cone Decompositions}\label{app:deep-cone-decompositions}
 
-\aside{Not ready for this result yet!}
-This allows us to write an explicit equation for \( \calDl \) as follows.
-
-\begin{restatable}{lemma}{activationCharacterization}\label{lemma:activation-characterization}
-    The limiting set of activation patterns given in
-    \cref{eq:limiting-activation-set} satisfies
-    \begin{equation}\label{eq:explicit-activation-def}
-        \calDl =
-        \cbr{\Dl_{j_l} = \mathds{1}\rbr{\emph{\diag}
-                \rbr{ \Xl \odot U^{(l)} \geq 0 }} :
-            U^{(l)} \in \calCl}
-    \end{equation}
-\end{restatable}
+\deepNonSingularCones*
 \begin{proof}
-    Define
+    The proof is straightforward.
+    By construction, \( \calC_{\text{ns}}^{(1)} = \R^{d_0 \times d_1} \).
+    Assume that
+    \( \calCl_{\text{ns}} = \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l-1} \times d_{l}} \)
+    for some \( l \in [L-1] \).
+    Consider any \( \Tll \in \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l} \times d_{l+1}} \).
+    Since \( \calK_{j_l} \) is non-singular, there exists
+    \( \Tl_{\phi_l(1, j_l, i_{l+1})}, \Tl_{ \phi_l(-1, j_l, i_{l+1})}
+    \in \calK^{(l)}_{j_{l}} \) such that
     \[
-        \tilde{\calD}^{(l)} =
-        \cbr{\Dl_{j_l} = \mathds{1}\rbr{\diag
-                \rbr{ \Xl \odot U^{(l)} \geq 0 }} :
-            U_l \in \calCl}
+        \Tll_{j_{l}, i_{l+1}}
+        = \Tl_{ \phi_l(1, j_l, i_{l+1})}
+        - \Tl_{ \phi_l(-1, j_l, i_{l+1})}, \\
     \]
-    and let \( \Dl \in \calDl \) as defined in
-    \cref{eq:limiting-activation-set}.
-    By definition,
+    Moreover,
+    \( \Tl \in \calCl_{\text{ns}} \) trivially by the inductive assumption.
+    But this implies that \( \Tll \calCll_{\text{ns}} \) and thus
+    \( \calCll_{\text{ns}} \supset \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l-1} \times d_{l}} \).
+    This completes the proof.
+\end{proof}
+
+\deepConeElimination*
+\begin{proof}
+    The proof is a straightforward application of \cref{thm:cone-elimination}.
+    Indeed, \cref{thm:cone-elimination} shows that the space of two-layer
+    convex ReLU networks is not affect by removing singular
+    cones.
+    That is, every two-layer convex ReLU model \( T^{(2)} \in \calC^{(2)} \)
+    satisfies
     \[
-        \Dl_{j_l} =
-        \diag\rbr{\mathds{1}\rbr{f_{\theta_{l-1}}(X) u \geq 0}},
+        X^{(2)} \odot T^{(2)} = X_{\text{ns}}^{(2)} \odot T^{(2)'}
     \]
-    for some \( \theta_{l-1} \in \Theta^{(l-1)} \) and \( u \in \R^{d_l} \).
-    Let \( U^{(l)} \in \R^{d_{l-1} \times d_{l}} \) such that
-    \( U^{(l)}_{i_l} = u \).
-    Then we can write
-    \begin{align*}
-        f_{\theta_{l-1}}(X) u
-         & = \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}_{i_l}.
-    \end{align*}
-    \cref{prop:layer-elimination} implies that there exists
-    \( \Tl \in \calG^{(l)} \) such that
-    \[
-        \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}
-        = \Xl \odot \Tl,
-    \]
-    and, in particular, that
-    \[
-        f_{\theta_{l-1}}(X) u
-        = \Xl \odot \Tl_{i_l}.
-    \]
-    Since the network widths can be made arbitrarily wide, they 
-    can be as wide as \( d_{l} \geq 2 p_l d_{l+1} \), which
-    allows us to use \cref{prop:constraint-convexification}
-    to obtain \( \calGl = \calCl \).
-    We deduce that \( \Dl_{j_l} \in \tilde{\calD}^{(l)} \) as required.
-    Since \cref{prop:layer-elimination} establishes an if-and-only-if
-    relationship, this derivation is easily reversed to obtain  
-    \( \tilde{\calD}^{(l)} \subset \calDl \).
+    for some model \( T^{(2)'} \in \calC^{(2)}_{\text{ns}} = \R^{d_0 \times p_1 \times d_2} \).
+
+    Since \( X_{\text{ns}}^{(2)} \odot T^{(2)'} \) is a linear function of two arguments,
+    we can represent both \( X^{(2)}_{\text{ns}} \) and \( T^{(2)'} \)
+    as matrices.
+    In particular, we can write the problem of training a two-layer
+    ReLU network on the matrix version of \( X^{(2)}_{\text{ns}} \).
+    Note that \cref{prop:layer-elimination} shows that this is equivalent
+    to training a three-layer ReLU network.
+    Applying \cref{thm:cone-elimination} again and repeating the argument
+    above is sufficient to show that we may omit all singular cones from
+    the second hidden layer.
+    That is, we may use \( X^{(3)}_{\text{ns}} \) in place of \( X^{(3)} \).
+    Arguing by induction in this fashion is sufficient to complete the proof.
+\end{proof}
+
+\coneDecompFormulation*
+\begin{proof}
+    The result follows immediately from \cref{prop:deep-cone-elimination}
+    and \cref{thm:deep-convex-reformulation}.
 \end{proof}
 

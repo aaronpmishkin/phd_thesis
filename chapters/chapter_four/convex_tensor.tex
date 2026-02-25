@@ -30,7 +30,7 @@ Using this notation, consider the tensor constraint defined recursively by
          & \hspace{3em}
         \Tl_{\phi_l(1, j_l, i_{l+1})}, \Tl_{ \phi_l(-1, j_l, i_{l+1})}
         \in \calK^{(l)}_{j_{l}}, \text{ and }
-        \Tl = \calC^{(l)}
+        \Tl \in \calC^{(l)}
         \bigg\}
     \end{aligned}
 \end{equation}
@@ -138,7 +138,7 @@ As an immediate result, we obtain the main theorem of this section.
 \begin{restatable}{theorem}{deepConvexReformulation}\label{thm:deep-convex-reformulation}
     If for every \( l \in [L-1]  \) it holds that
     \( d_l \geq m^{*}_{l} \) for some threshold \( m^{*}_{l} \leq c \, n^{L - l} \),
-    then
+    then the deep ReLU network training problem
     \begin{equation*}
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
     \end{equation*}
@@ -403,9 +403,8 @@ Gated ReLU network.
 
 \subsection{Deep Cone Decompositions}\label{sec:deep-cone-decompositions}
 
-We conclude by extending the equivalence of ReLU and Gated ReLU networks from
-the two-layer setting, as shown in \cref{sec:relu-grelu-equivalence},
-to deep networks.
+We conclude by extending the equivalence of two-layer ReLU and Gated ReLU networks
+shown in \cref{sec:relu-grelu-equivalence} to deep networks.
 Recall that we call an activation pattern \( \Dl_{j_l} \in \calDl \)
 \emph{singular} if the cone \( \calKl_{j_l} \)  is contained in a strict
 subspace of \( \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \),
@@ -413,8 +412,91 @@ implying that
 \( \calKl_{j_l} - \calKl_{j_l} \subset \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \).
 We use the set \( \calDl_{\text{ns}} \subseteq \calDl \) to denote the subset
 of ReLU activation patterns in the \( l^{\text{th}} \) layer which are
-non-singular.
+non-singular and write \( p^\text{ns}_{l} = \abs{\calDl_{\text{ns}}} \).
 
-Because \( \Xl \odot \Tl \) is a linear map, there exists a matrix 
-version of \( \Xl \) and a matrix version of \( \Tl \).
-The 
+Define the data tensor for non-singular cones as 
+\( \leftindex_{\text{ns}}{X}^{(1)} = X \)
+and
+\[
+    \leftindex_{\text{ns}}{\Xll} \odot \Tl = \sum_{j_l = 1}^{p^{\text{ns}}_l}
+    \Dl_{j_l}\leftindex_{\text{ns}}{\Xl} \odot \Tl_{j_l},
+\]
+where \( \Dl_{j_l} \in \calDl_{\text{ns}} \) for every \( j_l \).
+Analyzing the constraint set \( \calCk_{\text{ns}} \) reveals that
+including only non-singular cones removes any limitations on \( \Tk \).
+
+\begin{restatable}{lemma}{deepNonSingularCones}\label{lemma:deep-non-singular-cones}
+    Consider restricting the tensor decomposition constraint
+    \( \calCl \) to non-singular cones.
+    That is, let \( \calC^{(1)}_{\text{ns}} = \R^{d_0 \times d_1} \)
+    and
+    \begin{equation}
+        \begin{aligned}
+            \calC^{(l+1)}_{\text{ns}}
+             & = \bigg\{
+            \Tll \in \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l} \times d_{l+1}}
+            :
+            \Tll_{j_{l}, i_{l+1}}
+            = \Tl_{ \phi_l(1, j_l, i_{l+1})}
+            - \Tl_{ \phi_l(-1, j_l, i_{l+1})}, \\
+             & \hspace{3em}
+            \Tl_{\phi_l(1, j_l, i_{l+1})}, \Tl_{ \phi_l(-1, j_l, i_{l+1})}
+            \in \calK^{(l)}_{j_{l}}, \text{ and }
+            \Tl \in \calC_\text{ns}^{(l)}
+            \bigg\},
+        \end{aligned}
+    \end{equation}
+    where it should be understood that the indices
+    \( j_l \in [p_l^\text{ns}] \) range only over non-singular cones.
+    Then it holds that
+    \( \calCll_{\text{ns}}
+    = \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l} \times d_{l+1}} \).
+\end{restatable}
+
+
+Since \( \Xl \odot \Tl \) is linear, it admits a representation
+as matrix multiplication between an expanded data matrix \( \mathbf{X}^{(l)} \)
+and a matrix version of the tensor, \( \mathbf{T^{(l)}} \).
+As such, our results on cone containment from \cref{chapter:fast-optimization}
+(\cref{thm:cone-elimination}) immediately extend to deep networks.
+
+\begin{restatable}{proposition}{deepConeElimination}\label{prop:deep-cone-elimination}
+    Non-singular cones do not contribute to the convex reformulation for
+    deep ReLU networks.
+    That is, the convex reformulation
+    \begin{equation*}
+        \min_{\Tk \in \calCk} \calL\rbr{\Xk \odot \Tk, y}.
+    \end{equation*}
+    is equivalent to the same problem where singular cones are omitted
+    \begin{equation}\label{eq:non-singular-cone-problem}
+        \min_{\Tk} \calL\rbr{\Xk \odot \Tk, y}.
+    \end{equation}
+\end{restatable}
+
+As a corollary, we show that training deep ReLU networks is equivalent to
+solving an unconstrained (convex) tensor program.
+
+\begin{restatable}{theorem}{coneDecompFormulation}\label{thm:cone-decomp-formulation}
+    If for every \( l \in [L-1]  \) it holds that
+    \( d_l \geq m^{*}_{l} \) for some threshold \( m^{*}_{l} \leq c \, n^{L - l} \),
+    then the deep ReLU network training problem
+    \begin{equation*}
+        \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
+    \end{equation*}
+    is equivalent to the unconstrained tensor program
+    \begin{equation}
+        \min_{\Tk}
+        \calL\rbr{\Xk_{\text{ns}} \odot \Tk, y}. 
+    \end{equation}
+\end{restatable}
+
+\cref{thm:cone-decomp-formulation} is the culmination of this chapter
+and of many ideas developed in this thesis.
+It combines gated ReLU networks, cone decompositions, and deep convex
+reformulations to show that training a \( L \)-layer ReLU network is equivalent
+to an unconstrained optimization problem over tensors of order \( L+1 \).
+Just as in the two-layer setting, the key ingredient is forming an expanded
+data space (\( \Xk_{\text{ns}} \)) which omits singular activation patterns.
+However, unlike the two-layer setting, many open questions remain.
+We discuss these in the next section. 
+
