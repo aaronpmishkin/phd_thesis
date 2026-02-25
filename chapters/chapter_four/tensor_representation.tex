@@ -175,6 +175,17 @@ on the slices of \( \Tll \).
     \]
 \end{restatable}
 
+\begin{figure}[t]
+    \centering
+    \input{figures/chapter_four/tensor_path.tex}
+    \caption{Illustration of layer elimination lemma for deep ReLU
+        networks (\cref{prop:layer-elimination}).
+        Each entry of the tensor \( \Tk \) is given by the
+        product of weights along the corresponding path through the neural
+        network.}%
+    \label{fig:tensor-path}
+\end{figure}
+
 Unrolling \cref{prop:layer-elimination} from \( l = L \) to \( l = 1 \)
 implies that every neural network \( f_\theta \) has a tensor representation.
 

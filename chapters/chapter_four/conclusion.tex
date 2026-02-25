@@ -1,0 +1,17 @@
+%!TEX root=../../main.tex
+
+We develop convex reformulations for deep ReLU networks and deep gated ReLU
+networks.
+Unlike previous work, our approach does not require restricted architectures
+or strong assumptions on the input data.
+Instead, our proofs rely on a novel layer elimination argument, which shows how
+to convert deep (gated) ReLU networks into tensor programs with non-convex
+decomposition constraints.
+Careful analysis of these constraint sets reveals that they become convex
+when the original network layers are sufficiently wide.
+Building on our work in \cref{chapter:fast-optimization}, we also extend the
+equivalence of ReLU networks and gated ReLU networks with non-singular
+activation patterns to arbitrarily many layers.
+This leads to a fully unconstrained convex tensor program which is equivalent
+to training the non-convex training problem for deep ReLU networks.
+
