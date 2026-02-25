@@ -66,7 +66,7 @@ In practice, this is only applicable for MOSEK, which scales poorly in both memo
 	\includegraphics[width=0.96\linewidth]{figures/chapter_two/additional_pp/pp_main_05.pdf}
 	\caption{
 		Alternative version of \cref{fig:performance-profiles} with success threshold set to be \( r_{\text{gap}} = 0.5 \).
-		Recall that a problem is considered solved when \( \rbr{F(x_k) - F(x^*)}/F(x^*) \leq r_{\text{gap}} \), where \( F(x^*) \) is the smallest objective value found by any method.
+		A problem is considered solved when \( \rbr{F(x_k) - F(x^*)}/F(x^*) \leq r_{\text{gap}} \), where \( F(x^*) \) is the smallest objective value found by any method.
 		We find that tightening the success threshold (as compared to \cref{fig:performance-profiles}) only improves the performance of our convex solvers relative to Adam and SGD.
 	}%
 	\label{fig:pp-main-05}
