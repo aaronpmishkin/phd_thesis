@@ -352,7 +352,7 @@ This proposition is exactly the gated ReLU equivalent of
 \cref{sec:tensor-representation}, although with several
 important differences.
 Firstly, since \( g_\theta \) is a gated ReLU network, the activation cones
-\( \calK^{(l)}_{j_l} \) do not appear in recursive constraint
+\( \calK^{(l)}_{j_l} \) do not appear in the recursive constraint
 (compare to \( \calGl \) in \cref{eq:rank-tensor-decomp}).
 Similarly, since the activations in the maximal gated ReLU problem are fixed,
 each tensor slice \( \Tl_{j_1, \ldots, j_l} \) is fixed to be rank-one.
@@ -361,8 +361,8 @@ multiples of each activation pattern in the non-convex network.
 
 Let \( g^{\text{exp}}_{\theta} \) be an expanded version of the maximal
 gated ReLU network which, in the \( l^{\text{th}} \) layer, contains
-\( p_{l+1} \) copies of each activation pattern for \( l \in [L-2] \)
-and \( c \) copies for \( l = L-1 \).
+\( d_{l+1} \) copies of each activation pattern for \( l \in [L-1] \),
+where we recall that \( d_{L} = c \).
 That is to say, let \( d^{(l)}_{j_l} = \diag\rbr{\tilde{D}^{(l)}_{j_l}} \)
 and set
 \[
@@ -370,9 +370,12 @@ and set
     \begin{bmatrix}
         [\underbrace{d^{(l)}_{1} \cdots d^{(l)}_{1}}_{p_{l+1}}] \cdots
         [\underbrace{d^{(l)}_{p_l} \cdots d^{(l)}_{p_l}}_{p_{l+1}}]
-    \end{bmatrix}.
+    \end{bmatrix},
 \]
-Then we can define \( g_{\theta_0}^{\text{exp}}(X) = X \),
+so that \( l^{\text{th}} \) layer has \( d_l = p_l d_{l+1} \) activation
+patterns.
+Unrolling this recursion, we have \( d_l = c \prod_{k = l}^{L-1} p_l \).
+Now we can define \( g_{\theta_0}^{\text{exp}}(X) = X \),
 \( g^{\text{exp}}_{\theta_{l}}(X)
 = \mathbf{D}_{\text{exp}}^{(l)} \cdot g^{\text{exp}}_{\theta_{l-1}}(X) W^{(l)}, \)
 and \( g_{\theta_L}^{\text{exp}}(X) = g^{\text{exp}}_{\theta_{L-1}}(X) W^{(L)} \).
@@ -387,10 +390,31 @@ This leads to our convex reformulation.
         \min_{\Tk} \calL\rbr{\Xk \odot \Tk, y}.
     \end{equation}
 \end{restatable}
+Just as in the two-layer case, switching to gated ReLU activations decouples
+activation patterns from the neuron weights, leading to a fully unconstrained
+problem.
+Indeed, Problem~\ref{eq:convex-gated-relu-program} is
+identical to the convex reformulation from the previous section
+(Problem~\ref{eq:convex-tensor-program}) except that the recursive cone
+constraints specified by \( \calCk \) have vanished.
+However, unlike for Problem~\ref{eq:convex-tensor-program}, we cannot
+avoid including \( d_{l+1} \) duplicated activation patterns in the expanded
+Gated ReLU network.
 
-We make several observations:
-(i) Problem~\ref{eq:convex-gated-relu-program} is exactly
-the unconstrained version of the convex reformulation from the previous
-section, Problem~\ref{eq:convex-tensor-program};
-(ii) unlike
+\subsection{Deep Cone Decompositions}\label{sec:deep-cone-decompositions}
 
+We conclude by extending the equivalence of ReLU and Gated ReLU networks from
+the two-layer setting, as shown in \cref{sec:relu-grelu-equivalence},
+to deep networks.
+Recall that we call an activation pattern \( \Dl_{j_l} \in \calDl \)
+\emph{singular} if the cone \( \calKl_{j_l} \)  is contained in a strict
+subspace of \( \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \),
+implying that
+\( \calKl_{j_l} - \calKl_{j_l} \subset \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \).
+We use the set \( \calDl_{\text{ns}} \subseteq \calDl \) to denote the subset
+of ReLU activation patterns in the \( l^{\text{th}} \) layer which are
+non-singular.
+
+Because \( \Xl \odot \Tl \) is a linear map, there exists a matrix 
+version of \( \Xl \) and a matrix version of \( \Tl \).
+The 

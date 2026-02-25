@@ -421,14 +421,14 @@
     This choice trivially satisfies
     \begin{align*}
         g_{\theta_1}^{\text{exp}}(X)
-         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot X W^{(1)}  \\
+         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot X W^{(1)}          \\
          & = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(1)}).
     \end{align*}
     Now assume that for \( l \in [L-1] \),
     \( g_{\theta_l}^{\text{exp}}(X) = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(l)}) \).
     We will show that this equation also holds at \( l+1 \).
     Let \( \calI^{(l)}_{j_l} \) contain the indices of the parameters in the
-    layer \( l \) which are associated with the \( p_{l+1} \) copies of 
+    layer \( l \) which are associated with the \( d_{l+1} \) copies of
     \( \tilde{D}^{(l)}_{j_l} \).
     Let
     \begin{equation*}
@@ -440,8 +440,12 @@
     \begin{align*}
         g_{\theta_{l+1}}^{\text{exp}}(X)
          & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
-        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \sum_{i_l \in \calI^{(l)}_{j_l}} 
-            \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{i_l}}}
+        \sbr{\sum_{i_l=1}^{d_l}
+            \rbr{\Dl_{i_l} \sbr{\Xl \odot \Tl_{i_l}}}
+        \otimes W^{(l+1)}_{i_l}}                                              \\
+         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+        \sbr{\sum_{j_l=1}^{\tilde{p}_l} \sum_{i_l \in \calI^{(l)}_{j_l}}
+        \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{i_l}}}
         \otimes W^{(l+1)}_{i_l}}                                              \\
          & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \sbr{\sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{i_l}
@@ -455,14 +459,111 @@
     \[
         g_{\theta}^{\text{exp}}(X) = \Xk \odot \Tk.
     \]
-    This implies that 
+    This implies that
     \[
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{g^{\text{exp}}_{\theta}(X), y}
-        \geq 
-        \min_{\Tk \in \calHk} \calL\rbr{\Xk \odot \Tk, y}.
+        \geq
+        \min_{\Tk} \calL\rbr{\Xk \odot \Tk, y}.
     \]
     This establishes one direction of theorem.
 
-    For the other direction...
+    For the other direction, let \( \Tk \) be any optimal solution
+    to \cref{eq:convex-gated-relu-program}.
+    We shall construct a parameter \( \theta = \rbr{W^{(1)}, \ldots \Wk} \)
+    for the expanded Gated ReLU model with the same model fit.
+    We have
+    \begin{align*}
+        \Xll \odot \Tll
+         & = \sum_{j_l = 1}^{\tilde{p}_l}
+        \tilde{\calD}_{i_l} \rbr{\Xl \odot \Tll_{j_l}}                            \\
+         & = \sum_{j_l = 1}^{\tilde{p}_l}
+        \tilde{\calD}_{j_l} \rbr{\Xl \odot
+        \sbr{\sum_{i_{l+1}=1}^{d_{l+1}} \Tll_{j_l, i_{l+1}} \otimes e_{i_{l+1}}}} \\
+         & = \sum_{j_l = 1}^{\tilde{p}_l}
+        \sum_{i_{l+1}=1}^{d_{l+1}} \sbr{\tilde{\calD}_{j_l} \rbr{\Xl \odot
+        \Tll_{j_l, i_{l+1}}}} \otimes e_{i_{l+1}}.                                \\
+        \intertext{Define \( \Tl_{\phi_l(j_l, i_{l+1})} = \Tll_{j_l, i_{l+1}} \),
+            which is possible since \( d_l \geq p_l d_{l+1} \)
+            Similarly, let \( \Wll_{\phi(j_l, i_{l+1})} = e_{i_{l+1}} \) to obtain
+        }
+         & =\sum_{i_l}^{d_{l+1}} \sbr{\tilde{\calD}_{i_l} \rbr{\Xl \odot
+        \Tl_{i_l}}} \otimes \Wll_{i_{l}}                                          \\
+         & =\mathbf{D}^{(l)}_{\text{exp}} \cdot \rbr{\Xl \odot
+        \Tl} \Wll                                                                 \\
+    \end{align*}
+    Unrolling this equation starting from \( l = L-1 \) and choosing
+    \( W^{(1)} = T^{(1)} \) yields  \( \theta = \rbr{W^(1), \ldots, W^{(L)}} \)
+    such that
+    \[
+        \Xk \odot \Tk
+        = g_{\theta}^{\text{exp}}(X),
+    \]
+    as desired.
+    We conclude that
+    \[
+        \min_{\Tk} \calL\rbr{\Xk \odot \Tk, y}
+        \geq
+        \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{g^{\text{exp}}_{\theta}(X), y},
+    \]
+    which completes the proof.
+
+\end{proof}
+
+
+\aside{Not ready for this result yet!}
+This allows us to write an explicit equation for \( \calDl \) as follows.
+
+\begin{restatable}{lemma}{activationCharacterization}\label{lemma:activation-characterization}
+    The limiting set of activation patterns given in
+    \cref{eq:limiting-activation-set} satisfies
+    \begin{equation}\label{eq:explicit-activation-def}
+        \calDl =
+        \cbr{\Dl_{j_l} = \mathds{1}\rbr{\emph{\diag}
+                \rbr{ \Xl \odot U^{(l)} \geq 0 }} :
+            U^{(l)} \in \calCl}
+    \end{equation}
+\end{restatable}
+\begin{proof}
+    Define
+    \[
+        \tilde{\calD}^{(l)} =
+        \cbr{\Dl_{j_l} = \mathds{1}\rbr{\diag
+                \rbr{ \Xl \odot U^{(l)} \geq 0 }} :
+            U_l \in \calCl}
+    \]
+    and let \( \Dl \in \calDl \) as defined in
+    \cref{eq:limiting-activation-set}.
+    By definition,
+    \[
+        \Dl_{j_l} =
+        \diag\rbr{\mathds{1}\rbr{f_{\theta_{l-1}}(X) u \geq 0}},
+    \]
+    for some \( \theta_{l-1} \in \Theta^{(l-1)} \) and \( u \in \R^{d_l} \).
+    Let \( U^{(l)} \in \R^{d_{l-1} \times d_{l}} \) such that
+    \( U^{(l)}_{i_l} = u \).
+    Then we can write
+    \begin{align*}
+        f_{\theta_{l-1}}(X) u
+         & = \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}_{i_l}.
+    \end{align*}
+    \cref{prop:layer-elimination} implies that there exists
+    \( \Tl \in \calG^{(l)} \) such that
+    \[
+        \rbr{Z^{(l-1)} W^{(l-1)}}_+ U^{(l)}
+        = \Xl \odot \Tl,
+    \]
+    and, in particular, that
+    \[
+        f_{\theta_{l-1}}(X) u
+        = \Xl \odot \Tl_{i_l}.
+    \]
+    Since the network widths can be made arbitrarily wide, they 
+    can be as wide as \( d_{l} \geq 2 p_l d_{l+1} \), which
+    allows us to use \cref{prop:constraint-convexification}
+    to obtain \( \calGl = \calCl \).
+    We deduce that \( \Dl_{j_l} \in \tilde{\calD}^{(l)} \) as required.
+    Since \cref{prop:layer-elimination} establishes an if-and-only-if
+    relationship, this derivation is easily reversed to obtain  
+    \( \tilde{\calD}^{(l)} \subset \calDl \).
 \end{proof}
 
