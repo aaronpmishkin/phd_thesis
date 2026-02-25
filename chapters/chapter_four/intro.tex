@@ -24,7 +24,30 @@ as a convex tensor program with non-convex decomposition constraints.
 As the width of the network increases, these constraints transform into
 convex cones describing the recursive decomposition of the model.
 A natural extension of our cone decompositions from
-\cref{chapter:fast-optimization} allows us to prove this that problem is
-equivalent to a fully unconstrained deep gated ReLU model.
+\cref{chapter:fast-optimization} allows us to prove that this problem is
+equivalent to an (unconstrained) deep gated ReLU model.
 
-\aside{Summarize results after deciding exactly what to include in this chapter.}
+To summarize, our main contributions are the following:
+
+\begin{itemize}
+    \item A new class of non-convexly constrained optimization problems over
+          tensors of order \( L+1 \) which are equivalent to training
+          unregularized deep ReLU networks with \( L \) layers.
+
+    \item A fully convex relaxation of these tensor programs which is equivalent
+          to training a deep ReLU network as long as the network layers
+          are at least as wide as a polynomial function of \( n \) (the number of training
+          data points) and \( c \) (the output dimension).
+
+    \item A rigorous definition of deep neural networks with gated ReLU networks
+          and a convex reformulation for deep gated ReLU networks
+          based on an unconstrained tensor program.
+
+    \item A formal proof that deep gated ReLU networks with non-singular
+          activation patterns form an equivalent hypothesis space to deep
+          ReLU networks.
+          This result extends our work from
+          \cref{chapter:fast-optimization} and shows that deep ReLU networks
+          can be trained by solving an unconstrained tensor program.
+\end{itemize}
+
