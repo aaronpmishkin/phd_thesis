@@ -2,24 +2,58 @@
 
 \chapter{Conclusion}\label{chapter:conclusion}
 
-We leave many problems for future work.
-In particular, we do not establish the exact complexity of solving the deep
-convex reformulation;
-this relies on computing the number of activation patterns achievable in the
-\( l^{\text{th}} \) layer of a ReLU network, which have not yet done.
+This thesis studies neural networks from the perspective of convex
+optimization.
+Building on recent work by \citet{pilanci2020convexnn}, we develop and
+analyze \emph{convex reformulations} of neural networks.
+Convex reformulations re-write the non-convex training problem for neural
+networks as a convex optimization program in a higher dimensional space.
+We show that this enables both faster optimization
+(\cref{chapter:fast-optimization}) and novel analysis of global optima
+(\cref{chapter:solution-functions}) for two-layer ReLU networks.
+We also show how to develop convex reformulations for ReLU neural networks
+with arbitrarily many layers and extend a subset of our previous results
+to this setting (\cref{chapter:deep-reformulations}).
+However, we leave many open problems to future work.
+
+In \cref{chapter:solution-functions}, we do not provide a definitive answer
+to the set-valued continuity of the regularization path for two-layer ReLU
+networks with weight-decay regularization.
+While our analysis shows that the path cannot be continuous at \( \lambda = 0 \),
+inner semi-continuity (openness) of the regularization path away
+from \( 0 \) is not known.
+This problem has significant impact on the computational complexity of
+hyper-parameter tuning for two-layer ReLU networks and we hope to address
+it in future work.
+
+In \cref{chapter:deep-reformulations}, we do not establish the exact complexity
+of solving our deep convex reformulations.
+A rigorous characterization for the complexity relies on computing the number
+of activation patterns achievable in the \( l^{\text{th}} \) layer of a ReLU
+network.
 Of particular interest is whether or not low-rank structure in the data
 leads to a polynomial number of activation patterns as in the two-layer
 setting.
 Such a result would imply polynomial time optimization for any deep ReLU
 network exceeding the width thresholds \( m^*_l \).
 
-Another open question concerns whether or not our bounds on the width
-thresholds are tight.
-Although they match the two-layer setting when specialized to \( L = 2 \),
+Another open question in the final chapter concerns whether or not our bounds
+on the width thresholds are tight.
+Although our requirement \( m^*_{l} \leq c n^{L - l} \) matches the
+two-layer setting when specialized to \( L = 2 \),
 it remains to prove lower bounds for \( L \geq 3 \).
-Developing these precise characterizations for \( m_l^* \) is necessary if the
-machine learning community is to fully understand the complexity regimes for
-training neural networks.
+We believe that developing precise characterizations for \( m_l^* \) is
+necessary if the machine learning community is to fully understand the
+complexity regimes for training neural networks.
 
-Finally, extending our results to include regularized problems is a critical
-step
+Finally, extending our deep convex reformulations to handle regularized
+problems is a critical research question that we are currently tackling.
+Since two-layer ReLU networks are universal approximators, the key role of
+depth is to provide a ``better'' function representation rather than a better
+fit of the training data.
+Better here means many things: more parsimonious (using fewer neurons),
+parameterizing a smoother function (lower norm in function space), or
+simply generalizing better at test time.
+Regularization is widely regarded as inducing these properties in neural
+networks, so incorporating regularization is crucial to realizing the full
+power of our convex reformulation framework.
