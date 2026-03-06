@@ -113,12 +113,13 @@ Convex reformulations re-write the non-convex training problem for a neural
 network as a convex program by lifting it into a higher dimensional space
 \citep{pilanci2020convexnn}.
 Crucially, the resulting problem is finite-dimensional.
-As such, convex reformulations are distinct from convexifications of neural
-networks based on infinite-width relaxations
-\citep{bach2017breaking, bengio2006convex}.
-Indeed, convex reformulations can be viewed as providing a finite
-discretization for the measure optimization problem arising in the
-infinite-width setting.
+As such, convex reformulations are more practical to solve than
+convexifications of neural networks based on infinite-width relaxations
+\citep{bengio2006convex}.
+Additionally, while infinite-width neural networks provide powerful insights
+into generalization behavior \citep{bach2017breaking}, convex reformulations
+characterize only (and all) finite-width solutions \citep{wang2022hidden},
+making them better for studying real-world models.
 Since their introduction for two-layer ReLU networks by
 \citet{pilanci2020convexnn}, convex reformulations have been developed for many
 other shallow architectures, including for convolutions
@@ -144,7 +145,7 @@ On their own, two-layer ReLU networks are widely used for reinforcement
 learning \citep{gaur2023global}, prediction on edge devices
 \citep{teerapittayanon2017distributed}, and word-embeddings
 \citep{mikolov2013word}.
-As such, advances in training and theory for two-layer networks stand to
+As such, advances in training and theory for two-layer networks can
 impact many areas of machine learning.
 
 We start by leveraging convex reformulations to develop fast, global
@@ -165,11 +166,11 @@ Next, we use convex reformulations to characterize the set of global
 solutions to the non-convex training problem for two-layer ReLU networks.
 Our work reveals the existence of a non-trivial manifold of global optima;
 in the convex parameterization, this manifold corresponds to a convex polytope
-living in an affine subspace.
+contained in an affine subspace.
 We show that vertices of the polytope correspond to highly neuron-sparse
 networks and derive a neuron pruning algorithm to compute these minimal models
-To the best of our knowledge, this is the first optimal neuron pruning
-algorithm for neural networks.
+To the best of our knowledge, this is the first pruning algorithm for neural
+networks which is guaranteed to preserve global optimality.
 We also prove many other continuity and sensitivity results as well as extend
 our characterization of the optimal set to include all critical points of the
 training objective.
@@ -179,7 +180,7 @@ developing convex reformulations for arbitrarily deep ReLU networks.
 Our approach is based on a novel layer elimination lemma, which we use to
 to show that ReLU networks are equivalent to tensor optimization problems with
 non-convex, low-rank decomposition constraints.
-For sufficiently wide networks (although still finite), these low-rank
+For sufficiently wide (although still finite) networks, these low-rank
 constraints vanish and we obtain a fully convex tensor program with a
 recursive cone constraint.
 Similar to the two-layer setting, we develop a unconstrained Gated ReLU
@@ -196,5 +197,8 @@ set for two-layer ReLU networks and establishes many results around pruning,
 sampling, continuity, and sensitivity.
 Finally, \cref{chapter:deep-reformulations} extends convex reformulations
 to deep, fully-connected ReLU networks.
+\cref{chapter:conclusion} concludes the thesis and introduces several open
+problems which we believe are important to advancing the theory of convex
+reformulations.
 All proofs are postponed to the corresponding section of the appendix.
 

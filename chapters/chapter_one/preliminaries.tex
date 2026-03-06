@@ -131,10 +131,24 @@ For any subset \( \tilde \calD \subseteq \calD_X \),
 the convex reformulation is,
 \begin{equation}\label{eq:convex-relu-mlp}
     \begin{aligned}
-        \min_{v, w} \, & L\Big(\sum_{D_i \in \tilde \calD} D_i X (v_i - u_i), y\Big)+\lambda\sum_{D_i \in \tilde \calD}\norm{v_i}_2+\norm{u_i}_2 \\
+        \min_{v, w} \, & \calL\Big(\sum_{D_i \in \tilde \calD} D_i X (v_i - u_i), y\Big)+\lambda\sum_{D_i \in \tilde \calD}\norm{v_i}_2+\norm{u_i}_2 \\
                        & \text{s.t.} \quad v_i, u_i \in \calK_i.
     \end{aligned}
 \end{equation}
+\begin{figure}[t]
+    \centering
+    \input{figures/chapter_one/convex_reformulation.tex}
+    \caption{Comparison between a two-layer ReLU network and its convex
+        reformulation.
+        The non-convex ReLU network maps the input \( X \) to a hidden
+        representation and then predicts using a linear combination of these
+        neurons.
+        In comparison, the convex reformulation computes \( \hat{y} \) as a sum
+        of linear models fit to copies of \( X \) which are split into active
+        and inactive data-points by half-spaces passing
+        through the origin.}%
+    \label{fig:convex-reformulation}
+\end{figure}
 See \cref{fig:convex-reformulation} for an illustration.
 \citet{pilanci2020convexnn} prove that this program and \cref{eq:non-convex-relu-mlp}
 are equivalent in the following sense:
@@ -151,21 +165,6 @@ for the ReLU problem are given by
     \end{aligned}
 \end{equation}
 where we use the convention that \( 0/0 = 0 \).
-
-\begin{figure}[t]
-    \centering
-    \input{figures/chapter_one/convex_reformulation.tex}
-    \caption{Comparison between a two-layer ReLU network and its convex
-        reformulation.
-        The non-convex ReLU network maps the input \( X \) to a hidden
-        representation and then predicts using a linear combination of these
-        neurons.
-        In comparison, the convex reformulation computes \( \hat{y} \) as a sum
-        of linear models fit to copies of \( X \) which are split into active
-        and inactive data-points by half-spaces passing
-        through the origin.}%
-    \label{fig:convex-reformulation}
-\end{figure}
 
 In practice, learning with \( \calD_{X} \) is intractable except when the data
 are low rank.
