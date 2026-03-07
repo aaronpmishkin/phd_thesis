@@ -50,8 +50,8 @@ type \citep{goodfellow2016deeplearning}.
 They are also slow from a theoretical perspective:
 lower bounds show that SGMs require at least \( \Omega(\epsilon^{-4}) \) iterations
 to compute an \( \epsilon \)-stationary point \citep{arjevani2023lower, drori2020complexity}.
-In stark contrast, for smooth, convex functions a stationary point can be
-computed in \( \tilde{O}(\epsilon^{-1/2}) \) iterations using acceleration
+In comparison, stationary points can be computed for smooth, convex functions
+in \( \tilde{O}(\epsilon^{-1/2}) \) iterations using acceleration
 \citep{nesterov2018lectures}.
 
 In addition to being theoretically slow, SGMs are also highly sensitive to
@@ -109,17 +109,18 @@ problems.
 
 This thesis tackles the optimization gap for neural networks using convex
 reformulations.
-Convex reformulations re-write the non-convex training problem for a neural
-network as a convex program by lifting it into a higher dimensional space
+Convex reformulations re-write the non-convex training problems for neural
+networks as convex programs by lifting them into higher dimensional spaces
 \citep{pilanci2020convexnn}.
-Crucially, the resulting problem is finite-dimensional.
-As such, convex reformulations are more practical to solve than
-convexifications of neural networks based on infinite-width relaxations
+Crucially, the resulting problems are finite-dimensional.
+This makes convex reformulations more practical to solve than convexifications
+of neural networks based on infinite-width relaxations
 \citep{bengio2006convex}.
-Additionally, while infinite-width neural networks provide powerful insights
-into generalization behavior \citep{bach2017breaking}, convex reformulations
-characterize only (and all) finite-width solutions \citep{wang2022hidden},
-making them better for studying real-world models.
+It also means that they allow for more realistic analyses:
+while infinite-width neural networks provide powerful insights into
+generalization behavior \citep{bach2017breaking}, convex reformulations
+characterize only (and, in fact, all) finite-width networks
+\citep{wang2022hidden}.
 Since their introduction for two-layer ReLU networks by
 \citet{pilanci2020convexnn}, convex reformulations have been developed for many
 other shallow architectures, including for convolutions

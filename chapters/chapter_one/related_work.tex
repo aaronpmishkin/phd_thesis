@@ -1,7 +1,7 @@
 %!TEX root=../../main.tex
 
-Convex versions of neural networks have a long history that originates in
-linearizations based on large-width analyses.
+The antecedents of convex neural networks --- both finite and
+infinite-dimensional --- arose from Bayesian analyses.
 This line of work begins with \citet{neal1996priors}, who showed that
 infinite-width, two-layer neural networks converge to
 Gaussian process models given appropriate priors on the network weights.
@@ -12,18 +12,18 @@ large-width limits of deep neural networks
 \citep{lee2019deep, matthews2018deep}, convolutional networks
 \citep{novak2019convolutional, alonso2019convolutional}, and recurrent
 architectures \citep{yang2019recurrent}.
-However, these models rely on a Bayesian approach that views the network
+However, these models rely on a probabilistic approach that views the network
 weights as random variables and does not account for training dynamics.
-Convexity of the final model is a by-product, rather than goal, of the
-analysis.
+Convexity of the final prediction model is a by-product of the analysis, rather
+than the goal.
 
 Another convexification of infinite-width neural networks is given by
 the neural tangent kernel (NTK) \citep{jacot2018ntk}.
 The NTK innovates on Bayesian analyses by extending the Gaussian process
 characterization to include the behavior of the network during training;
-this is achieved by showing that the effects of any (stochastic) gradient
-updates vanish in the infinite-width limit, causing the network to remain at a
-kernel specified by the initial gradients.
+this is achieved by showing that the effects of optimization vanish in the 
+infinite-width limit, causing the network to converge to a Gaussian process 
+with a kernel specified by the gradients at initialization.
 NTK dynamics have been the target of intense study by the machine learning
 community and extensions have been developed for convolutions
 \citep{arora2019ntk}, graph neural networks \citep{du2019graph} and general
@@ -31,7 +31,7 @@ architectures \citep{yang2020tensor}, among other models.
 
 A major criticism of the NTK approach is that it does not capture feature
 learning.
-Since the effect of training vanishes as the network becomes arbitrarily wide,
+Since the effects of training vanish as the network becomes arbitrarily wide,
 NTK models remain arbitrarily close to their initializations in the so-called
 ``lazy training regime'' \citep{chizat2019lazy}.
 The mean-field, or ``rich training regime'', is an alternative large-width

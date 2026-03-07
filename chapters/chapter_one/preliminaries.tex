@@ -7,8 +7,8 @@ This setup covers both multi-class classification and regression with
 vector-valued targets.
 We are interested in fully-connected ReLU neural networks with arbitrarily many
 layers.
-Let \( \Wl \in \R^{d_{l-1} \times d_{l}} \) be the matrix of weights for the \(
-^{\text{th}} \) layer.
+Let \( \Wl \in \R^{d_{l-1} \times d_{l}} \) be the matrix of weights for the
+\( l^{\text{th}} \) layer.
 We will use \( \Wl_{i} \) to refer to the \( i^{\text{th}} \) row of \( \Wl \)
 and \( \Wl_{\cdot, j} \) to refer to the \( j^{\text{th}} \) column.
 The activations at layer $l$ are defined to be,
@@ -28,8 +28,8 @@ Here, \( \theta = \cbr{W^{(1)}, \ldots, \Wk} \) denotes the collection of
 weights for the network and \( \Theta \) the complete parameter space.
 The choice of \( L = 2 \) corresponds to a two-layer ReLU network,
 which is sometimes referred to as a network with one hidden layer.
-In this case, the recursive definition can be unrolled to give a simple
-and explicit prediction function,
+In this case, the recursive definition can be unrolled to give an explicit
+prediction function,
 \begin{equation}\label{eq:two-layer-vector-output}
     f_\theta(X) = \rbr{X W^{(1)}}_+ W^{(2)}.
 \end{equation}
@@ -65,7 +65,7 @@ The function
 is referred to as the objective function.
 Although \( \calL \) and \( R \) are usually convex, \( \theta \mapsto
 F_\lambda(\theta) \) is not because the neural network \( f_\theta \) is
-highly non-linear and itself non-convex.
+highly non-linear.
 As a result, Problem~\ref{eq:regularized-erm} is challenging to solve in both
 theory and practice.
 
@@ -88,8 +88,8 @@ classification problems \citep{hui2021evaluation}.
 Similarly, \( \ell_2 \)-squared regularization is comparable to assuming
 a Gaussian prior on the model weights;
 from an optimization perspective, it is desirable because it gives curvature to
-objective function, ensuring that \( F_\lambda \) is coercive and that the
-level sets are compact.
+objective function and ensures that \( F_\lambda \) is coercive and the
+sub-level sets are compact.
 
 \begin{figure}[t]
     \centering
@@ -110,11 +110,12 @@ level sets are compact.
 \end{figure}
 
 We conclude by introducing background on convex reformulations.
-In the following, we assume that \( \theta \) parameterizers a two-layer,
+In the following, we assume that \( \theta \) parameterizes a two-layer,
 scalar output ReLU network as described in \cref{eq:two-layer-scalar-output}.
-For such networks, convex reformulations re-write \cref{eq:regularized-erm} as
-a convex program by enumerating the activations a single neuron in the
-hidden layer can take on for fixed \( X \) as follows:
+For such networks, convex reformulations re-write
+Problem~\ref{eq:regularized-erm} as a convex program by enumerating the
+activations a single neuron in the hidden layer can take on for fixed \( X \)
+as follows:
 \begin{equation}\label{eq:activation-patterns}
     \calD_X = \cbr{D = \diag(\mathds{1}(X u \geq 0)) : u \in \R^d}.
 \end{equation}
@@ -126,7 +127,8 @@ a convex cone,
 \begin{equation}\label{eq:activation-cone}
     \calK_i = \cbr{u \in \R^d : (2D_i - I) X u \succeq 0}.
 \end{equation}
-If \( u \in \calK_i \), then \( u \) matches \( D_i \), meaning \( D_i X u = \rbr{X u}_+ \).
+If \( u \in \calK_i \), then \( u \) is said to match, or be consistent with,
+\( D_i \), meaning \( D_i X u = \rbr{X u}_+ \).
 For any subset \( \tilde \calD \subseteq \calD_X \),
 the convex reformulation is,
 \begin{equation}\label{eq:convex-relu-mlp}
@@ -148,14 +150,15 @@ the convex reformulation is,
         and inactive data-points by half-spaces passing
         through the origin.}%
     \label{fig:convex-reformulation}
-\end{figure}
+\end{figure}%
 See \cref{fig:convex-reformulation} for an illustration.
-\citet{pilanci2020convexnn} prove that this program and \cref{eq:non-convex-relu-mlp}
-are equivalent in the following sense:
+\citet{pilanci2020convexnn} prove that this program is equivalent to
+training a two-layer ReLU network are equivalent in the following sense:
 if \( \tilde \calD = \calD_X \) and \( m \geq m^* \) for some \( m^* \leq n + 1 \),
-then the two programs have the same optimal value and every solution to the convex program
-can be mapped to a solution of the non-convex training problem and vice-versa.
-Given a solution \( \rbr{v^*, u^*} \), optimal weights
+then the two problems have the same optimal value and every solution to the
+convex program can be mapped to a solution of the non-convex training problem
+and vice-versa.
+In particular, given a solution \( \rbr{v^*, u^*} \), optimal weights
 for the ReLU problem are given by
 \begin{equation}\label{eq:convex-to-relu}
     \begin{aligned}
@@ -168,7 +171,15 @@ where we use the convention that \( 0/0 = 0 \).
 
 In practice, learning with \( \calD_{X} \) is intractable except when the data
 are low rank.
-In the following chapter, we provide refined conditions on \( \tilde \calD \)
-which are sufficient for \cref{eq:convex-relu-mlp} to be equivalent to the
-non-convex problem.
+In such special settings, \citet{pilanci2020convexnn} prove that training two-layer
+ReLU networks is fully polynomial in the problem parameters.
+This implies global optimization is polynomial time in fixed dimension as long
+as the network width exceeds \( m^* \).
+In fact, \( m^* \) is exactly the critical threshold for two-layer ReLU
+networks to be in P (instead of NP) since \citet{froese2023hard} provide a lower
+bound showing global optimization is NP-Hard for fixed \( d \) as long as
+\( m \) is small.
+In the following chapter, we take a different approach and provide refined
+conditions on \( \tilde{\calD} \)  for Problem~\ref{eq:convex-relu-mlp} to be
+equivalent to the non-convex problem.
 
