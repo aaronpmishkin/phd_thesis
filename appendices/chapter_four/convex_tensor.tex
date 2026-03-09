@@ -218,11 +218,11 @@
 \minimumSolutionWidth*
 \begin{proof}
     Let \( \Tk \in \calCk \) be a solution to
-    \cref{eq:convex-tensor-program}.
-    We shall construct a solution with the desired width bounds from
+    Problem~\ref{eq:convex-tensor-program};
+    we will construct a solution with the desired width bounds using
     \( \Tk \).
-    Let \( l \in [L-1] \) and suppose that the layer at \( l+1 \)
-    has \( k \) non-zero outputs.
+    Towards this goal, let \( l \in [L-1] \) and suppose that the layer at
+    \( l+1 \) has \( k \) non-zero outputs.
     That is, the set
     \[
         \calA(\Tll) = \cbr{i_{l+1} \in [d_{l+1}] : T^{(l+1)}_{i_{l+1}} \neq 0 },
@@ -244,22 +244,20 @@
     \[
         \calQ_{i_{l+1}}(T^{(l)})
         = \cbr{q_{s, j_l, i_{l+1}} :=
-            X^{(l+1)}_{j_l} \odot T^{(l)}_{\phi_{l}(1, j_{l}, i_{l+1})}
+            X^{(l+1)}_{j_l} \odot T^{(l)}_{\phi_{l}(s, j_{l}, i_{l+1})}
             : j_l \in [p_l], s \in \cbr{+1, -1},
             T^{(l)}_{\phi_{l}(s, j_{l}, i_{l+1})} \neq 0}
     \]
-    Since each vector
-    \( q_{s, j_l, i_{l+1}} \in \mathcal{N}_{i_{l+1}}(\Tl) \) is
-    \( n \)-dimensional, \( \calQ_{i_{l+1}}(\Tl) \)
-    contains a linearly dependent set if it contains are more than \( n \)
-    vectors.
+    Since each vector \( q_{s, j_l, i_{l+1}} \) is \( n \)-dimensional,
+    \( \calQ_{i_{l+1}}(\Tl) \) contains a linearly dependent set if it contains
+    more than \( n \) vectors.
     Let
     \[
         \calN_{i_{l+1}}(T^{(l)})
         = \cbr{(s, j_l) : q_{s, j_l, i_{l+1}} \in \calQ_{i_{l+1}}(\Tl)}.
     \]
-    Then linear dependence implies there exists
-    \( \cbr{\alpha_(s,j_l) : (s,j_l) \in \calN_{i_{l+1}}(T^{(l)})} \)
+    Linear dependence implies there exists
+    \( \cbr{\alpha_{s,j_l} : (s,j_l) \in \calN_{i_{l+1}}(T^{(l)})} \)
     not all equal to zero such that
     \begin{align*}
         0 & = \sum_{(s,j_l) \in \calN_{i_{l+1}}(T^{(l)})} \alpha_{s, j_l} q_{s, j_l, i_{l+1}} \\
@@ -269,11 +267,11 @@
         \rbr{X^{(l+1)}_{j_l} \odot \sbr{\alpha_{s,j_l} T^{(l)}_{\phi_{l}(s,j_l,i_{l+1})}}}.
     \end{align*}
     Let \( (s^*, r^*) =
-    \argmax_(s, j_l) \cbr{ \abs{\alpha_{s, j_l}} :
+    \argmax_{s, j_l} \cbr{ \abs{\alpha_{s, j_l}} :
         (s, j_l) \in \calN_{i_{l+1}}(T^{(l)})} \)
-    and define \( \tilde{\alpha}_{s, j_l} = \alpha_{s, j_l} / \alpha_{s^* ,r^*} \).
-    Clearly \( \tilde{\alpha}_{s, j_l} \leq 1 \) for all \( (s, j_l) \) and
-    \( \tilde{\alpha}_{(s^*, r^*)} = 1 \).
+    and define \( \tilde{\alpha}_{s, j_l} = \alpha_{s, j_l} / \abs{\alpha_{s^* ,r^*}} \).
+    Clearly \( \abs{\tilde{\alpha}_{s, j_l}} \leq 1 \) for all \( (s, j_l) \) 
+    and \( \abs{\tilde{\alpha}_{(s^*, r^*)}} = 1 \).
     Using this notation, we have
     \begin{align*}
         0 & = \sum_{(s, j_l) \in \calN_{i_{l+1}}(T^{(l)})}
@@ -299,13 +297,13 @@
     It is clear from the above calculation that \( \hat{T}^{(l)} \) preserves
     the predictions of \( T^{(l)} \)
     and maintains \( \hat{T}^{(l)}_{\phi_{l}(s, j_l, i_{l+1})} \in \calK_{j_l}^{(l)} \)
-    since \( \tilde{\alpha}_{s, j_l} \geq 0 \) for each \( (s, j_l) \).
+    since \( \abs{\tilde{\alpha}_{s, j_l}} \leq 1 \) for each \( (s, j_l) \).
     Additionally, \( \hat{T}^{(l)} \in \calCl \) by \cref{lemma:cone-scaling}.
     Defining
     \[
         \hat{T}^{(l+1)}_{s, j_l, i_{l+1}} =
         \hat{T}^{(l)}_{\phi_{l}(1, j_l, i_{l+1})}
-        - \hat{T}^{(l)}_{\phi_{l}(-1, j_l, i_{l+1})}
+        - \hat{T}^{(l)}_{\phi_{l}(-1, j_l, i_{l+1})},
     \]
     we see that \( \hat{T}^{(l+1)} \in \calC^{(l+1)} \)
     and thus \( \hat{T}^{(l+1)} \) is also optimal.
@@ -317,7 +315,7 @@
     in \( \calQ_{i_{l+1}}(\hat{T}^{(l)}) \) are linearly independent.
     This implies there exists optimal \( \hat{T}^{(l)} \)
     for which \( \abs{\calQ_{i_{l+1}}(\hat{T}^{(l)})} \leq n \).
-    Repeating this procedure independently for each \( i_{l+1} \)
+    Since this procedure is performed independently for each \( i_{l+1} \)
     for which \( T^{(l+1)}_{i_{l+1}} \neq 0 \), we construct
     \( \hat{T}^{(l+1)} \) with
     \( m_{l}(\hat{T}^{(l)}) \leq k n \).
@@ -328,12 +326,13 @@
 
 \deepConvexReformulation*
 \begin{proof}
-    Let \( \Tk \in \calCk \) be the solution to \cref{eq:convex-tensor-program}
+    Let \( \Tk \in \calCk \) be the sparse solution to 
+    Problem~\ref{eq:convex-tensor-program}
     which is guaranteed to exist by \cref{prop:convex-minimal-solution-width}.
-    This solution is sparse and satisfies \( m_l = \calA\rbr{\Tl} \leq c n^{L - l} \).
+    This solution satisfies \( m_l = \calA\rbr{\Tl} \leq c n^{L - l} \).
     \cref{lemma:convex-tensor-solution-mapping} now implies that there
-    exists a optimal sparse neural network \( \theta^* \) with at
-    most \( m_l \) neurons in the \( l^{\text{th}} \) layer.
+    exists an optimal sparse neural network \( \theta^* \) with at
+    most \( m_l \) non-zero neurons in the \( l^{\text{th}} \) layer.
     Removing zero neurons results in the architecture
     \( \Delta' = \rbr{m_1, \ldots, m_{L-1}} \)
     with associated parameter space \( \Theta_{\Delta'} \).
@@ -342,7 +341,7 @@
     Now can obtain
     \begin{align*}
         \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y)
-         & = \min_{\theta \in \Theta} \calL(f_\theta(X), y)              \\
+         & = \min_{\theta \in \Theta_{\Delta}} \calL(f_\theta(X), y)              \\
          & \leq \min_{\theta \in \Theta_{\Delta'}} \calL(f_\theta(X), y) \\
          & \leq \calL(f_{\theta^*}(X), y)                                \\
          & = \min_{\Tk \in \calCk} \calL(\Xk \odot \Tk, y),
