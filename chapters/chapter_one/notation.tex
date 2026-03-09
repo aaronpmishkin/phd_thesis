@@ -1,12 +1,24 @@
 %!TEX root=../../main.tex
 
-We use lower-case \( a \) to denote vectors and upper-case \( A \) for matrices.
+We use lower-case \( a \) to denote vectors and upper-case \( A \) for matrices
+and tensors.
+We index the \( i^{\text{th}} \) row of \( A \) using \( A_{i} \) and the
+\( j^{\text{th}} \) column using \( A_{\cdot, j} \).
 For \( d \in \bbN \), \( [d] = \cbr{1, \ldots, d} \).
-Calligraphic letters \( \calC \) denote sets.
+Given a tensor \( T \in \R^{a_0 \times \cdots \times a_L} \),
+we use \( i_l \) to access the \( l^{\text{th}} \)
+slice of \( T \), regardless of position.
+For example, given \( i_{l} \in [a_l] \), the slice
+\( T_{i_l} \) is an order \( L \) tensor in
+\( \R^{a_0 \times \cdots \times a_{l-1} \times a_{l+1} \times \cdots \times a_{L}} \).
+
+We use calligraphic letters \( \calC \) denote sets.
 For a block of indices \( \bi \subseteq [d] \),
 we write \( A_{\bi} \) for the sub-matrix of columns indexed by \( \bi \).
 Similarly, \( a_{\bi} \) is the sub-vector indexed by \( \bi \).
 If \( \calM \) is a collection of blocks, then \( A_\calM \) is the submatrix
 and \( a_\calM \) the sub-vector with columns/elements indexed by blocks in
 the collection.
-Finally, \( \abs{\calM} \) is cardinality of the union of blocks in \( \calM \).
+Finally, \( \abs{\calM} \) is the cardinality of the union of blocks in
+\( \calM \).
+

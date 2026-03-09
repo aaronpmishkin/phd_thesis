@@ -10,14 +10,14 @@ introduced in \cref{sec:preliminaries}.
 
 Recall that a deep ReLU network is
 parameterized by \( \theta = \rbr{W^{(1)}, \ldots, \Wk} \), where
-\( W^{(l)} \in \R^{d_{l} \times d_{l+1}} \) are the weights for the
+\( W^{(l)} \in \R^{d_{l-1} \times d_{l}} \) are the weights for the
 \( l^{\text{th}} \) layer.
 The dimension of the network inputs is given by \( d_0 = d \) and the output
 dimension is \( d_{L} = c \), where \( c \) is the number of targets.
 In accordance with \cref{eq:activations} and \cref{eq:predictions}, the model
 activations and predictions are given by
 \[
-    Z^{(l+1)} = \rbr{\Zl W^{(l)}}_+,
+    Z^{(l+1)} = \rbr{\Zl W^{(l)}}_+
     \quad \text{and} \quad
     f_\theta(X) = Z^{(L)} W^{(L)},
 \]
@@ -28,7 +28,7 @@ activation patterns.
 In order to refer to sub-networks,
 let \( \theta_l = \rbr{W^{(1)}, \ldots, \Wl} \) be the weights of the
 network up to and including the \( l^{\text{th}} \) layer.
-The prediction function associated with this sub-network is
+The partial network evaluation associated with this sub-network is
 \begin{equation}\label{eq:sub-network}
     f_{\theta_{l}}(X) = \rbr{Z^{(l)} W^{(l)}}_+ = Z^{(l+1)}
 \end{equation}
@@ -49,7 +49,7 @@ where \( \Theta^{(l-1)}_{\Delta} \) is the parameter space of the sub-network
 associated with the architecture \( \Delta \).
 When \( l = 1 \), \( \calD^{(1)}_{\Delta} \) is independent of \( \Delta \)
 and equivalent to the standard definition of activation patterns for two-layer
-ReLU networks (\cref{eq:activation-patterns}).
+ReLU networks given in \cref{eq:activation-patterns}.
 For \( l > 1 \), the definition is dependent on the capacity of the network
 as expressed by \( \Delta \).
 However, it is straightforward to obtain a canonical (and maximal) set of
@@ -57,26 +57,28 @@ patterns by taking all the layer widths to be arbitrarily large.
 \begin{restatable}{lemma}{limitingActivationSet}\label{lemma:activation-patterns}
     The set of activation patterns in the \( l^{\text{th}} \) layer has a
     finite limit, call it \( \calDl \), obtained by taking each hidden layer
-    width \( d_{i} \rightarrow \infty \),
+    width \( d_{k} \rightarrow \infty \) for each \( k \in [l] \).
     \begin{equation}\label{eq:limiting-activation-set}
         \calDl = \lim_{\Delta \rightarrow \infty} \calDl_{\Delta}.
     \end{equation}
 \end{restatable}
-We use \( p_{l} = \abs{\calDl} \) to represent the number of unique activation
-patterns in layer \( l \).
+We write \( p_{l} = \abs{\calDl} \) for the number of unique activation
+patterns in the \( l^{\text{th}} \) layer.
 
 Similar to the two-layer setting, we use activation patterns to define
-a data-dependent basis expansion on which our convex reformulation will
+a data-dependent basis expansion on which the convex reformulation will
 operate.
-Let \( X^{(1)} = X \in \R^{n \times d_0} \) and recursively define
-the tensor \( X^{(l+1)} \in \R^{n \times p_1 \times \cdots \times p_{l} \times d_0} \)
-such that
+As the base case, let \( X^{(1)} = X \in \R^{n \times d_0} \) and then
+recursively define the tensor 
+\( X^{(l+1)} \in \R^{n \times p_1 \times \cdots \times p_{l} \times d_0} \)
+in terms of the following slices:
 \begin{equation}\label{eq:data-tensor}
     X^{(l+1)}_{j_1,\ldots, j_l}
     := \Dl_{j_l} \Xl_{j_1, \ldots, j_{l-1}} \in \R^{n \times d_0},
 \end{equation}
 where we use the convention that \( j_{l} \) always indexes the
-\( l^{\text{th}} \) slice of \( \Xl \).
+\( l^{\text{th}} \) slice of \( \Xl \) regardless of the index
+position.
 Unrolling this recursion implies that \( \Xl \) is a \( l+1 \) order tensor
 satisfying
 \( \Xl_{j_1, \ldots, j_{l-1}} = D^{(l-1)}_{j_{l-1}} \cdots D^{(1)}_{j_1} X \).
@@ -87,7 +89,7 @@ and \( i_l \) as indices of neurons.
 
 Our goal is to re-write the network \( f_\theta(X) \) as a linear tensor
 operator on \( \Xk \).
-To do so, we define a tensor reduction as follows.
+To do so, we define a new tensor reduction operator as follows.
 \begin{definition}[Tensor Reduction]
     Given two tensors
     \( \Xll \in \R^{n \times p_1 \times \cdots \times p_l \times d_0} \)
@@ -102,19 +104,19 @@ To do so, we define a tensor reduction as follows.
 It should be clear from the definition that the tensor reduction is
 linear and acts on tensors of conformal shapes.
 We will also use \( \odot \) with right-hand arguments of order
-\( l \), such as \( U^{(l)} \in \R^{d_0 \times p_1 \times \cdots \times p_{l-1}} \)
+\( l \), such as \( U^{(l)} \in \R^{d_0 \times p_1 \times \cdots \times p_{l}} \)
 in which case it is given by the following reduction over
 matrix-vector products:
 \[
     \Xll \odot U^{(l)} = \sum_{j_{l}} \cdots \sum_{j_{1}}
-    \Xll_{j_1, \ldots, j_{l}} U^{(l)}_{j_1, \ldots, j_{l}, i_{l+1}}.
+    \Xll_{j_1, \ldots, j_{l}} U^{(l)}_{j_1, \ldots, j_{l}}.
 \]
-With the tensor reduction operator now in hand, we can define the tensor cones
+Using our tensor reduction operator, we define the tensor cones
 associated with our higher-order activation activation patterns as
 \begin{equation}\label{eq:tensor-cone}
     \calK^{(l)}_{j_{l}} =
     \cbr{
-    U^{(l)} \in \R^{d_0 \times p_{1} \times \cdots \times p_{l-1}}
+    U^{(l)} \in \R^{d_0 \times p_{1} \times \cdots \times p_{l}}
     :
     (2D^{(l)}_{j_{l}} - I)
     \sbr{\Xl \odot U^{(l)}} \geq 0
@@ -132,7 +134,7 @@ when \( L = 2 \).
 
 Now we have the framework to prove our first result:
 every neural network prediction function can be represented by a linear
-operator on a \( L+1 \) order tensor.
+operator on an \( L+1 \) order tensor.
 Key to this representation is a recursive constraint set encoding the network
 structure in tensor form.
 Define \( \calG^{(1)} = \R^{d_0 \times d_1} \) and let \( \calGl \)
@@ -180,19 +182,19 @@ on the slices of \( \Tll \).
     \input{figures/chapter_four/tensor_path.tex}
     \caption{Illustration of layer elimination lemma for deep ReLU
         networks (\cref{prop:layer-elimination}).
-        Each entry of the tensor \( \Tk \) is given by the
+        Each entry of the tensor \( \Tk \) is computed as the
         product of weights along the corresponding path through the neural
         network.}%
     \label{fig:tensor-path}
 \end{figure}
 
-Unrolling \cref{prop:layer-elimination} from \( l = L \) to \( l = 1 \)
+Unrolling \cref{prop:layer-elimination} from \( l = 1 \) to \( L \)
 implies that every neural network \( f_\theta \) has a tensor representation.
 
 \begin{restatable}{theorem}{tensorEquivalence}\label{thm:tensor-equivalence}
     For each non-convex parameterization
     \( \theta = \rbr{W^{(1)}, \ldots, \Wk} \), there exists an equivalent
-    tensor parameterization \( \Tk \in \calG^{(k)} \) satisfying
+    tensor parameterization \( \Tk \in \calGk \) satisfying
     \[
         f_\theta(X) = \Xk \odot \Tk.
     \]
@@ -204,16 +206,16 @@ As a corollary, we obtain an equivalent convex tensor problem
 with non-convex decomposition constraints.
 
 \begin{corollary}\label{cor:non-convex-tensor-program}
-    Training an \( L \)-layer ReLU model,
+    The unregularized training problem for an \( L \)-layer ReLU model,
     \begin{equation}
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{f_{\theta}(X), y},
     \end{equation}
-    is equivalent to a convex tensor program
-    with non-convex decomposition constraints,
+    is equivalent to solving the following convex tensor program
+    with non-convex decomposition constraints:
     \begin{equation}\label{eq:non-convex-tensor-program}
         \min_{\Tk}
         \calL\rbr{\Xk \odot \Tk, y} \quad \text{s.t.} \quad
-        \Tk \in \calG^{(k)}.
+        \Tk \in \calGk.
     \end{equation}
 \end{corollary}
 
