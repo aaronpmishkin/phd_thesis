@@ -1,11 +1,12 @@
 %!TEX root=../../main.tex
 
-So far we have seen that convex reformulations enable both faster optimization
-and deep insights into shallow ReLU networks.
-While these results are powerful, they are also restricted: they only apply to
-neural networks with one hidden layer.
-Although models with one hidden layer are widespread --- both as standalone
-prediction models and as sub-modules of other networks --- they have
+So far we have seen that convex reformulations enable faster optimization for
+shallow ReLU networks while also unlocking deep insights into the non-convex
+training problem.
+These results are powerful, but restricted: they only apply to
+models with one hidden layer.
+And although networks with one hidden layer are widespread --- both as
+standalone prediction models and as sub-modules of other networks --- they have
 significant weaknesses compared to ``deep learning'' approaches.
 For example, both deep and shallow neural networks are universal approximators,
 but deep networks are more parsimonious and require exponentially fewer neurons
@@ -21,11 +22,12 @@ Our analysis derives a new connection between \( L \)-layer ReLU networks and
 optimization problems over tensors of order \( L+1 \).
 In particular, we show that every deep ReLU training problem can be represented
 as a convex tensor program with non-convex decomposition constraints.
-As the width of the network increases, these constraints transform into
-convex cones describing the recursive decomposition of the model.
-A natural extension of our cone decompositions from
-\cref{chapter:fast-optimization} allows us to prove that this problem is
-equivalent to an (unconstrained) deep gated ReLU model.
+Furthermore, if the width of the network is sufficiently large (but still
+finite), these constraints reduce to convex cones which describe the recursive
+decomposition of the model.
+Similar to \cref{chapter:fast-optimization}, we use the idea of cone
+decompositions to prove that this problem is equivalent to an (unconstrained)
+deep gated ReLU model.
 
 To summarize, our main contributions are the following:
 
@@ -34,7 +36,7 @@ To summarize, our main contributions are the following:
           tensors of order \( L+1 \) which are equivalent to training
           unregularized deep ReLU networks with \( L \) layers.
 
-    \item A fully convex relaxation of these tensor programs which is equivalent
+    \item A fully convex version of these tensor programs which is equivalent
           to training a deep ReLU network as long as the network layers
           are at least as wide as a polynomial function of \( n \) (the number of training
           data points) and \( c \) (the output dimension).

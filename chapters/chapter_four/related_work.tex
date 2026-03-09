@@ -11,10 +11,10 @@ At the same time, \citet{ergen2021beyond} show that three-layer ReLU
 networks arranged in parallel (also called multi-branch)
 architectures have a convex reformulation which can be solved in polynomial
 time when the network width is fixed.
-Follow-up work by \citet{wang2023parallel} extends these both of results;
-they prove that deep linear networks with vector outputs have non-zero duality
-gap and derive convex reformulations for general deep parallel networks with
-modified regularization.
+Follow-up work by \citet{wang2023parallel} extends both of these results;
+they prove that deep linear networks with vector outputs have a non-zero
+duality gap and derive convex reformulations for deep parallel networks
+with modified regularization.
 They also show that three-layer ReLU networks with rank-one inputs satisfy
 strong duality.
 
@@ -27,19 +27,19 @@ characterize the structure of optimal weights for arbitrarily deep models.
 \citet{wang2024randomized} combine these results with sketching to perform
 transfer learning in large language models.
 These approaches do not rely on enumerating activation
-patterns and are quite from those presented here.
+patterns and so are substantially different from our results.
 
 \textbf{Optimality Conditions}:
 A separate line of work tackles the problem of deriving optimality conditions
 for deep neural networks.
 While validating the global optimality of a candidate solution is NP-Hard
 for general non-convex programming \citep{murty1987complete},
-\citet{jadbadbaie2018checking} prove that a critical point of a deep linear
-network is globally optimal if and only if the product of all parameter
-matrices is full-rank.
+\citet{jadbadbaie2018checking} study linear neural networks and prove that if
+the product of the parameter matrices at a critical point is full-rank, then 
+that point is also a global optimum.
 They also provide several weaker results for deep non-linear networks using a
 function space perspective.
 In comparison, our deep convex reformulations are stronger because they come
 equipped with a mapping between convex and non-convex solutions which can
-always be used to evaluate the optimality of a candidate non-convex model.
+always be used to evaluate the optimality of a candidate solution.
 
