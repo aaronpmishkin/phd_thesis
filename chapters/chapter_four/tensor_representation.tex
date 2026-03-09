@@ -56,7 +56,7 @@ However, it is straightforward to obtain a canonical (and maximal) set of
 patterns by taking all the layer widths to be arbitrarily large.
 \begin{restatable}{lemma}{limitingActivationSet}\label{lemma:activation-patterns}
     The set of activation patterns in the \( l^{\text{th}} \) layer has a
-    finite limit, call it \( \calDl \), obtained by taking each hidden layer
+    finite limit, call it \( \calDl \), obtained by taking the hidden layer
     width \( d_{k} \rightarrow \infty \) for each \( k \in [l] \).
     \begin{equation}\label{eq:limiting-activation-set}
         \calDl = \lim_{\Delta \rightarrow \infty} \calDl_{\Delta}.
@@ -104,19 +104,19 @@ To do so, we define a new tensor reduction operator as follows.
 It should be clear from the definition that the tensor reduction is
 linear and acts on tensors of conformal shapes.
 We will also use \( \odot \) with right-hand arguments of order
-\( l \), such as \( U^{(l)} \in \R^{d_0 \times p_1 \times \cdots \times p_{l}} \)
+\( l \), such as \( U^{(l+1)} \in \R^{d_0 \times p_1 \times \cdots \times p_{l}} \)
 in which case it is given by the following reduction over
 matrix-vector products:
 \[
-    \Xll \odot U^{(l)} = \sum_{j_{l}} \cdots \sum_{j_{1}}
-    \Xll_{j_1, \ldots, j_{l}} U^{(l)}_{j_1, \ldots, j_{l}}.
+    \Xll \odot U^{(l+1)} = \sum_{j_{1}} \cdots \sum_{j_{l}}
+    \Xll_{j_1, \ldots, j_{l}} U^{(l+1)}_{j_1, \ldots, j_{l}}.
 \]
 Using our tensor reduction operator, we define the tensor cones
 associated with our higher-order activation activation patterns as
 \begin{equation}\label{eq:tensor-cone}
     \calK^{(l)}_{j_{l}} =
     \cbr{
-    U^{(l)} \in \R^{d_0 \times p_{1} \times \cdots \times p_{l}}
+    U^{(l)} \in \R^{d_0 \times p_{1} \times \cdots \times p_{l-1}}
     :
     (2D^{(l)}_{j_{l}} - I)
     \sbr{\Xl \odot U^{(l)}} \geq 0

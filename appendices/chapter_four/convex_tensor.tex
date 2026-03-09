@@ -51,10 +51,10 @@
         = \leftindex_{k}{T}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
         - \leftindex_{k}{T}^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}.
     \]
-    Define
+    Define \( \leftindex_{k}{\hat{T}}^{(l-1)} \) by
     \[
-        \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
-        = \leftindex_{k}{\alpha}_{i_{l}} \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}.
+        \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(c, j_{l-1}, i_l)}
+        = \leftindex_{k}{\alpha}_{i_{l}} \leftindex_{k}{T}^{(l-1)}_{\phi_{l-1}(c, j_{l-1}, i_l)}.
     \]
     The inductive assumption implies
     \( \leftindex_{k}{\hat{T}}^{(l-1)} \in \calC^{(l-1)} \).
@@ -62,17 +62,17 @@
     \( \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
     \in \calK^{(l-1)}_{j_{l-1}} \) since \( \calK^{(l-1)}_{j_{l-1}} \) is a
     convex cone.
-    Thus,
+    Thus, the tensor \( \leftindex_{k}{\hat{T}}^{(l)} \) with entries
     \begin{equation*}
         \leftindex_{k}{\hat{T}}^{(l)}_{i_{l}} :=
         \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(1, j_{l-1}, i_l)}
         - \leftindex_{k}{\hat{T}}^{(l-1)}_{\phi_{l-1}(-1, j_{l-1}, i_l)}
     \end{equation*}
     must be in \( \calCl \).
-    We conclude that \( \hat{T}^{(l)} \in \calCl \) since it is a non-negative
-    combination of elements of \( \calCl \) and \( \calCl \) is a convex cone
-    by \cref{lemma:convex-recursive-cone-constraint}.
-
+    We conclude that \( \hat{T}^{(l)} \in \calCl \) since it is a sum (and
+    therefore a non-negative combination ) of elements of \( \calCl \) and \(
+    \calCl \) is a convex cone by
+    \cref{lemma:convex-recursive-cone-constraint}.
 \end{proof}
 
 \constraintConvexification*
@@ -82,7 +82,7 @@
     this establishes our base case.
 
     Now, assume that
-    \( \calG^{(l)} = \calC^{(l)} \) for some \( 1 \leq l < k  \).
+    \( \calG^{(l)} = \calC^{(l)} \) for some \( 1 \leq l < L  \).
     Let \( \Tll \in \calG^{(l+1)} \) be arbitrary.
     By membership in \( \calG^{(l+1)} \), \( \Tll \) satisfies
     \[
@@ -117,8 +117,8 @@
     to show that
     \( \Tll_{j_l, i_{l+1}}
     = \hat{T}^{(l)}_{ \phi_l(1, j_l, i_{l+1})} - \hat{T}^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}\).
-    Moreover,
-    \( \calKl_{j_l} \) is a convex cone, so
+    Because
+    \( \calKl_{j_l} \) is a convex cone,
     \( \hat{T}^{(l)}_{ \phi_l(1, j_l, i_{l+1})}, \hat{T}^{(l)}_{ \phi_l(-1, j_l, i_{l+1})}
     \in \calKl_{j_l} \) as required.
     Finally, since \( \Tl \in \calG^{(l)} = \calC^{(l)} \), we can invoke
@@ -180,7 +180,7 @@
         \calI_{j_l}^{(l)}
         = \cbr{ \phi_l(1, j_l, i_{l+1}) : i_{l+1} \in [d_{l+1}]}
         \cup
-        \cbr{ \phi_l(2, j_l, i_{l+1}) : i_{l+1} \in [d_{l+1}]}.
+        \cbr{ \phi_l(-1, j_l, i_{l+1}) : i_{l+1} \in [d_{l+1}]}.
     \]
     Thus, we need \( 2 d_{l+1} \) outer-products per \( j_l \in [p_l] \) to
     represent \( \Tll \).
@@ -196,18 +196,19 @@
     For any \( l \in [k-1] \), we have
     \begin{align*}
         X^{(l+1)} \odot T^{(l+1)}
-         & = \sum_{j_{l}=1}^{p_l} X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}}          \\
+         & = \sum_{j_{l}=1}^{p_l} X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}}                \\
          & = \sum_{j_{l}=1}^{p_l} \sum_{i_{l+1}=1}^{d_{l+1}}
-        \rbr{X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}, i_{l+1}}} \otimes e_{i_{l+1}} \\
+        \rbr{X^{(l+1)}_{j_{l}} \odot T^{(l+1)}_{j_{l}, i_{l+1}}} \otimes e_{i_{l+1}}       \\
          & = \sum_{j_{l}=1}^{p_l} \sum_{i_{l+1}=1}^{d_{l+1}}
         \rbr{X^{(l+1)}_{j_{l}} \odot
         \sbr{T^{(l)}_{\phi_l(1, j_{l}, i_{l+1})} - T^{(l)}_{\phi_l(-1, j_{l}, t i_{l+1})}}}
-        \otimes e_{i_{l+1}}                                                          \\
+        \otimes e_{i_{l+1}}                                                                \\
+         & = \sum_{j_{l}=1}^{p_l} \sum_{i_{l+1}=1}^{d_{l+1}} \sum_{s \in \cbr{+1, -1}}
+        \rbr{X^{(l+1)}_{j_{l}} \odot
+        T^{(l)}_{\phi_l(s, j_{l}, i_{l+1})}} \otimes W^{(l+1)}_{\phi_l(s, j_{l}, i_{l+1})} \\
          & = \sum_{i_{l}=1}^{d_{l}}
         D^{(l)}_{i_{l}} \rbr{X^{(l)} \odot
-        T^{(l)}_{i_{l}}} \otimes W^{(l+1)}_{i_{l}}                                   \\
-         & = \sum_{i_{l}=1}^{d_{l}}
-        \rbr{X^{(l)} \odot T^{(l)}_{i_{l}}}_+ \otimes W^{(l+1)}_{i_{l}}              \\
+        T^{(l)}_{i_{l}}} \otimes W^{(l+1)}_{i_{l}}                                         \\
          & = \rbr{X^{(l)} \odot T^{(l)}}_+ W^{(l+1)}.
     \end{align*}
     Applying this recursively from \( l = k - 1 \)
@@ -435,15 +436,15 @@
     in \cref{eq:gated-layer-to-tensorize} as follows:
     \begin{align*}
         Z^{(l+2)}
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{j_l}}}
         \otimes W^{(l+1)}_{j_l}}                                              \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \sbr{\Tl_{j_l}
         \otimes W^{(l+1)}_{j_l}}}}                                            \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \Tll_{j_l}}} \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot \sbr{\Xll \odot \Tll}.
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ \sbr{\Xll \odot \Tll}.
     \end{align*}
     It should be clear from the way that we constructed \( \Tll \) that
     it is contained \( \calH^{(l+1)} \).
@@ -466,11 +467,11 @@
     This choice trivially satisfies
     \begin{align*}
         g_{\theta_1}^{\text{exp}}(X)
-         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot X W^{(1)}          \\
-         & = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(1)}).
+         & = \mathbf{D}^{(1)}_{\text{exp}} \circ X W^{(1)}          \\
+         & = \mathbf{D}^{(1)}_{\text{exp}} \circ (X \odot T^{(1)}).
     \end{align*}
     Now assume that for \( l \in [L-1] \),
-    \( g_{\theta_l}^{\text{exp}}(X) = \mathbf{D}^{(1)}_{\text{exp}} \cdot (X \odot T^{(l)}) \).
+    \( g_{\theta_l}^{\text{exp}}(X) = \mathbf{D}^{(1)}_{\text{exp}} \circ (X \odot T^{(l)}) \).
     We will show that this equation also holds at \( l+1 \).
     Let \( \calI^{(l)}_{j_l} \) contain the indices of the parameters in the
     layer \( l \) which are associated with the \( d_{l+1} \) copies of
@@ -484,20 +485,20 @@
     for the expanded gated ReLU model as follows:
     \begin{align*}
         g_{\theta_{l+1}}^{\text{exp}}(X)
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{i_l=1}^{d_l}
             \rbr{\Dl_{i_l} \sbr{\Xl \odot \Tl_{i_l}}}
         \otimes W^{(l+1)}_{i_l}}                                              \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \sum_{i_l \in \calI^{(l)}_{j_l}}
         \rbr{\Dl_{j_l} \sbr{\Xl \odot \Tl_{i_l}}}
         \otimes W^{(l+1)}_{i_l}}                                              \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \sbr{\sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{i_l}
         \otimes W^{(l+1)}_{i_l}}}}                                            \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{\tilde{p}_l} \rbr{\Dl_{j_l} \Xl \odot \Tll_{j_l}}} \\
-         & = \mathbf{D}^{(l+1)}_\text{gated} \cdot \sbr{\Xll \odot \Tll}.
+         & = \mathbf{D}^{(l+1)}_\text{gated} \circ \sbr{\Xll \odot \Tll}.
     \end{align*}
     Induction (with a minor modification to drop the activation patterns
     from the final layer) now implies that
@@ -533,7 +534,7 @@
         }
          & =\sum_{i_l}^{d_{l+1}} \sbr{\tilde{\calD}_{i_l} \rbr{\Xl \odot
         \Tl_{i_l}}} \otimes \Wll_{i_{l}}                                          \\
-         & =\mathbf{D}^{(l)}_{\text{exp}} \cdot \rbr{\Xl \odot
+         & =\mathbf{D}^{(l)}_{\text{exp}} \circ \rbr{\Xl \odot
         \Tl} \Wll                                                                 \\
     \end{align*}
     Unrolling this equation starting from \( l = L-1 \) and choosing

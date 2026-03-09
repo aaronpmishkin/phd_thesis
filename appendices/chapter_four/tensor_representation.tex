@@ -6,7 +6,7 @@
     \( \Delta' \) is at least as large as \( \Delta \).
     If \( \Delta \prec \Delta' \), then it is straightforward to embed
     any network weights \( \theta \) conformal to \( \Delta \) into a network
-    conformal \( \Delta' \) by setting the additional neurons to zero.
+    conformal to \( \Delta' \) by setting the additional neurons to zero.
     Thus, \( \calDl_{\Delta} \subseteq \calDl_{\Delta'} \).
     Since
     \( \calDl_{\Delta} \subseteq \cbr{ \diag(z) : z \in \cbr{0, 1}^n} \),
@@ -40,12 +40,12 @@
          & = \rbr{\sum_{j_l=1}^{p_l} \sum_{i_l \in \calI^{(l)}_{j_l}}
             \rbr{\Xl \odot \Tl_{i_l}}_+
             W^{(l+1)}_{i_l}}_+.
-        \intertext{Linearizing the activation pattern now gives,}
+        \intertext{Linearizing the activation using now gives,}
         Z^{(l+2)}
          & = \rbr{\sum_{j_l=1}^{p_l}
             \sum_{i_l \in \calI^{(l)}_{j_l}}
             D^{(l)}_{j_l} \sbr{\Xl \odot \Tl_{i_l}}
-        W^{(l+1)}_{m, \cdot}}_+                                       \\
+        W^{(l+1)}_{i_l, \cdot}}_+                                       \\
          & = \rbr{\sum_{j_l=1}^{p_l}
             \sum_{j_1, \ldots, j_{l-1}} D^{(l)}_{j_l} \Xl_{j_1, \ldots j_{l-1}}
             \rbr{
@@ -55,8 +55,8 @@
          & = \rbr{\Xll \odot \Tll}_+.
     \end{align*}
     It should be clear from the way that we constructed \( \Tll \) that
-    it is contained \( \calG^{(l+1)} \).
-    This establishes one direction of theorem.
+    it is contained in \( \calG^{(l+1)} \).
+    This establishes one direction of the theorem.
     The other direction can be shown by instead assuming that
     \( \Tll \in \calG^{(l+1)} \) and then noting that the characterization
     in \cref{eq:t-plus-characterization} immediately follows for some
@@ -92,8 +92,8 @@
         Z^{(l+2)} = \rbr{\Xll \odot \Tll}_+,
     \]
     for some \( \Tll \in \calG^{(l+1)} \).
-    Induction (with a minor modification to drop the ReLU in the final step)
-    now implies there exists an equivalent
+    Arguing by induction (with a minor modification to drop the ReLU in the final step)
+    shows that there exists an equivalent
     tensor problem \( f_\theta(X) = \Xk \odot \Tk \) with
     \( \Tk \in \calGk \).
     Since \cref{prop:layer-elimination} establishes an if-and-only-if

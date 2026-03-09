@@ -39,7 +39,7 @@ network exceeding the width thresholds \( m^*_l \).
 
 Another open question in the final chapter concerns whether or not our bounds
 on the width thresholds are tight.
-Although our requirement \( m^*_{l} \leq c n^{L - l} \) matches the
+Although our requirement \( m^*_{l} \leq c \, n^{L - l} \) matches the
 two-layer setting when specialized to \( L = 2 \),
 it remains to prove lower bounds for \( L \geq 3 \).
 We believe that developing precise characterizations for \( m_l^* \) is
@@ -51,7 +51,7 @@ problems is a critical research question that we are currently tackling.
 Since two-layer ReLU networks are universal approximators, the key role of
 depth is to provide a ``better'' function representation rather than a better
 fit of the training data.
-Better here means many things: more parsimonious (using fewer neurons),
+Better can mean several things: more parsimonious (using fewer neurons),
 parameterizing a smoother function (lower norm in function space), or
 simply generalizing better at test time.
 Regularization is widely regarded as inducing these properties in neural
