@@ -162,9 +162,11 @@ In particular, given a solution \( \rbr{v^*, u^*} \), optimal weights
 for the ReLU problem are given by
 \begin{equation}\label{eq:convex-to-relu}
     \begin{aligned}
-        W^{(1)}_{\cdot, i} & = v_i^*/ \sqrt{\norm{v_i^*}}, \quad W^{(2)}_{i} = \sqrt{\norm{v_i^*}}
+        W^{(1)}_{\cdot, i} 
+        & = v_i^*/ \sqrt{\norm{v_i^*}_2}, \quad W^{(2)}_{i} = \sqrt{\norm{v_i^*}_2}
         \\
-        W_{1j}             & = u_i^*/ \sqrt{\norm{u_i^*}}, \quad w_{2j} = -\sqrt{\norm{u_i^*}},
+        W_{1j}             
+        & = u_i^*/ \sqrt{\norm{u_i^*}_2}, \quad w_{2j} = -\sqrt{\norm{u_i^*}_2},
     \end{aligned}
 \end{equation}
 where we use the convention that \( 0/0 = 0 \).
