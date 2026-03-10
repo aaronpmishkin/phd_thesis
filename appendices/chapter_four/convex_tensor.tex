@@ -632,27 +632,27 @@
     be the parameters of a gated ReLU model and \( G^{(1)}, \ldots, G^{(L)} \)
     the associated gates.
     Let \( T^{(1)} = W^{(1)} \).
-    Induction applied to \cref{prop:duplicated-layer-elimination} now implies
+    Induction applied to \cref{prop:duplicated-layer-elimination} implies
     that there exists
     \( \Tk \in \R^{d_0 \times p_1^\text{gated} \times \ldots p_{L-1}^{\text{gated}} \times d_L} \)
     satisfying
     \[
         g_\theta(X) = \Xk \odot \Tk.
     \]
-   \cref{thm:convex-gated-relu} and there proof thereof shows that every
-   duplicated gated ReLU model is equivalent to an unconstrained tensor 
-   \( \Tk \) and vice versa.
-   As a result, we have shown that every standard gated ReLU model can be
-   represented as a duplicated gated ReLU model.
+    \cref{thm:convex-gated-relu} and the proof thereof shows that every
+    duplicated gated ReLU model is equivalent to an unconstrained tensor
+    \( \Tk \) and vice versa.
+    As a result, we have shown that every standard gated ReLU model can be
+    represented as a duplicated gated ReLU model.
 
-   Unfortunately, the converse does not hold. 
-   For example, consider a duplicated gated ReLU model where the intermediate
-   feature map \( g_{\theta_{l}}^{\text{dup}} \) is constrained to lie in a
-   subspace (this can be achieved by having only a small number of non-zero
-   neurons, for example).
-   This feature map will not be able to achieve all of the active patterns
-   at layer \( l+1 \), meaning it has no representation as a gated ReLU
-   network.
+    Unfortunately, the converse does not hold.
+    To see this, consider a duplicated gated ReLU model where the intermediate
+    feature map \( g_{\theta_{l}}^{\text{dup}} \) is constrained to lie in a
+    subspace (this can be achieved by having only a small number of non-zero
+    neurons).
+    This feature map will not be able to achieve all of the activation patterns
+    in the duplicated gated ReLU model at layer \( l+1 \),
+    meaning it cannot be written as a gated ReLU network.
 \end{proof}
 
 \subsection{Deep Cone Decompositions: Proofs}\label{app:deep-cone-decompositions}

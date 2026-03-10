@@ -202,6 +202,9 @@ minimizes the sum of norms to the fourth power.
     and admits no neuron-merge symmetries.
 \end{restatable}
 
+Here, neuron-merge symmetry refers to the fact that neurons with collinear
+weight vectors can be merged without changing the predictions or norm of
+the network (see \cref{lemma:mapping-equality} for more details).
 As a result, we can compute the \( r \)-minimal optimal ReLU network
 by solving Problem~\eqref{eq:min-norm-program}.
 If \( \calS_\lambda \) is unknown, then using \( \act(w) \) for some solution
