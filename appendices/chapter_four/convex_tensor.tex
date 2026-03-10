@@ -442,10 +442,10 @@
         Z^{(l+2)}
          & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \rbr{\Dl_{j_l} \sbr{\tXl \odot \Tl_{j_l}}}
-        \otimes W^{(l+1)}_{j_l}}                                              \\
+        \otimes W^{(l+1)}_{j_l}}                                                      \\
          & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \rbr{\Dl_{j_l} \tXl \odot \sbr{\Tl_{j_l}
-        \otimes W^{(l+1)}_{j_l}}}}                                            \\
+        \otimes W^{(l+1)}_{j_l}}}}                                                    \\
          & = \mathbf{D}^{(l+1)}_\text{gated} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \rbr{\Dl_{j_l} \tXl \odot \Tll_{j_l}}} \\
          & = \mathbf{D}^{(l+1)}_\text{gated} \circ \sbr{\tXll \odot \Tll}.
@@ -492,14 +492,14 @@
          & = \mathbf{D}^{(l+1)}_\text{dup} \circ
         \sbr{\sum_{i_l=1}^{d_l}
             \rbr{\Dl_{i_l} \sbr{\tXl \odot \Tl_{i_l}}}
-        \otimes W^{(l+1)}_{i_l}}                                              \\
+        \otimes W^{(l+1)}_{i_l}}                                                      \\
          & = \mathbf{D}^{(l+1)}_\text{dup} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \sum_{i_l \in \calI^{(l)}_{j_l}}
         \rbr{\Dl_{j_l} \sbr{\tXl \odot \Tl_{i_l}}}
-        \otimes W^{(l+1)}_{i_l}}                                              \\
+        \otimes W^{(l+1)}_{i_l}}                                                      \\
          & = \mathbf{D}^{(l+1)}_\text{dup} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \rbr{\Dl_{j_l} \tXl \odot \sbr{\sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{i_l}
-        \otimes W^{(l+1)}_{i_l}}}}                                            \\
+        \otimes W^{(l+1)}_{i_l}}}}                                                    \\
          & = \mathbf{D}^{(l+1)}_\text{dup} \circ
         \sbr{\sum_{j_l=1}^{p_l^{\text{gated}}} \rbr{\Dl_{j_l} \tXl \odot \Tll_{j_l}}} \\
          & = \mathbf{D}^{(l+1)}_\text{dup} \circ \sbr{\tXll \odot \Tll}.
@@ -525,7 +525,7 @@
     \begin{align*}
         \tXll \odot \Tll
          & = \sum_{j_l = 1}^{p_l^{\text{gated}}}
-        \Dl_{i_l} \rbr{\tXl \odot \Tll_{j_l}}                            \\
+        \Dl_{i_l} \rbr{\tXl \odot \Tll_{j_l}}                                     \\
          & = \sum_{j_l = 1}^{p_l^{\text{gated}}}
         \Dl_{j_l} \rbr{\tXl \odot
         \sbr{\sum_{i_{l+1}=1}^{d_{l+1}} \Tll_{j_l, i_{l+1}} \otimes e_{i_{l+1}}}} \\
@@ -556,19 +556,103 @@
         \min_{\theta = (W^{(1)}, \ldots, \Wk)} \calL\rbr{g^{\text{dup}}_{\theta}(X), y},
     \]
     which completes the proof.
+\end{proof}
 
+\begin{restatable}[Duplicated Gated ReLU Layer Elimination]{proposition}{duplicatedLayerElimination}%
+    \label{prop:duplicated-layer-elimination}
+    If there exists
+    \( H^{(l)}, \Tl \in
+    \R^{d_0 \times p_1^{\text{gated}} \times \cdots \times p_{l-1}^{\text{gated}} \times d_{l}} \)
+    such that the gated ReLU model at layer \( l+1 \) satisfies
+    \begin{equation}\label{eq:duplicated-layer-to-tensorize}
+        \Zll \Wll =
+        \sbr{\mathds{1}(\tXl \odot H^{(l)} \geq 0) \circ
+            (\tXl \odot \Tl)} \Wll
+    \end{equation}
+    then there exists
+    \( \Tll \in \R^{d_0 \times p_1^{\text{gated}} \times \cdots \times p_{l}^{\text{gated}} \times d_{l+1}} \)
+    satisfying
+    \[
+        \Zll \Wll = \tXll \odot \Tll
+    \]
+    and
+    \( H^{(l+1)} \in \R^{d_0 \times p_1^{\text{gated}} \times \cdots \times p_{l}^{\text{gated}} \times d_{l+1}} \)
+    such that
+    \[
+        Z^{(l+2)} W^{(l+2)}
+        = \sbr{\mathds{1}(\tXll \odot H^{(l+1)} \geq 0) \circ \rbr{\tXll \odot \Tll}} W^{(l+2)}.
+    \]
+\end{restatable}
+\begin{proof}
+    Let \( \calI^{(l)}_{j_l} \) be the indices of gate vectors mapping to the
+    \( j_l^{\text{th}} \) pattern,
+    \[
+        \calI^{(l)}_{j_l}
+        := \cbr{ i_l \in [d_l] : \Dl_{j_l} = \diag\rbr{\mathds{1}(\tXl \odot H^{(l)}_{i_l} \geq 0)}}.
+    \]
+    Define a candidate tensor as
+    \[
+        \Tll_{j_1, \ldots, j_{l}}
+        = \sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{j_1, \ldots, j_{l-1}, i_l} \otimes \Wll_{i_{l}}
+    \]
+    Now we can write the pre-activations at layer \( l+1 \) as follows:
+    \begin{align*}
+        \Zll \Wll
+         & = \sbr{\mathds{1}(\tXl \odot H^{(l)} \geq 0) \circ (\tXl \odot \Tl)} \Wll                   \\
+         & = \sum_{i_l=1}^{d_l}
+        \sbr{\diag\rbr{\mathds{1}(\tXl \odot H_{i_l}^{(l)} \geq 0)} (\tXl \odot \Tl_{i_l})} \Wll_{i_l} \\
+         & = \sum_{j_l=1}^{p^{\text{gated}}_l}
+        \sum_{i_l \in \calI^{(l)}_{j_l}}
+        \sbr{\Dl_{j_l} (\tXl \odot \Tl_{i_l})} \Wll_{i_l}                                              \\
+         & = \sum_{j_1=1}^{p^{\text{gated}}_1} \cdots \sum_{j_l=1}^{p^{\text{gated}}_l}
+        \Dl_{j_l} \sbr{\tXl}_{j_1, \ldots, j_{l-1}}
+        \rbr{\sum_{i_l \in \calI^{(l)}_{j_l}} \Tl_{j_1, \ldots, j_{l-1}, i_l} \otimes \Wll_{i_l}}      \\
+         & = \sum_{j_1=1}^{p^{\text{gated}}_1} \cdots \sum_{j_l=1}^{p^{\text{gated}}_l}
+        \Dl_{j_l} \sbr{\tXl}_{j_1, \ldots, j_{l-1}} \Tll_{j_1, \ldots, j_{l-1}, j_l}                   \\
+         & =  \tXll \odot \Tll.
+    \end{align*}
+    This completes the first part of the proof.
+    Moreover, substituting \( G^{(l+1)} \) for \( \Wll \) in the above
+    argument shows that there exists some \( H^{(l+1)} \) satisfying
+    \[
+        \Zll G^{(l+1)} = \tXll \odot H^{(l+1)}.
+    \]
+    As a result,
+    \begin{align*}
+        Z^{(l+2)} W^{(l+2)}
+         & = \sbr{\mathds{1}(\Zll G^{(l+1)} \geq 0) \circ \rbr{\tXll \odot \Tll}} W^{(l+2)}         \\
+         & = \sbr{\mathds{1}(\tXll \odot H^{(l+1)} \geq 0) \circ \rbr{\tXll \odot \Tll}} W^{(l+2)},
+    \end{align*}
+    as desired.
 \end{proof}
 
 \duplicatedEquivalence*
 \begin{proof}
-    Let \( \theta = \rbr{W^{(1)}, \ldots, W^{(L)}} \) 
+    Let \( \theta = \rbr{W^{(1)}, \ldots, W^{(L)}} \)
     be the parameters of a gated ReLU model and \( G^{(1)}, \ldots, G^{(L)} \)
     the associated gates.
+    Let \( T^{(1)} = W^{(1)} \).
+    Induction applied to \cref{prop:duplicated-layer-elimination} now implies
+    that there exists
+    \( \Tk \in \R^{d_0 \times p_1^\text{gated} \times \ldots p_{L-1}^{\text{gated}} \times d_L} \)
+    satisfying
+    \[
+        g_\theta(X) = \Xk \odot \Tk.
+    \]
+   \cref{thm:convex-gated-relu} and there proof thereof shows that every
+   duplicated gated ReLU model is equivalent to an unconstrained tensor 
+   \( \Tk \) and vice versa.
+   As a result, we have shown that every standard gated ReLU model can be
+   represented as a duplicated gated ReLU model.
 
-    Let \( T^{(1)} = W^{(1)} \) so that \( X_{\text{dup}}^{(1)} \odot T^{(1)} = X W^{(1)} \).
-    This establishes our base case.
-    Now, assume that 
-
+   Unfortunately, the converse does not hold. 
+   For example, consider a duplicated gated ReLU model where the intermediate
+   feature map \( g_{\theta_{l}}^{\text{dup}} \) is constrained to lie in a
+   subspace (this can be achieved by having only a small number of non-zero
+   neurons, for example).
+   This feature map will not be able to achieve all of the active patterns
+   at layer \( l+1 \), meaning it has no representation as a gated ReLU
+   network.
 \end{proof}
 
 \subsection{Deep Cone Decompositions: Proofs}\label{app:deep-cone-decompositions}
@@ -591,8 +675,8 @@
     \]
     Moreover,
     \( \Tl \in \calCl_{\text{ns}} \) trivially by the inductive assumption.
-    But this implies that \( \Tll \calCll_{\text{ns}} \) and thus
-    \( \calCll_{\text{ns}} \supset \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l-1} \times d_{l}} \).
+    But this implies that \( \Tll \in \calCll_{\text{ns}} \) and thus
+    \( \calCll_{\text{ns}} \supseteq \R^{d_0 \times p^\text{ns}_1 \cdots \times p^\text{ns}_{l-1} \times d_{l}} \).
     This completes the proof.
 \end{proof}
 
