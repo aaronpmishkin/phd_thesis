@@ -8,3 +8,6 @@ Boyd.
 
 You can find the final version online at the [Stanford University
 Libraries](https://searchworks.stanford.edu/view/in00001006872).
+
+The LaTeX template is based on
+[stanford-thesis-example](https://github.com/dcroote/stanford-thesis-example).
